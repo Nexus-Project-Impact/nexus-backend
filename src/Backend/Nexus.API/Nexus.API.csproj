@@ -17,8 +17,4 @@
     <ProjectReference Include="..\Nexus.Application\Nexus.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 </Project>

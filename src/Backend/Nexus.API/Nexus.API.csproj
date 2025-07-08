@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.6" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Nexus.Communication\Nexus.Communication.csproj" />
+    <ProjectReference Include="..\..\Shared\Nexus.Exceptions\Nexus.Exceptions.csproj" />
+    <ProjectReference Include="..\Nexus.Application\Nexus.Application.csproj" />
+  </ItemGroup>
+
+</Project>

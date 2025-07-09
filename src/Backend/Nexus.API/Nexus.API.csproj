@@ -15,6 +15,7 @@
     <ProjectReference Include="..\..\Shared\Nexus.Communication\Nexus.Communication.csproj" />
     <ProjectReference Include="..\..\Shared\Nexus.Exceptions\Nexus.Exceptions.csproj" />
     <ProjectReference Include="..\Nexus.Application\Nexus.Application.csproj" />
+    <ProjectReference Include="..\Nexus.Infrastructure\Nexus.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

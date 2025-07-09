@@ -1,0 +1,35 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.User;
+using Nexus.Infrastructure.DataAccess;
+using Nexus.Infrastructure.DataAccess.Repositories;
+
+namespace Nexus.Infrastructure
+{
+    public static class DependencyInjectionExtension
+    {
+        public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            AddDbContext(services, configuration);
+            AddRepositories(services);
+        }
+
+        private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<NexusDbContext>(dbContextOptions =>
+            {
+                dbContextOptions.UseSqlServer(connectionString);
+            });
+        }
+
+        private static void AddRepositories(IServiceCollection services)
+        {
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
+            services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+        }
+    }
+}

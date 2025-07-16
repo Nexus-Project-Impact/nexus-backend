@@ -61,6 +61,15 @@ namespace Nexus.Exceptions {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O documento não pode estar vazio..
+        /// </summary>
+        public static string DOCUMENT_EMPTY {
+            get {
+                return ResourceManager.GetString("DOCUMENT_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a E-mail já registrado..
         /// </summary>
         public static string EMAIL_ALREADY_REGISTERED {
@@ -99,9 +108,18 @@ namespace Nexus.Exceptions {
         /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve ter mais de 6 caracteres..
         /// </summary>
-        public static string PASSWORD_EMPTY {
+        public static string PASSWORD_INVALID {
             get {
-                return ResourceManager.GetString("PASSWORD_EMPTY", resourceCulture);
+                return ResourceManager.GetString("PASSWORD_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O telefone não pode estar vazio..
+        /// </summary>
+        public static string PHONE_EMPTY {
+            get {
+                return ResourceManager.GetString("PHONE_EMPTY", resourceCulture);
             }
         }
         

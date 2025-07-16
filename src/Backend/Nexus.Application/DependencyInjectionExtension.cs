@@ -17,8 +17,10 @@ namespace Nexus.Application
         }
         private static void AddAutoMapper(IServiceCollection services)
         {
-            // Correct the method call to use a configuration action
-            services.AddAutoMapper(cfg => cfg.AddProfile<AutoMapping>());
+            services.AddScoped(option => new MapperConfiguration(options =>
+            {
+                options.AddProfile(new AutoMapping());
+            }));
         }
 
         private static void AddUseCases(IServiceCollection services)

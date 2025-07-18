@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Identity;
 using Nexus.API.Filters;
 using Nexus.Application;
+using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
+using Nexus.Infrastructure.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,24 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var nexusDbContext = services.GetRequiredService<NexusDbContext>();
+        var userManager = services.GetRequiredService<UserManager<Nexus.Domain.Entities.User>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+        await SeedData.Initialize(nexusDbContext, userManager, roleManager);
+    }
+
+    catch (Exception ex)
+    {
+        throw new SeedDataException();
+    }
+}
+    
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

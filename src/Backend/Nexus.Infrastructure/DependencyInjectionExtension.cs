@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Domain.Repositories.User;
 using Nexus.Infrastructure.DataAccess;
 using Nexus.Infrastructure.DataAccess.Repositories;
+using System;
 
 namespace Nexus.Infrastructure
 {
@@ -14,6 +17,7 @@ namespace Nexus.Infrastructure
         {
             AddDbContext(services, configuration);
             AddRepositories(services);
+            AddIndentity(services);
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)
@@ -30,6 +34,13 @@ namespace Nexus.Infrastructure
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
             services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+        }
+
+        private static void AddIndentity(IServiceCollection services)
+        {
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<NexusDbContext>() 
+                .AddDefaultTokenProviders();
         }
     }
 }

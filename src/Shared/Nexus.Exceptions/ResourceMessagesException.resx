@@ -138,6 +138,9 @@
   <data name="PHONE_EMPTY" xml:space="preserve">
     <value>O telefone não pode estar vazio.</value>
   </data>
+  <data name="SEED_DATA_ERROR" xml:space="preserve">
+    <value>Ocorreu um erro ao executar o SeedData</value>
+  </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
   </data>

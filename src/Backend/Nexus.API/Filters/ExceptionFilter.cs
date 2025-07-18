@@ -31,6 +31,13 @@ public class ExceptionFilter : IExceptionFilter
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.BadRequest;
             context.Result = new BadRequestObjectResult(new ResponseErrorJson(exception.ErrorsMessages));
         }
+        else if(context.Exception is SeedDataException)
+        {
+            var exception = context.Exception as SeedDataException;
+
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Result = new ObjectResult(new ResponseErrorJson(exception.Message));
+        }
     }
 
     private void ThrowUnknowException(ExceptionContext context)

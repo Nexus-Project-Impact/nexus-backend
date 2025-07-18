@@ -124,6 +124,15 @@ namespace Nexus.Exceptions {
         }
         
         /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Ocorreu um erro ao executar o SeedData.
+        /// </summary>
+        public static string SEED_DATA_ERROR {
+            get {
+                return ResourceManager.GetString("SEED_DATA_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Consulta uma cadeia de caracteres localizada semelhante a Erro desconhecido..
         /// </summary>
         public static string UNKNOWN_ERROR {

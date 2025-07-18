@@ -2,7 +2,7 @@
 using Nexus.Domain.Entities;
 
 
-public class Evaluation
+public class Rating
 {
 	public int Id { get; set; }
 	public double Score { get; set; }

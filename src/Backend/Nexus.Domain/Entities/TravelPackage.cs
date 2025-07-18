@@ -1,4 +1,5 @@
 ﻿using System;
+using Nexus.Domain.Entities;
 
 public class TravelPackage
 {
@@ -10,10 +11,6 @@ public class TravelPackage
 	public DateTime DepartureDate { get; set; }
 	public DateTime ReturnDate { get; set; }
     public decimal Value { get; set; }
-    
-
-    
-
-
+	public ICollection<Image> Images { get; set; } = new List<Image>();
 
 }

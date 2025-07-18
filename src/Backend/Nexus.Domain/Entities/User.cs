@@ -1,12 +1,12 @@
-﻿namespace Nexus.Domain.Entities
+﻿using Microsoft.AspNetCore.Identity;
+
+
+namespace Nexus.Domain.Entities
 {
-    public class User
+    public class User : IdentityUser
     {
-        public long Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
-        public string Password { get; set; } = string.Empty;
-        public string Phone { get; set; } = string.Empty;
-        public string CPF { get; set; } = string.Empty;
+        public string? Name { get; set; }
+        public string? Phone { get; set; }
+        public string? CPF { get; set; } 
     }
 }

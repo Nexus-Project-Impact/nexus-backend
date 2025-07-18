@@ -1,6 +1,9 @@
-﻿namespace Nexus.Exceptions.ExceptionsBase
+﻿namespace Nexus.Exceptions.ExceptionsBase;
+
+public class NexusException : SystemException
 {
-    public class NexusException : SystemException
+    public NexusException(string message) : base(message)
     {
     }
+
 }

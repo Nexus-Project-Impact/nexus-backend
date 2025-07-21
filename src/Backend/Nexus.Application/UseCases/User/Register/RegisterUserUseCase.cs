@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Nexus.Application.Services.Cryptography;
+using Microsoft.AspNetCore.Identity;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Repositories;
-using Nexus.Domain.Repositories.User;
 using Nexus.Exceptions;
 using Nexus.Exceptions.ExceptionsBase;
 
@@ -11,23 +10,16 @@ namespace Nexus.Application.UseCases.User.Register
 {
     public class RegisterUserUseCase : IRegisterUserUseCase
     {
-
-        private readonly IUserWriteOnlyRepository _writeOnlyRepository;
-        private readonly IUserReadOnlyRepository _readOnlyRepository;
+        private readonly UserManager<Domain.Entities.User> _userManager;
         private readonly IMapper _mapper;
-        private readonly PasswordEncripter _passwordEncripter;
         private readonly IUnitOfWork _unitOfWork;
         public RegisterUserUseCase(
-            IUserWriteOnlyRepository writeOnlyRepository, 
-            IUserReadOnlyRepository readOnlyRepository, 
+            UserManager<Domain.Entities.User> userManager,
             IMapper mapper, 
-            PasswordEncripter passwordEncripter,
             IUnitOfWork unitOfWork)
         {
-            _writeOnlyRepository = writeOnlyRepository;
-            _readOnlyRepository = readOnlyRepository;
+            _userManager = userManager;
             _mapper = mapper;
-            _passwordEncripter = passwordEncripter;
             _unitOfWork = unitOfWork;
         }
 
@@ -40,16 +32,18 @@ namespace Nexus.Application.UseCases.User.Register
 
             var user = _mapper.Map<Domain.Entities.User>(request);
 
-            //Criptografar a senha
-            
-            user.Password = _passwordEncripter.Encrypt(request.Password);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
-
-            //Salvar no banco de dados
-            await _writeOnlyRepository.Add(user);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+            }
+            else
+            {
+                throw new UserCreationException();
+            }
 
             await _unitOfWork.Commit();
-
 
             return new ResponseRegisteredUserJson
             {
@@ -63,8 +57,8 @@ namespace Nexus.Application.UseCases.User.Register
 
             var result = validator.Validate(request);
 
-            var emailExist = await _readOnlyRepository.ExistActiveUserWithEmail(request.Email);
-            if (emailExist)
+            var emailExist = await _userManager.FindByEmailAsync(request.Email);
+            if (emailExist != null)
             {
                 result.Errors.Add(new FluentValidation.Results.ValidationFailure(string.Empty, ResourceMessagesException.EMAIL_ALREADY_REGISTERED));
             }

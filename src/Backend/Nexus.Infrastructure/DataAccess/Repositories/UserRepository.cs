@@ -1,25 +1,42 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories.User;
+using Nexus.Domain.Repositories;
 
-namespace Nexus.Infrastructure.DataAccess.Repositories
+namespace Nexus.Infrastructure.DataAccess.Repositories;
+
+public class UserRepository : IRepository<User,string>
 {
-    public class UserRepository : IUserWriteOnlyRepository, IUserReadOnlyRepository
+    private readonly NexusDbContext _context;
+    public UserRepository(NexusDbContext context)
     {
-        private readonly NexusDbContext _context;
-        public UserRepository(NexusDbContext context)
-        {
-            _context = context;
-        }
-
-        public async Task Add(User user)
-        {
-            await _context.Users.AddAsync(user);
-        }
-
-        public async Task<bool> ExistActiveUserWithEmail(string email)
-        {
-            return await _context.Users.AnyAsync(user => user.Email == email);
-        }
+        _context = context;
     }
+
+    public Task<IEnumerable<User>> GetAllAsync()
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<User?> GetByIdAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task AddAsync(User user)
+    {
+        await _context.Users.AddAsync(user);
+    }
+    public Task UpdateAsync(User entity)
+    {
+        throw new NotImplementedException();
+    }
+    public Task DeleteAsync(string id)
+    {
+        throw new NotImplementedException();
+    }
+
+    
+
+    
 }

@@ -7,6 +7,8 @@ namespace Nexus.Infrastructure.DataAccess
 {
     public class NexusDbContext : IdentityDbContext<User>
     {
+
+        public DbSet<TravelPackage> TravelPackages { get; set; }
         public NexusDbContext(DbContextOptions<NexusDbContext> options) : base(options)
         {
         }

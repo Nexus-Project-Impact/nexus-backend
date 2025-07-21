@@ -106,11 +106,47 @@ namespace Nexus.Exceptions {
         }
         
         /// <summary>
-        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve ter mais de 6 caracteres..
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha é inválida..
         /// </summary>
         public static string PASSWORD_INVALID {
             get {
                 return ResourceManager.GetString("PASSWORD_INVALID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve conter ao menos um número..
+        /// </summary>
+        public static string PASSWORD_MISSING_DIGIT {
+            get {
+                return ResourceManager.GetString("PASSWORD_MISSING_DIGIT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve conter ao menos um caractere especial..
+        /// </summary>
+        public static string PASSWORD_MISSING_SPECIAL_CHAR {
+            get {
+                return ResourceManager.GetString("PASSWORD_MISSING_SPECIAL_CHAR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve conter ao menos uma letra maiúscula..
+        /// </summary>
+        public static string PASSWORD_MISSING_UPPERCASE {
+            get {
+                return ResourceManager.GetString("PASSWORD_MISSING_UPPERCASE", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a A senha deve ter mais de 6 caracteres..
+        /// </summary>
+        public static string PASSWORD_TOO_SHORT {
+            get {
+                return ResourceManager.GetString("PASSWORD_TOO_SHORT", resourceCulture);
             }
         }
         
@@ -120,6 +156,15 @@ namespace Nexus.Exceptions {
         public static string PHONE_EMPTY {
             get {
                 return ResourceManager.GetString("PHONE_EMPTY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a O telefone é inválido.
+        /// </summary>
+        public static string PHONE_INVALID {
+            get {
+                return ResourceManager.GetString("PHONE_INVALID", resourceCulture);
             }
         }
         
@@ -138,6 +183,15 @@ namespace Nexus.Exceptions {
         public static string UNKNOWN_ERROR {
             get {
                 return ResourceManager.GetString("UNKNOWN_ERROR", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Consulta uma cadeia de caracteres localizada semelhante a Ocorreu um erro ao criar o usuário..
+        /// </summary>
+        public static string USER_CREATION_ERROR {
+            get {
+                return ResourceManager.GetString("USER_CREATION_ERROR", resourceCulture);
             }
         }
     }

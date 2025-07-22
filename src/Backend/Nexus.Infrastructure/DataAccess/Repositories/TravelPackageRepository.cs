@@ -17,20 +17,18 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             _context = context;
         }
 
+        public async Task AddAsync(TravelPackage travelPackage)
+        {
+            await _context.TravelPackages.AddAsync(travelPackage);
+        }
         public async Task<IEnumerable<TravelPackage>> GetAllAsync() => await _context.TravelPackages.ToListAsync();
 
         public async Task<TravelPackage?> GetByIdAsync(int id) => await _context.TravelPackages.FindAsync(id);
 
-        public async Task AddAsync(TravelPackage travelPackage)
-        {
-            await _context.TravelPackages.AddAsync(travelPackage);
-            await _context.SaveChangesAsync();
-        }
 
         public async Task UpdateAsync(TravelPackage travelPackage)
         {
             _context.TravelPackages.Update(travelPackage);
-            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(int id)
@@ -39,7 +37,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             if (travelPackage != null)
             {
                 _context.TravelPackages.Remove(travelPackage);
-                await _context.SaveChangesAsync();
             }
         }
 

@@ -15,10 +15,8 @@ namespace Nexus.Application.Services.AutoMapper
         private void RequestToDomain() 
         {
             CreateMap<RequestRegisterUserJson, User>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+                
         }
 
         private void DomainToResponse() 

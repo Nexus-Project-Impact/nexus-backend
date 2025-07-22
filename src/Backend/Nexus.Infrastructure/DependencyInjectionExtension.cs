@@ -40,6 +40,7 @@ namespace Nexus.Infrastructure
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<NexusDbContext>() 
                 .AddDefaultTokenProviders();
+
         }
     }
 }

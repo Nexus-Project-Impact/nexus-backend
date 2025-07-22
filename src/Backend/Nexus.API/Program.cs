@@ -1,4 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
@@ -19,6 +22,12 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
+
+builder.Services.AddDbContext<NexusDbContext>(
+        options => options.UseSqlServer(
+                builder.Configuration.GetConnectionString("DefaultConnection")
+            )
+    );
 
 using (var scope = app.Services.CreateScope())
 {

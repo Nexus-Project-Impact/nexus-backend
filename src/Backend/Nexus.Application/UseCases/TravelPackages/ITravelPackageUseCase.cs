@@ -11,14 +11,10 @@ namespace Nexus.Application.UseCases.TravelPackage
 {
     public interface ITravelPackageUseCase
     {
-        public Task<ResponseTravelPackage> AddAsync(RequestTravelPackage requestTravelPackage);
-
         public Task<IEnumerable<ResponseTravelPackage>> GetAllAsync();
-
         public Task<ResponseTravelPackage?> GetByIdAsync(int id);
-
-        public Task UpdateAsync(int id, RequestTravelPackage requestTravelPackage);
-
-        public Task DeleteAsync(int id);
+        public Task<ResponseTravelPackage> AddAsync(RequestTravelPackage requestTravelPackage);
+        public Task<ResponseTravelPackage?> UpdateAsync(int id, RequestTravelPackage requestTravelPackage);
+        public Task<bool> DeleteAsync(int id);
     }
 }

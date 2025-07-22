@@ -1,7 +1,7 @@
 ﻿using System;
 using Nexus.Domain.Entities;
 
-public class TravelPackage
+public class TravelPackageEntity
 {
 	public int Id { get; set; }
 	public string Title { get; set; }

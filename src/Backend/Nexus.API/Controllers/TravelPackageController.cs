@@ -26,7 +26,7 @@ namespace Nexus.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create(RequestTravelPackage register)
         {
-            var newPackage = _mapper.Map<TravelPackage>(register);
+            var newPackage = _mapper.Map<TravelPackageEntity>(register);
 
             await _travelPackageUseCase.AddAsync(_mapper.Map<RequestTravelPackage>(register));
 
@@ -44,34 +44,32 @@ namespace Nexus.API.Controllers
         {
             var packages = await _travelPackageUseCase.GetAllAsync();
 
-            return Ok(_mapper.Map<IEnumerable<ResponseTravelPackage>>(packages));
+            return Ok(packages);
         }
 
         [HttpGet("GetById/{id}")]
         public async Task<ActionResult<ResponseTravelPackage>> GetById(int id)
         {
-            var package = await _travelPackageUseCase.GetByIdAsync(id);
+            var packages = await _travelPackageUseCase.GetByIdAsync(id);
 
-            if (package == null)
+            if (packages == null)
             {
                 return NotFound();
             }
-            return Ok(_mapper.Map<ResponseTravelPackage>(package));
+            return Ok(packages);
         }
 
         [HttpPut("Update/{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Update(int id, RequestTravelPackage register)
+        public async Task<IActionResult> UpdateAsync(int id, RequestTravelPackage register)
         {
-            var package = await _travelPackageUseCase.GetByIdAsync(id);
+           
+            var packages =  await _travelPackageUseCase.UpdateAsync(id, register);
 
-            if (package == null)
+            if (packages == null)
             {
                 return NotFound();
             }
-
-            _mapper.Map(register, package);
-            await _travelPackageUseCase.UpdateAsync(id, _mapper.Map<RequestTravelPackage>(register));
 
             return NoContent();
         }
@@ -80,7 +78,12 @@ namespace Nexus.API.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _travelPackageUseCase.DeleteAsync(id);
+            var packages = await _travelPackageUseCase.DeleteAsync(id);
+            if (packages == false)
+            {
+                return NotFound();
+            }
+
             return NoContent();
         }
 

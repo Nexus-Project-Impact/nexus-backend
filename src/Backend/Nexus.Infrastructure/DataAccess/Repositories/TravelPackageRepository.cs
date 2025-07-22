@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Nexus.Infrastructure.DataAccess.Repositories
 {
-    public class TravelPackageRepository : IRepository<TravelPackage, int>
+    public class TravelPackageRepository : IRepository<TravelPackageEntity, int>
     {
         private readonly NexusDbContext _context;
 
@@ -17,16 +17,24 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task AddAsync(TravelPackage travelPackage)
+        public async Task AddAsync(TravelPackageEntity travelPackage)
         {
             await _context.TravelPackages.AddAsync(travelPackage);
         }
-        public async Task<IEnumerable<TravelPackage>> GetAllAsync() => await _context.TravelPackages.ToListAsync();
+        public async Task<IEnumerable<TravelPackageEntity>> GetAllAsync()
+        {
+            return await _context.TravelPackages.ToListAsync();
+        }
+            
 
-        public async Task<TravelPackage?> GetByIdAsync(int id) => await _context.TravelPackages.FindAsync(id);
+        public async Task<TravelPackageEntity?> GetByIdAsync(int id)
+        {
+           return await _context.TravelPackages.FindAsync(id);
+        }
+            
 
 
-        public async Task UpdateAsync(TravelPackage travelPackage)
+        public async Task UpdateAsync(TravelPackageEntity travelPackage)
         {
             _context.TravelPackages.Update(travelPackage);
         }

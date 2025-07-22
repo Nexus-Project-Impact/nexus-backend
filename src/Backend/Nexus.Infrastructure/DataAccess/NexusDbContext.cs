@@ -13,7 +13,7 @@ namespace Nexus.Infrastructure.DataAccess
 
         public DbSet<Review> Reviews { get; set; } 
 
-        public DbSet<TravelPackage> TravelPackages { get; set; }
+        public DbSet<TravelPackageEntity> TravelPackages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

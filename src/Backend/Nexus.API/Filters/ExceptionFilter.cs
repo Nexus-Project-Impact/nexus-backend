@@ -38,6 +38,14 @@ public class ExceptionFilter : IExceptionFilter
             context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             context.Result = new ObjectResult(new ResponseErrorJson(exception.Message));
         }
+
+        else if (context.Exception is UserCreationException)
+        {
+            var exception = context.Exception as UserCreationException;
+
+            context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Result = new ObjectResult(new ResponseErrorJson(exception.Message));
+        }
     }
 
     private void ThrowUnknowException(ExceptionContext context)

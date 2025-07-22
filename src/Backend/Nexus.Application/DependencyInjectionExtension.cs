@@ -17,10 +17,7 @@ namespace Nexus.Application
         }
         private static void AddAutoMapper(IServiceCollection services)
         {
-            services.AddScoped(option => new MapperConfiguration(options =>
-            {
-                options.AddProfile(new AutoMapping());
-            }));
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         }
 
         private static void AddUseCases(IServiceCollection services)

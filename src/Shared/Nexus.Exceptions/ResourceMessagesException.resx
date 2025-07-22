@@ -133,15 +133,33 @@
     <value>O nome não pode estar vazio.</value>
   </data>
   <data name="PASSWORD_INVALID" xml:space="preserve">
+    <value>A senha é inválida.</value>
+  </data>
+  <data name="PASSWORD_MISSING_DIGIT" xml:space="preserve">
+    <value>A senha deve conter ao menos um número.</value>
+  </data>
+  <data name="PASSWORD_MISSING_SPECIAL_CHAR" xml:space="preserve">
+    <value>A senha deve conter ao menos um caractere especial.</value>
+  </data>
+  <data name="PASSWORD_MISSING_UPPERCASE" xml:space="preserve">
+    <value>A senha deve conter ao menos uma letra maiúscula.</value>
+  </data>
+  <data name="PASSWORD_TOO_SHORT" xml:space="preserve">
     <value>A senha deve ter mais de 6 caracteres.</value>
   </data>
   <data name="PHONE_EMPTY" xml:space="preserve">
     <value>O telefone não pode estar vazio.</value>
+  </data>
+  <data name="PHONE_INVALID" xml:space="preserve">
+    <value>O telefone é inválido</value>
   </data>
   <data name="SEED_DATA_ERROR" xml:space="preserve">
     <value>Ocorreu um erro ao executar o SeedData</value>
   </data>
   <data name="UNKNOWN_ERROR" xml:space="preserve">
     <value>Erro desconhecido.</value>
+  </data>
+  <data name="USER_CREATION_ERROR" xml:space="preserve">
+    <value>Ocorreu um erro ao criar o usuário.</value>
   </data>
 </root>

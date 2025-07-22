@@ -25,7 +25,7 @@ namespace Nexus.Infrastructure.DataAccess
 
             var adminUser = await userManager.FindByEmailAsync("admin@nexus.com");
 
-            if (adminUser != null)
+            if (adminUser == null)
             {
                 adminUser = new User
                 {

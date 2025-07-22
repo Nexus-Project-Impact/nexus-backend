@@ -11,6 +11,8 @@ namespace Nexus.Infrastructure.DataAccess
         {
         }
 
+        public DbSet<Review> Reviews { get; set; } 
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +24,7 @@ namespace Nexus.Infrastructure.DataAccess
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+
         }
 
     }

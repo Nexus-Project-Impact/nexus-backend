@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexus.Domain.Entities;
-using Nexus.Domain.Repositories.User;
 using Nexus.Domain.Repositories;
+
 
 namespace Nexus.Infrastructure.DataAccess.Repositories;
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Nexus.Communication.Requests;
+using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
 
 namespace Nexus.Application.Services.AutoMapper
@@ -23,6 +24,7 @@ namespace Nexus.Application.Services.AutoMapper
 
         private void DomainToResponse() 
         {
+            CreateMap<Review, ResponseReviewJson>();
 
         }
     }

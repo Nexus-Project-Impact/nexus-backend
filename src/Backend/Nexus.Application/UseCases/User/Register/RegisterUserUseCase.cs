@@ -36,6 +36,10 @@ namespace Nexus.Application.UseCases.User.Register
             
             user.PasswordHash = _passwordEncripter.Encrypt(request.Password);
 
+
+            //Salvar no banco de dados
+            await _writeOnlyRepository.Add(user);
+
             await _unitOfWork.Commit();
 
             return new ResponseRegisteredUserJson

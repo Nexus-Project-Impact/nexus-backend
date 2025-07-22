@@ -32,7 +32,9 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+            services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
+            services.AddScoped<IUserReadOnlyRepository, UserRepository>();
+            services.AddScoped<IRepository<TravelPackage, int>, TravelPackageRepository>();
         }
 
         private static void AddIndentity(IServiceCollection services)

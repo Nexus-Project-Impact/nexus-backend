@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
-using Nexus.Domain.Repositories.User;
 using Nexus.Infrastructure.DataAccess;
 using Nexus.Infrastructure.DataAccess.Repositories;
 using System;

@@ -8,7 +8,6 @@ namespace Nexus.Communication.Requests
 {
     public class RequestReservation
     {
-        public int Id { get; set; }
         public DateTime ReservationDate { get; set; } = DateTime.UtcNow;
         public string? Status { get; set; }
         public int ReservationNumber { get; set; }

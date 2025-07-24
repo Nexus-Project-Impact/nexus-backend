@@ -21,13 +21,13 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
-
 builder.Services.AddDbContext<NexusDbContext>(
         options => options.UseSqlServer(
                 builder.Configuration.GetConnectionString("DefaultConnection")
             )
     );
+
+var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {

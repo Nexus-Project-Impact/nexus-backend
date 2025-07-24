@@ -31,8 +31,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         {
            return await _context.TravelPackages.FindAsync(id);
         }
-            
-
 
         public async Task UpdateAsync(TravelPackageEntity travelPackage)
         {
@@ -47,7 +45,5 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 _context.TravelPackages.Remove(travelPackage);
             }
         }
-
-
     }
 }

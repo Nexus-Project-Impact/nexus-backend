@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
+using Nexus.Domain.Repositories;
 using Nexus.Domain.Repositories.Review;
 using System;
 using System.Collections.Generic;

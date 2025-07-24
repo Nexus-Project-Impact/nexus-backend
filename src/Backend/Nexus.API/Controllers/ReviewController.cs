@@ -19,5 +19,7 @@ namespace Nexus.API.Controllers
             var reviews = await useCase.Execute();
             return Ok(reviews);
         }
+
+        
     }
 }

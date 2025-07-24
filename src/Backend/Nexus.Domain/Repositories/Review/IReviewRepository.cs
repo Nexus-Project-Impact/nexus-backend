@@ -12,7 +12,7 @@ namespace Nexus.Domain.Repositories.Review
 
         Task<IEnumerable<Entities.Review>> GetAllAsync();
 
-        Task<Entities.Review?> GetByIdAsync(string id);
+        Task<Entities.Review?> GetByIdAsync(int id);
 
         Task AddAsync(Entities.Review entity);
 

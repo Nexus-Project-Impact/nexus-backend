@@ -26,7 +26,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
 
         }
 
-        public async Task<Review?> GetByIdAsync(string id)
+        public async Task<Review?> GetByIdAsync(int id)
         {
             return await _context.Reviews
                 .Include(r => r.User)

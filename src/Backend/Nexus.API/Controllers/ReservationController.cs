@@ -18,7 +18,7 @@ namespace Nexus.API.Controllers
     public class ReservationController : ControllerBase
     {
 
-        private readonly IUpdateReservationUseCase _updateReservationUseCase;
+        // private readonly IUpdateReservationUseCase _updateReservationUseCase;
         private readonly IGetAllReservantionUseCase _getAllReservantionUseCase;
         private readonly IGetByIdReservationUseCase _getByIdReservationUseCase;
         private readonly IDeleteReservationUseCase _deleteReservationUseCase;
@@ -26,17 +26,17 @@ namespace Nexus.API.Controllers
 
         public ReservationController
         (
-            IUpdateReservationUseCase updateReservationUseCase,
+            // IUpdateReservationUseCase updateReservationUseCase,
             IGetAllReservantionUseCase getAllReservantionUseCase, 
             IGetByIdReservationUseCase getByIdReservationUseCase,
             IDeleteReservationUseCase deleteReservationUseCase, 
             IMapper mapper
         )
         {
+            // _updateReservationUseCase = updateReservationUseCase;
             _deleteReservationUseCase = deleteReservationUseCase;
             _getAllReservantionUseCase = getAllReservantionUseCase;
             _getByIdReservationUseCase = getByIdReservationUseCase;
-            _updateReservationUseCase = updateReservationUseCase;
             _mapper = mapper;
         }
 
@@ -49,6 +49,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetAll")]
+        [Authorize(Roles =("Admin"))]
         public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetAll()
         {
             var packages = await _getAllReservantionUseCase.ExecuteGetAllAsync();
@@ -69,6 +70,20 @@ namespace Nexus.API.Controllers
             return Ok(packages);
         }
 
+        [HttpDelete("Delete/{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var packages = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
+            if (packages == false)
+            {
+                return NotFound();
+            }
+
+            return NoContent();
+        }
+
+        /*
         [HttpPut("Update/{id}")]
         [Authorize(Roles = "Admin, User")]
         public async Task<IActionResult> UpdateAsync(int id, RequestRegisterReservationJson register)
@@ -83,20 +98,7 @@ namespace Nexus.API.Controllers
 
             return NoContent();
         }
-
-        [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var packages = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
-            if (packages == false)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
+        */
 
     }
 }

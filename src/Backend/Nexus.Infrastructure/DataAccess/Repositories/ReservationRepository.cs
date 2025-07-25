@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Reservation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Infrastructure.DataAccess.Repositories
 {
-    public class ReservationRepository : IRepository<Reservation,int>
+    public class ReservationRepository : IReservationRepository
     {
         private readonly NexusDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
@@ -41,12 +42,26 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             await _unitOfWork.Commit();
         }
 
+        public async Task DeleteAsync(int id)
+        {
+            var item = await _context.Reservations.FindAsync(id);
+
+            if (item != null)
+            {
+                _context.Reservations.Remove(item);
+
+                await _unitOfWork.Commit();
+            }
+        }
+
+
+        /*
         public async Task UpdateAsync(Reservation reservation)
         {
             _context.Reservations.Update(reservation);
 
             await _unitOfWork.Commit();
-            /*
+            
             var existingTravelers = await _context.Travelers
                         .Where(t => t.ReservationId == reservation.Id)
                         .ToListAsync();
@@ -70,20 +85,9 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                     _context.Travelers.Remove(existing);
                 }
             }
-            */
-        }
-        public async Task DeleteAsync(int id)
-        {
             
-            var item = await _context.Reservations.FindAsync(id);
-
-            if (item != null)
-            {
-                _context.Reservations.Remove(item);
-
-                await _unitOfWork.Commit();
-            }
         }
+        */
     }
 }
 

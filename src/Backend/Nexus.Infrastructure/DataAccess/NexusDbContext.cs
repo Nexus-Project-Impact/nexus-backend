@@ -34,8 +34,8 @@ namespace Nexus.Infrastructure.DataAccess
 
             modelBuilder.Entity<Reservation>()
                 .HasOne(r => r.TravelPackageEntity)
-                .WithOne()
-                .HasForeignKey("TravelPackageId")
+                .WithMany()
+                .HasForeignKey(r => r.TravelPackageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
         }

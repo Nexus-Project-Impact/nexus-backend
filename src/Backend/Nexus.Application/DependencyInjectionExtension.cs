@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Nexus.Application.Services.AutoMapper;
+using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Cryptography;
-using Nexus.Application.UseCases.Review;
 using Nexus.Application.UseCases.User.Register;
 
 namespace Nexus.Application
@@ -15,6 +14,7 @@ namespace Nexus.Application
             AddUseCases(services);
             AddAutoMapper(services);
             AddPaswordEncrypter(services, configuration);
+            AddJwtService(services, configuration); 
         }
         private static void AddAutoMapper(IServiceCollection services)
         {
@@ -24,7 +24,6 @@ namespace Nexus.Application
         private static void AddUseCases(IServiceCollection services)
         {
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
-            services.AddScoped<IReviewUseCase, ReviewUseCase>();
         }
 
         private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)
@@ -32,5 +31,13 @@ namespace Nexus.Application
             var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
             services.AddScoped(option => new PasswordEncripter(additionalKey!));
         }
+        private static void AddJwtService(IServiceCollection services, IConfiguration configuration)
+        {
+            var secretKey = configuration["Jwt:Key"];
+            var issuer = configuration["Jwt:Issuer"];
+            var audience = configuration["Jwt:Audience"];
+            services.AddScoped<JwtService>(provider => new JwtService(secretKey, issuer, audience));
+        }   
+
     }
 }

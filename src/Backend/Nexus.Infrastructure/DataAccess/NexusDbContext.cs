@@ -9,7 +9,7 @@ namespace Nexus.Infrastructure.DataAccess
     {
         public NexusDbContext(DbContextOptions<NexusDbContext> options) : base(options)
         {
-        }   
+        }
 
         public DbSet<Review> Reviews { get; set; } 
 

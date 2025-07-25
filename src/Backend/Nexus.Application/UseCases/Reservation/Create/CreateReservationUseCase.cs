@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
 using System;
@@ -12,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace Nexus.Application.UseCases.Reservation.Create
 {
-    public class CreateReservationUseCase
+    public class CreateReservationUseCase : ICreateReservationUseCase
     {
-        private readonly IRepository<Nexus.Domain.Entities.Reservation, int > _repository;
+        private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
@@ -26,18 +27,18 @@ namespace Nexus.Application.UseCases.Reservation.Create
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseReservation> AddAsync(RequestReservation register)
+        public async Task<ResponseRegisteredReservationJson> Execute(RequestRegisterReservationJson request)
         {
-            var newReservation = _mapper.Map<Nexus.Domain.Entities.Reservation>(register);
+            var reservation = _mapper.Map<Nexus.Domain.Entities.Reservation>(request);
 
-            await _repository.AddAsync(newReservation);
-
-            var packagesJson = _mapper.Map<ResponseReservation>(newReservation);
+            await _repository.AddAsync(reservation);
 
             await _unitOfWork.Commit();
 
-            return packagesJson;
-
+            return new ResponseRegisteredReservationJson
+            {
+                ReservationNumber = reservation.ReservationNumber
+            };
         }
     }
 }

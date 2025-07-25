@@ -18,7 +18,6 @@ namespace Nexus.API.Controllers
     public class ReservationController : ControllerBase
     {
 
-        private readonly ICreateReservationUseCase _createReservationUseCase;
         private readonly IUpdateReservationUseCase _updateReservationUseCase;
         private readonly IGetAllReservantionUseCase _getAllReservantionUseCase;
         private readonly IGetByIdReservationUseCase _getByIdReservationUseCase;
@@ -27,7 +26,6 @@ namespace Nexus.API.Controllers
 
         public ReservationController
         (
-            ICreateReservationUseCase createReservationUseCase, 
             IUpdateReservationUseCase updateReservationUseCase,
             IGetAllReservantionUseCase getAllReservantionUseCase, 
             IGetByIdReservationUseCase getByIdReservationUseCase,
@@ -35,7 +33,6 @@ namespace Nexus.API.Controllers
             IMapper mapper
         )
         {
-            _createReservationUseCase = createReservationUseCase;
             _deleteReservationUseCase = deleteReservationUseCase;
             _getAllReservantionUseCase = getAllReservantionUseCase;
             _getByIdReservationUseCase = getByIdReservationUseCase;
@@ -44,34 +41,26 @@ namespace Nexus.API.Controllers
         }
 
         [HttpPost("Create")]
-        [Authorize(Roles = "Admin, Uset")]
-        public async Task<IActionResult> Create(RequestReservation register)
+        [ProducesResponseType(typeof(ResponseRegisteredReservationJson), StatusCodes.Status201Created)]
+        public async Task<IActionResult> Register([FromServices] ICreateReservationUseCase useCase, [FromBody] RequestRegisterReservationJson request)
         {
-            var newPackage = _mapper.Map<Reservation>(register);
-
-            await _createReservationUseCase.AddAsync(_mapper.Map<RequestReservation>(register));
-
-            return CreatedAtAction(
-                nameof(GetById),
-                new
-                {
-                    id = newPackage.Id
-                },
-                _mapper.Map<ResponseReservation>(newPackage));
+            var result = await useCase.Execute(request);
+            return Created(string.Empty, result);
         }
 
         [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<ResponseReservation>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetAll()
         {
-            var packages = await _getAllReservantionUseCase.GetAllAsync();
+            var packages = await _getAllReservantionUseCase.ExecuteGetAllAsync();
 
             return Ok(packages);
         }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<ResponseReservation>> GetById(int id)
+        [Authorize(Roles =("Admin, User"))]
+        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetById(int id)
         {
-            var packages = await _getByIdReservationUseCase.GetByIdAsync(id);
+            var packages = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
 
             if (packages == null)
             {
@@ -82,10 +71,10 @@ namespace Nexus.API.Controllers
 
         [HttpPut("Update/{id}")]
         [Authorize(Roles = "Admin, User")]
-        public async Task<IActionResult> UpdateAsync(int id, RequestReservation register)
+        public async Task<IActionResult> UpdateAsync(int id, RequestRegisterReservationJson register)
         {
 
-            var packages = await _updateReservationUseCase.UpdateAsync(id, register);
+            var packages = await _updateReservationUseCase.ExecuteUpdateAsync(id, register);
 
             if (packages == null)
             {
@@ -96,10 +85,10 @@ namespace Nexus.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin, User")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var packages = await _deleteReservationUseCase.DeleteAsync(id);
+            var packages = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
             if (packages == false)
             {
                 return NotFound();

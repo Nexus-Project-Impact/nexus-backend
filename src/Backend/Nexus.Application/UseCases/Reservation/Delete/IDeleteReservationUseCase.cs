@@ -8,6 +8,6 @@ namespace Nexus.Application.UseCases.Reservation.Delete
 {
     public interface IDeleteReservationUseCase
     {
-        public Task<bool> DeleteAsync(int id);
+        public Task<bool> ExecuteDeleteAsync(int id);
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Communication.Requests
 {
-    public class RequestReservation
+    public class RequestUpdateReservationJson
     {
         public DateTime ReservationDate { get; set; } = DateTime.UtcNow;
         public string? Status { get; set; }
@@ -14,6 +14,5 @@ namespace Nexus.Communication.Requests
         public string? UserId { get; set; }
         public int TravelPackageId { get; set; }
         public ICollection<RequestTravelers> Traveler { get; set; } = new List<RequestTravelers>();
-
     }
 }

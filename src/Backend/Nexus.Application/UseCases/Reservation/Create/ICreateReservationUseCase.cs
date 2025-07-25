@@ -10,6 +10,6 @@ namespace Nexus.Application.UseCases.Reservation.Create
 {
     public interface ICreateReservationUseCase
     {
-        public Task<ResponseReservation> AddAsync(RequestReservation requestReservation);
+        public Task<ResponseRegisteredReservationJson> Execute(RequestRegisterReservationJson request);
     }
 }

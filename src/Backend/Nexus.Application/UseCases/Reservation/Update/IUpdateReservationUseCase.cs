@@ -10,6 +10,6 @@ namespace Nexus.Application.UseCases.Reservation.Update
 {
     public interface IUpdateReservationUseCase
     {
-        public Task<ResponseReservation?> UpdateAsync(int id, RequestReservation requestReservation);
+        public Task<ResponseRegisteredReservationJson?> ExecuteUpdateAsync(int id, RequestRegisterReservationJson requestReservation);
     }
 }

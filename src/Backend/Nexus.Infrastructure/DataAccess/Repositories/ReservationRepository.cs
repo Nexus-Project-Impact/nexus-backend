@@ -12,16 +12,19 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class ReservationRepository : IRepository<Reservation,int>
     {
         private readonly NexusDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ReservationRepository(NexusDbContext context)
+        public ReservationRepository(NexusDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
-            return await _context.Reservations.Include
+             return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
+ 
         }
 
         public async Task<Reservation?> GetByIdAsync(int id)
@@ -35,13 +38,15 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         {
             await _context.Reservations.AddAsync(reservation);
 
-            await _context.SaveChangesAsync();
+            await _unitOfWork.Commit();
         }
 
         public async Task UpdateAsync(Reservation reservation)
         {
             _context.Reservations.Update(reservation);
 
+            await _unitOfWork.Commit();
+            /*
             var existingTravelers = await _context.Travelers
                         .Where(t => t.ReservationId == reservation.Id)
                         .ToListAsync();
@@ -65,8 +70,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                     _context.Travelers.Remove(existing);
                 }
             }
-
-            await _context.SaveChangesAsync();
+            */
         }
         public async Task DeleteAsync(int id)
         {
@@ -77,7 +81,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.Reservations.Remove(item);
 
-                await _context.SaveChangesAsync(); 
+                await _unitOfWork.Commit();
             }
         }
     }

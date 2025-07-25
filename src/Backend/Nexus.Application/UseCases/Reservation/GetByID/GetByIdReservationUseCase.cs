@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Application.UseCases.Reservation.GetByID
 {
-    public class GetByIdReservationUseCase
+    public class GetByIdReservationUseCase : IGetByIdReservationUseCase
     {
         private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
         private readonly IMapper _mapper;
@@ -23,11 +23,11 @@ namespace Nexus.Application.UseCases.Reservation.GetByID
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseReservation?> GetByIdAsync(int id)
+        public async Task<ResponseRegisteredReservationJson?> ExecuteGetByIdAsync(int id)
         {
             var packages = await _repository.GetByIdAsync(id);
 
-            var packagesJson = _mapper.Map<ResponseReservation>(packages);
+            var packagesJson = _mapper.Map<ResponseRegisteredReservationJson>(packages);
 
             await _unitOfWork.Commit();
 

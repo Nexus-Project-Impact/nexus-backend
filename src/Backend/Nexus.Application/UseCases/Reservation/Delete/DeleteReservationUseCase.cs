@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Application.UseCases.Reservation.Delete
 {
-    public class DeleteReservationUseCase
+    public class DeleteReservationUseCase : IDeleteReservationUseCase
     {
         private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace Nexus.Application.UseCases.Reservation.Delete
             _mapper = mapper;
             _unitOfWork = unitOfWork;
         }
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> ExecuteDeleteAsync(int id)
         {
             var reservation = await _repository.GetByIdAsync(id);
             if (reservation == null)

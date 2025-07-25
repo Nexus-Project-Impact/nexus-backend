@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Application.UseCases.Reservation.Update
 {
-    public class UpdateReservationUseCase 
+    public class UpdateReservationUseCase : IUpdateReservationUseCase
     {
         private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace Nexus.Application.UseCases.Reservation.Update
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseReservation?> UpdateAsync(int id, RequestReservation register)
+        public async Task<ResponseRegisteredReservationJson?> ExecuteUpdateAsync(int id, RequestRegisterReservationJson register)
         {
             var package = await _repository.GetByIdAsync(id);
 
@@ -36,7 +36,7 @@ namespace Nexus.Application.UseCases.Reservation.Update
 
             await _repository.UpdateAsync(package);
 
-            var packagesJson = _mapper.Map<ResponseReservation>(package);
+            var packagesJson = _mapper.Map<ResponseRegisteredReservationJson>(package);
 
             await _unitOfWork.Commit();
 

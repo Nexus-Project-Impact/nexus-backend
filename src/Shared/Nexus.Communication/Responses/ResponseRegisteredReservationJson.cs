@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Communication.Responses
 {
-    public class ResponseReservation
+    public class ResponseRegisteredReservationJson
     {
         public int Id { get; set; }
         public DateTime ReservationDate { get; set; } = DateTime.UtcNow;

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Application.UseCases.Reservation.GetAll
 {
-    public class GetAllReservationUseCase
+    public class GetAllReservationUseCase : IGetAllReservantionUseCase
     {
 
         private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
@@ -24,7 +24,7 @@ namespace Nexus.Application.UseCases.Reservation.GetAll
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<ResponseTravelPackage>> GetAllAsync()
+        public async Task<IEnumerable<ResponseTravelPackage>> ExecuteGetAllAsync()
         {
             var packages = await _repository.GetAllAsync();
 

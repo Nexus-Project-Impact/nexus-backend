@@ -25,13 +25,13 @@ namespace Nexus.Application.UseCases.Reservation.GetByID
 
         public async Task<ResponseRegisteredReservationJson?> ExecuteGetByIdAsync(int id)
         {
-            var packages = await _repository.GetByIdAsync(id);
+            var reservation = await _repository.GetByIdAsync(id);
 
-            var packagesJson = _mapper.Map<ResponseRegisteredReservationJson>(packages);
+            var reservationJson = _mapper.Map<ResponseRegisteredReservationJson>(reservation);
 
             await _unitOfWork.Commit();
 
-            return packagesJson;
+            return reservationJson;
         }
     }
 }

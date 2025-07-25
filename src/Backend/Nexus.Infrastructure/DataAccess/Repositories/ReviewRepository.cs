@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace Nexus.Infrastructure.DataAccess.Repositories
 {
-    public class ReviewRepository : IReviewRepository
+    public class ReviewRepository : IRepository<Review, int>
     {
         private readonly NexusDbContext _context;
         public ReviewRepository(NexusDbContext context)
@@ -39,8 +39,12 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             
         }
 
+        public Task UpdateAsync(Review entity)
+        {
+            throw new NotImplementedException();
+        }
 
-        public async Task DeleteAsync(string id)
+        public async Task DeleteAsync(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
 
@@ -51,5 +55,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             
         }
 
+        
     }
 }

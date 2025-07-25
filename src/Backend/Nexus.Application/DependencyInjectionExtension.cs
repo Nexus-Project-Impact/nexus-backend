@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Application.Services.AutoMapper;
 using Nexus.Application.Services.Cryptography;
+using Nexus.Application.UseCases.Review;
 using Nexus.Application.UseCases.User.Register;
 
 namespace Nexus.Application
@@ -23,6 +24,7 @@ namespace Nexus.Application
         private static void AddUseCases(IServiceCollection services)
         {
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+            services.AddScoped<IReviewUseCase, ReviewUseCase>();
         }
 
         private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)

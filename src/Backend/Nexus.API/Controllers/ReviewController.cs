@@ -12,9 +12,8 @@ namespace Nexus.API.Controllers
     {
 
         [HttpGet("GetAllReviews")]
-        [ProducesResponseType(typeof(IEnumerable<ResponseReviewJson>), StatusCodes.Status200OK)]
 
-        public async Task<IActionResult> GetAllReviews([FromServices] IReviewUseCase useCase)
+        public async Task<ActionResult<IEnumerable<ResponseReviewJson>>> GetAllReviews([FromServices] IReviewUseCase useCase)
         {
             var reviews = await useCase.Execute();
             return Ok(reviews);

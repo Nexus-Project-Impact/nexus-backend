@@ -25,6 +25,7 @@ namespace Nexus.Infrastructure.DataAccess
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            modelBuilder.Entity<TravelPackageEntity>().Property(tp => tp.Value).HasPrecision(18, 2);
 
             modelBuilder.Entity<Reservation>()
                 .HasMany(r => r.Traveler)

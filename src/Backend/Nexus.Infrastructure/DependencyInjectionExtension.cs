@@ -31,8 +31,6 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IUserWriteOnlyRepository, UserRepository>();
-            services.AddScoped<IUserReadOnlyRepository, UserRepository>();
             services.AddScoped<IRepository<TravelPackageEntity, int>, TravelPackageRepository>();
         }
 
@@ -41,6 +39,7 @@ namespace Nexus.Infrastructure
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<NexusDbContext>() 
                 .AddDefaultTokenProviders();
+         
 
         }
     }

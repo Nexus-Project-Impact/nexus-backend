@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nexus.Communication.Responses
+namespace Nexus.Communication.Requests
 {
-    public class ResponseTravelPackage
+    public class RequestRegisterPackageJson
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -15,6 +15,5 @@ namespace Nexus.Communication.Responses
         public DateTime DepartureDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public decimal Value { get; set; }
-
     }
 }

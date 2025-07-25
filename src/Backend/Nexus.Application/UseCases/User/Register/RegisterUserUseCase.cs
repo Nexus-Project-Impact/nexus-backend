@@ -31,14 +31,16 @@ namespace Nexus.Application.UseCases.User.Register
             //Mapear a request em uma entidade
 
             var user = _mapper.Map<Domain.Entities.User>(request);
+            var result = await _userManager.CreateAsync(user, request.Password);
 
-            //Criptografar a senha
-            
-            user.PasswordHash = _passwordEncripter.Encrypt(request.Password);
-
-
-            //Salvar no banco de dados
-            await _writeOnlyRepository.Add(user);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "User");
+            }
+            else
+            {
+                throw new UserCreationException();
+            }
 
             await _unitOfWork.Commit();
 

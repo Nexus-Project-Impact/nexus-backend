@@ -11,15 +11,21 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class TravelPackageRepository : IRepository<TravelPackageEntity, int>
     {
         private readonly NexusDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TravelPackageRepository(NexusDbContext context)
+        public TravelPackageRepository(NexusDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task AddAsync(TravelPackageEntity travelPackage)
         {
             await _context.TravelPackages.AddAsync(travelPackage);
+
+            await _unitOfWork.Commit();
+
+
         }
         public async Task<IEnumerable<TravelPackageEntity>> GetAllAsync()
         {
@@ -46,6 +52,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.TravelPackages.Remove(travelPackage);
             }
+           
         }
 
 

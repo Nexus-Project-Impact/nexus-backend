@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Nexus.Application.UseCases.TravelPackage;
+using Nexus.Application.UseCases.TravelPackages.Create;
+using Nexus.Application.UseCases.TravelPackages.Delete;
+using Nexus.Application.UseCases.TravelPackages.GetAll;
+using Nexus.Application.UseCases.TravelPackages.GetId;
+using Nexus.Application.UseCases.TravelPackages.Update;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 
@@ -11,81 +15,112 @@ namespace Nexus.API.Controllers
     [ApiController]
     public class TravelPackageController : ControllerBase
     {
-        private readonly ITravelPackageUseCase _travelPackageUseCase;
         private readonly IMapper _mapper;
+        private readonly IGetAllPackageUseCase _allPackageUseCase;
+        private readonly IGetByIdPackageUseCase _getByIdPackageUseCase;
+        private readonly IUpdatePackageUseCase _updatePackageUseCase;
+        private readonly IDeletePackageUseCase _deletePackageUseCase;
+     
 
         public TravelPackageController(
-            ITravelPackageUseCase travelPackageUseCase,
-            IMapper mapper)
+            IMapper mapper, IGetAllPackageUseCase getAllPackageUseCase, IGetByIdPackageUseCase getByIdPackageUseCase, IUpdatePackageUseCase updatePackageUseCase, IDeletePackageUseCase deletePackageJsonUseCase)
         {
-            _travelPackageUseCase = travelPackageUseCase;
             _mapper = mapper;
+            _allPackageUseCase = getAllPackageUseCase;
+            _getByIdPackageUseCase = getByIdPackageUseCase;
+            _updatePackageUseCase = updatePackageUseCase;
+            _deletePackageUseCase = deletePackageJsonUseCase;
         }
 
-        [HttpPost("Create")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Create(RequestTravelPackage register)
+
+        [HttpGet("GetAllPackages")]
+        public async Task<ActionResult<IEnumerable<ResponsePackageJson>>> GetAll()
         {
-            var newPackage = _mapper.Map<TravelPackageEntity>(register);
+            try
+            {
+                var packages = await _allPackageUseCase.ExecuteGetAll();
 
-            await _travelPackageUseCase.AddAsync(_mapper.Map<RequestTravelPackage>(register));
+                if (packages == null || !packages.Any())
+                    return NotFound();
 
-            return CreatedAtAction(
-                nameof(GetById),
-                new
-                {
-                    id = newPackage.Id
-                },
-                _mapper.Map<ResponseTravelPackage>(newPackage));
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
         }
 
-        [HttpGet("GetAll")]
-        public async Task<ActionResult<IEnumerable<ResponseTravelPackage>>> GetAll()
-        {
-            var packages = await _travelPackageUseCase.GetAllAsync();
-
-            return Ok(packages);
-        }
 
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<ResponseTravelPackage>> GetById(int id)
+        public async Task<ActionResult<ResponsePackageJson>> ExecuteGetById(int id)
         {
-            var packages = await _travelPackageUseCase.GetByIdAsync(id);
-
-            if (packages == null)
+            if (id == 0) return NotFound(new { message = $"O valor do campo Id não pode ser nulo." });
+            try
             {
-                return NotFound();
+                var packages = await _getByIdPackageUseCase.ExecuteGetById(id);
+
+                if (packages == null)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado." });
+
+                return Ok(packages);
             }
-            return Ok(packages);
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
         }
 
-        [HttpPut("Update/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateAsync(int id, RequestTravelPackage register)
+
+        [HttpPost("Create")]
+        [ProducesResponseType(typeof(ResponseRegisteredPackageJson), StatusCodes.Status201Created)]
+        public async Task<IActionResult> Register([FromServices] IRegisterPackageUseCase useCase, [FromBody] RequestRegisterPackageJson request)
         {
-           
-            var packages =  await _travelPackageUseCase.UpdateAsync(id, register);
+            var result = await useCase.Execute(request);
+            return Created(string.Empty, result);
+        }
 
-            if (packages == null)
+
+        [HttpPut("Update/{id}")]
+        [ProducesResponseType(typeof(ResponseRegisteredPackageJson), StatusCodes.Status201Created)]
+        public async Task<IActionResult> Update([FromServices] IRegisterPackageUseCase useCase, int id, [FromBody] RequestUpdatePackageJson request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
             {
-                return NotFound();
-            }
+                var updatedPackage = await _updatePackageUseCase.ExecuteUpdate(id,request);
 
-            return NoContent();
+                if (updatedPackage == null)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado para atualização." });
+
+                return Ok(updatedPackage);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> DeletePackage(int id)
         {
-            var packages = await _travelPackageUseCase.DeleteAsync(id);
-            if (packages == false)
+            try
             {
-                return NotFound();
-            }
+                var deleted = await _deletePackageUseCase.ExecuteDelete(id);
 
-            return NoContent();
+                if (!deleted)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado para exclusão." });
+
+                return NoContent();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
         }
+
 
     }
 }

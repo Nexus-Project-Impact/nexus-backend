@@ -3,6 +3,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Application.Services.AutoMapper;
 using Nexus.Application.Services.Cryptography;
+using Nexus.Application.UseCases.TravelPackages;
+using Nexus.Application.UseCases.TravelPackages.Create;
+using Nexus.Application.UseCases.TravelPackages.Delete;
+using Nexus.Application.UseCases.TravelPackages.GetAll;
+using Nexus.Application.UseCases.TravelPackages.GetId;
+using Nexus.Application.UseCases.TravelPackages.Update;
 using Nexus.Application.UseCases.User.Register;
 
 namespace Nexus.Application
@@ -23,6 +29,11 @@ namespace Nexus.Application
         private static void AddUseCases(IServiceCollection services)
         {
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+            services.AddScoped<IDeletePackageUseCase, DeletePackageUseCase>();
+            services.AddScoped<IGetAllPackageUseCase, GetAllPackageUseCase>();
+            services.AddScoped<IGetByIdPackageUseCase, GetByIdPackageUseCase>();
+            services.AddScoped<IRegisterPackageUseCase, RegisterPackageUseCase>();
+            services.AddScoped<IUpdatePackageUseCase, UpdatePackageUseCase>();
         }
 
         private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)

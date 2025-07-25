@@ -5,8 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
-using Nexus.Infrastructure.DataAccess.Repositories;
-using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Nexus.Infrastructure
 {
@@ -17,6 +16,27 @@ namespace Nexus.Infrastructure
             AddDbContext(services, configuration);
             AddRepositories(services);
             AddIndentity(services);
+
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            } 
+           ).AddJwtBearer (options =>
+            {
+                var key = configuration["Jwt:Key"];
+                options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
+                    IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)),
+                    ClockSkew = TimeSpan.Zero 
+                };
+            });
         }
 
         private static void AddDbContext(IServiceCollection services, IConfiguration configuration)

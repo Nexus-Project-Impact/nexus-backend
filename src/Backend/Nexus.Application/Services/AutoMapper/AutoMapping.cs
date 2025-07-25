@@ -20,11 +20,15 @@ namespace Nexus.Application.Services.AutoMapper
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+            CreateMap<RequestCreatePackage, TravelPackage>();
+            CreateMap<RequestUpdatePackage, TravelPackage>();
         }
 
         private void DomainToResponse() 
         {
             CreateMap<Review, ResponseReviewJson>();
+            CreateMap<TravelPackage, ResponseCreatedPackage>();
+            CreateMap<TravelPackage, ResponsePackage>();
 
         }
     }

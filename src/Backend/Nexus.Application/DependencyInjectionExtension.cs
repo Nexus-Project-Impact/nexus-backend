@@ -5,6 +5,11 @@ using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Cryptography;
 using Nexus.Application.Services.Email;
 using Nexus.Application.UseCases.Midia;
+using Nexus.Application.UseCases.Packages.Create;
+using Nexus.Application.UseCases.Packages.Delete;
+using Nexus.Application.UseCases.Packages.GetAll;
+using Nexus.Application.UseCases.Packages.GetById;
+using Nexus.Application.UseCases.Packages.Update;
 using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
 
@@ -30,6 +35,13 @@ namespace Nexus.Application
             services.AddScoped<IAuthUserUseCase, AuthUserUseCase>();
             services.AddScoped<IMidiaUseCase, MidiaUseCase>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<ICreatePackageUseCase, CreatePackageUseCase>();
+            services.AddScoped<IGetAllPackageUseCase, GetAllPackageUseCase>();
+            services.AddScoped<IGetByIdPackageUseCase, GetByIdPackageUseCase>();
+            services.AddScoped<IUpdatePackageUseCase, UpdatePackageUseCase>();
+            services.AddScoped<IDeletePackageUseCase, DeletePackageUseCase>();
+
+
         }
 
         private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)

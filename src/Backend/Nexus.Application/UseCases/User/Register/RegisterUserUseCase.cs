@@ -47,7 +47,7 @@ namespace Nexus.Application.UseCases.User.Register
 
             return new ResponseRegisteredUserJson
             {
-                Name = user.Name
+                Message = "Usuário cadastrado com sucesso!"
             };
         }
 

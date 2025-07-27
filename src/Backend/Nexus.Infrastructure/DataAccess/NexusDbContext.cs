@@ -10,8 +10,10 @@ namespace Nexus.Infrastructure.DataAccess
         public NexusDbContext(DbContextOptions<NexusDbContext> options) : base(options)
         {
         }
+        
         public DbSet<Travelers> Travelers { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<Midia> Midias { get; set; }
         public DbSet<Review> Reviews { get; set; } 
         public DbSet<TravelPackageEntity> TravelPackages { get; set; }
 

@@ -1,4 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
@@ -12,7 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// ConfiguraÁ„o do Swagger com suporte a JWT Bearer
+// Configura√ß√£o do Swagger com suporte a JWT Bearer
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "NexusAPI", Version = "v1" });
@@ -43,8 +46,7 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Remover bloco comentado de AddAuthentication/AddJwtBearer/AddAuthorization pois j· est· na infraestrutura
-
+// Remover bloco comentado de AddAuthentication/AddJwtBearer/AddAuthorization pois j√° est√° na infraestrutura
 
 var app = builder.Build();
 

@@ -12,6 +12,7 @@ namespace Nexus.Infrastructure.DataAccess
         }
 
         public DbSet<Review> Reviews { get; set; } 
+        public DbSet<Midia> Midias { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -25,6 +26,7 @@ namespace Nexus.Infrastructure.DataAccess
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
             modelBuilder.Entity<Review>().ToTable("Reviews");
+            modelBuilder.Entity<Midia>().ToTable("Midias");
 
 
         }

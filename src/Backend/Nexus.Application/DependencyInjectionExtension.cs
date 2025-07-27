@@ -3,6 +3,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Cryptography;
+using Nexus.Application.Services.Email;
+using Nexus.Application.UseCases.Midia;
+using Nexus.Application.UseCases.Review.Delete;
+using Nexus.Application.UseCases.Review.GetAll;
+using Nexus.Application.UseCases.Review.GetId;
+using Nexus.Application.UseCases.Review.Moderate;
+using Nexus.Application.UseCases.Review.Register;
+using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
 
 namespace Nexus.Application
@@ -24,6 +32,15 @@ namespace Nexus.Application
         private static void AddUseCases(IServiceCollection services)
         {
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+            services.AddScoped<IAuthUserUseCase, AuthUserUseCase>();
+            services.AddScoped<IMidiaUseCase, MidiaUseCase>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IDeleteReviewUseCase, DeleteReviewUseCase>();
+            services.AddScoped<IDeleteReviewUseCase, DeleteReviewUseCase>();
+            services.AddScoped<IModerateReviewUseCase, ModerateReviewUseCase>();
+            services.AddScoped<IRegisterReviewUseCase, RegisterReviewUseCase>();
+            services.AddScoped<IGetByIdReviewUseCase, GetByIdReviewUseCase>();
+            services.AddScoped<IGetAllReviewUseCase, GetAllReviewUseCase>();
         }
 
         private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)

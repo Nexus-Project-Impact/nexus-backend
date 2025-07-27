@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Nexus.Infrastructure.DataAccess.Repositories;
 
 namespace Nexus.Infrastructure
 {
@@ -51,7 +52,7 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+           // services.AddScoped<IReviewRepository, ReviewRepository>();
         }
 
         private static void AddIndentity(IServiceCollection services)

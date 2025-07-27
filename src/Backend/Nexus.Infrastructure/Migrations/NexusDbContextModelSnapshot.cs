@@ -171,7 +171,7 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Midias");
+                    b.ToTable("Midias", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
@@ -203,7 +203,7 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.User", b =>

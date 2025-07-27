@@ -12,7 +12,7 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250724173615_MigrationInicial")]
+    [Migration("20250725221722_MigrationInicial")]
     partial class MigrationInicial
     {
         /// <inheritdoc />
@@ -158,6 +158,25 @@ namespace Nexus.Infrastructure.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Nexus.Domain.Entities.Midia", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Midias", (string)null);
+                });
+
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
                 {
                     b.Property<int>("Id")
@@ -187,7 +206,7 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.User", b =>

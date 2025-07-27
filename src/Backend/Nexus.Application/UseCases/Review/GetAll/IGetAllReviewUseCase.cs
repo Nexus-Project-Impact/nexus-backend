@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Nexus.Application.UseCases.Review
+namespace Nexus.Application.UseCases.Review.GetAll
 {
-    public interface IReviewUseCase
+    public interface IGetAllReviewUseCase
     {
-        public Task<IEnumerable<ResponseReviewJson>> Execute();
-
+        public Task<IEnumerable<ResponseReviewJson>> ExecuteGetAll();
     }
 }

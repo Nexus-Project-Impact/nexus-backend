@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.3.0" />
     <PackageReference Include="MailKit" Version="4.13.0" />
     <PackageReference Include="Microsoft.AspNet.Identity.Owin.fr" Version="2.2.4" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
@@ -23,6 +24,7 @@
     <ProjectReference Include="..\..\Shared\Nexus.Communication\Nexus.Communication.csproj" />
     <ProjectReference Include="..\..\Shared\Nexus.Exceptions\Nexus.Exceptions.csproj" />
     <ProjectReference Include="..\Nexus.Domain\Nexus.Domain.csproj" />
+    <ProjectReference Include="..\Nexus.Infrastructure\Nexus.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

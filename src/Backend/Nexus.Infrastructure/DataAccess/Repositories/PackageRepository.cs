@@ -3,36 +3,45 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Nexus.Domain.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Nexus.Domain.Entities;
+using Nexus.Domain.Repositories;
 
 namespace Nexus.Infrastructure.DataAccess.Repositories
 {
-    public class TravelPackageRepository : IRepository<TravelPackageEntity, int>
+    public class PackageRepository : IRepository<TravelPackage, int>
     {
         private readonly NexusDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public TravelPackageRepository(NexusDbContext context)
+        public PackageRepository(NexusDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task AddAsync(TravelPackageEntity travelPackage)
+        public async Task AddAsync(TravelPackage travelPackage)
         {
             await _context.TravelPackages.AddAsync(travelPackage);
+
+            await _unitOfWork.Commit();
+
+
         }
-        public async Task<IEnumerable<TravelPackageEntity>> GetAllAsync()
+        public async Task<IEnumerable<TravelPackage>> GetAllAsync()
         {
             return await _context.TravelPackages.ToListAsync();
         }
-            
 
-        public async Task<TravelPackageEntity?> GetByIdAsync(int id)
+
+        public async Task<TravelPackage?> GetByIdAsync(int id)
         {
-           return await _context.TravelPackages.FindAsync(id);
+            return await _context.TravelPackages.FindAsync(id);
         }
 
-        public async Task UpdateAsync(TravelPackageEntity travelPackage)
+
+
+        public async Task UpdateAsync(TravelPackage travelPackage)
         {
             _context.TravelPackages.Update(travelPackage);
         }
@@ -44,6 +53,9 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.TravelPackages.Remove(travelPackage);
             }
+
         }
+
+
     }
 }

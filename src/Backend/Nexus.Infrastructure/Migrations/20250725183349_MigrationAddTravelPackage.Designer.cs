@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Nexus.Infrastructure.DataAccess;
 
@@ -11,9 +12,11 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    partial class NexusDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250725183349_MigrationAddTravelPackage")]
+    partial class MigrationAddTravelPackage
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -171,16 +174,13 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Midias", (string)null);
+                    b.ToTable("Midias");
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -203,7 +203,7 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.TravelPackage", b =>

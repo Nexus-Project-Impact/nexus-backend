@@ -171,13 +171,16 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Midias");
+                    b.ToTable("Midias", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -200,7 +203,7 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.TravelPackage", b =>

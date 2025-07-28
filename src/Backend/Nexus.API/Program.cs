@@ -9,6 +9,8 @@ using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using Nexus.Domain.Repositories;
+using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,8 +47,8 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
 
-// Remover bloco comentado de AddAuthentication/AddJwtBearer/AddAuthorization pois já está na infraestrutura
 
 var app = builder.Build();
 

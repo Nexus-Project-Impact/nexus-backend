@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using Nexus.Infrastructure.DataAccess.Repositories;
 
 namespace Nexus.Infrastructure
@@ -53,8 +56,10 @@ namespace Nexus.Infrastructure
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
+
             services.AddScoped<IRepository<TravelPackage, int>, PackageRepository>();
             
+
 
         }
 

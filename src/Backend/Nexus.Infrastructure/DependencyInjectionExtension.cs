@@ -6,6 +6,7 @@ using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Nexus.Infrastructure.DataAccess.Repositories;
 
 namespace Nexus.Infrastructure
 {
@@ -51,7 +52,10 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-           
+
+            services.AddScoped<IRepository<TravelPackage, int>, PackageRepository>();
+            
+
         }
 
         private static void AddIndentity(IServiceCollection services)

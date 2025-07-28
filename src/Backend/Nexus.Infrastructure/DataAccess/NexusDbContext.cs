@@ -15,7 +15,10 @@ namespace Nexus.Infrastructure.DataAccess
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Midia> Midias { get; set; }
         public DbSet<Review> Reviews { get; set; } 
-        public DbSet<TravelPackageEntity> TravelPackages { get; set; }
+
+        public DbSet<TravelPackage> TravelPackages { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

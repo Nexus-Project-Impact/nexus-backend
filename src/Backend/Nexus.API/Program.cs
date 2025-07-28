@@ -1,4 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
@@ -14,7 +17,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Configuração do Swagger com suporte a JWT Bearer
+// ConfiguraÃ§Ã£o do Swagger com suporte a JWT Bearer
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "NexusAPI", Version = "v1" });
@@ -44,7 +47,6 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-
 builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
 
 

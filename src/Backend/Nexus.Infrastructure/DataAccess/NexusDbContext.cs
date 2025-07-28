@@ -11,9 +11,11 @@ namespace Nexus.Infrastructure.DataAccess
         {
         }
 
-        public DbSet<Review> Reviews { get; set; } 
+        public DbSet<Travelers> Travelers { get; set; }
+        public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Midia> Midias { get; set; }
-
+        public DbSet<Review> Reviews { get; set; } 
+        public DbSet<TravelPackageEntity> TravelPackages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -28,6 +30,18 @@ namespace Nexus.Infrastructure.DataAccess
             modelBuilder.Entity<Review>().ToTable("Reviews");
             modelBuilder.Entity<Midia>().ToTable("Midias");
 
+
+            modelBuilder.Entity<Reservation>()
+                .HasMany(r => r.Traveler)
+                .WithOne(t => t.Reservation )
+                .HasForeignKey("ReservationId")
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Reservation>()
+                .HasOne(r => r.TravelPackageEntity)
+                .WithMany()
+                .HasForeignKey(r => r.TravelPackageId)
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
 

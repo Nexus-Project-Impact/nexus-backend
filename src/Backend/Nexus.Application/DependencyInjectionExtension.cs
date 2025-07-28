@@ -20,6 +20,10 @@ using Nexus.Application.UseCases.Packages.Update;
 
 using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
+using Nexus.Application.UseCases.Reservation.Create;
+using Nexus.Application.UseCases.Reservation.GetAll;
+using Nexus.Application.UseCases.Reservation.GetByID;
+using Nexus.Application.UseCases.Reservation.Delete;
 
 namespace Nexus.Application
 {
@@ -56,6 +60,11 @@ namespace Nexus.Application
             services.AddScoped<IGetByIdPackageUseCase, GetByIdPackageUseCase>();
             services.AddScoped<IUpdatePackageUseCase, UpdatePackageUseCase>();
             services.AddScoped<IDeletePackageUseCase, DeletePackageUseCase>();
+
+            services.AddScoped<ICreateReservationUseCase, CreateReservationUseCase>();
+            services.AddScoped<IGetAllReservantionUseCase, GetAllReservationUseCase>();
+            services.AddScoped<IGetByIdReservationUseCase, GetByIdReservationUseCase>();
+            services.AddScoped<IDeleteReservationUseCase, DeleteReservationUseCase>();
 
 
 

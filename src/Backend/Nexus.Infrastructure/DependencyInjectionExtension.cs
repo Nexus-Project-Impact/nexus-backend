@@ -10,6 +10,8 @@ using Nexus.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 using Nexus.Infrastructure.DataAccess.Repositories;
+using Nexus.Domain.Repositories.Reservation;
+using Nexus.Domain.Repositories.Travelers;
 
 namespace Nexus.Infrastructure
 {
@@ -58,7 +60,12 @@ namespace Nexus.Infrastructure
 
 
             services.AddScoped<IRepository<TravelPackage, int>, PackageRepository>();
-            
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IRepository<Review, int>, ReviewRepository>();
+            services.AddScoped<ITravelersRepository, TravelersRepository>();
+           
+
+
 
 
         }

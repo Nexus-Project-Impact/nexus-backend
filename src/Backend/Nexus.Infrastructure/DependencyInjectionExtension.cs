@@ -52,8 +52,10 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             services.AddScoped<IRepository<TravelPackage, int>, PackageRepository>();
             
+
         }
 
         private static void AddIndentity(IServiceCollection services)
@@ -61,6 +63,7 @@ namespace Nexus.Infrastructure
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<NexusDbContext>() 
                 .AddDefaultTokenProviders();
+
         }
     }
 }

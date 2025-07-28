@@ -5,7 +5,6 @@ using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
 using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,8 +41,6 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-
-// Remover bloco comentado de AddAuthentication/AddJwtBearer/AddAuthorization pois já está na infraestrutura
 
 
 var app = builder.Build();
@@ -87,3 +84,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+    

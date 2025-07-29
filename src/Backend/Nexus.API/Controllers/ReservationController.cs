@@ -52,30 +52,30 @@ namespace Nexus.API.Controllers
         [Authorize(Roles =("Admin"))]
         public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetAll()
         {
-            var packages = await _getAllReservantionUseCase.ExecuteGetAllAsync();
+            var reservations = await _getAllReservantionUseCase.ExecuteGetAllAsync();
 
-            return Ok(packages);
+            return Ok(reservations);
         }
 
         [HttpGet("GetById/{id}")]
         [Authorize(Roles =("Admin, User"))]
         public async Task<ActionResult<ResponseRegisteredReservationJson>> GetById(int id)
         {
-            var packages = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
+            var reservations = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
 
-            if (packages == null)
+            if (reservations == null)
             {
                 return NotFound();
             }
-            return Ok(packages);
+            return Ok(reservations);
         }
 
         [HttpDelete("Delete/{id}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var packages = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
-            if (packages == false)
+            var reservations = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
+            if (reservations == false)
             {
                 return NotFound();
             }

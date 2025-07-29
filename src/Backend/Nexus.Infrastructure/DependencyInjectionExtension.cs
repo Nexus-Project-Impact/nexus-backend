@@ -6,6 +6,8 @@ using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Nexus.Infrastructure.Configuration;
+using Nexus.Infrastructure.Services;
 
 namespace Nexus.Infrastructure
 {
@@ -16,6 +18,7 @@ namespace Nexus.Infrastructure
             AddDbContext(services, configuration);
             AddRepositories(services);
             AddIndentity(services);
+            AddStripe(services, configuration);
 
             services.AddAuthentication(opt =>
             {
@@ -51,7 +54,7 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            
+            services.AddScoped<IStripeService, Nexus.Infrastructure.Services.Stripe>();
         }
 
         private static void AddIndentity(IServiceCollection services)
@@ -59,6 +62,13 @@ namespace Nexus.Infrastructure
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<NexusDbContext>() 
                 .AddDefaultTokenProviders();
+        }
+
+        private static void AddStripe(IServiceCollection services, IConfiguration configuration)
+        {
+            var stripeSection = configuration.GetSection("Stripe");
+            services.Configure<StripeSettings>(stripeSection);
+            services.AddSingleton<IStripeSettings>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<StripeSettings>>().Value);
         }
     }
 }

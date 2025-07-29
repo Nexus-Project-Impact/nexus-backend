@@ -21,28 +21,28 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Reservation>> ExecuteGetAllAsync() 
+        public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
  
         }
 
-        public async Task<Reservation?> ExecuteGetByIdAsync(int id)
+        public async Task<Reservation> GetByIdAsync(int id)
         {
             return await _context.Reservations.Include(t => t.Traveler)
-            .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id) ?? throw new InvalidOperationException("Reservation not found.");
         }
 
 
-        public async Task ExecuteAddAsync(Reservation reservation)
+        public async Task AddAsync(Reservation reservation)
         {
             await _context.Reservations.AddAsync(reservation);
 
             await _unitOfWork.Commit();
         }
 
-        public async Task ExecuteDeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var item = await _context.Reservations.FindAsync(id);
 
@@ -54,6 +54,21 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             }
         }
 
+        public async Task<IEnumerable<Reservation>> GetReservationByTravelerNameAsync(string travelerName)
+        {
+            return await _context.Reservations
+                .Include(r => r.Traveler)
+                .Where(r => r.Traveler.Any(t => t.Name != null && t.Name.Contains(travelerName)))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationByCpfAsync(string travelerCpf)
+        {
+            return await _context.Reservations
+                .Include(r => r.User)
+                .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
+                .ToListAsync();
+        }
 
         /*
         public async Task UpdateAsync(Reservation reservation)

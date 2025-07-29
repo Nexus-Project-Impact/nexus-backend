@@ -1,4 +1,6 @@
-﻿namespace Nexus.Domain.Repositories
+﻿using Nexus.Domain.Entities;
+
+namespace Nexus.Domain.Repositories
 {
     public interface IRepository<T, TId> where T : class
     {
@@ -12,6 +14,5 @@
         Task UpdateAsync(T entity);
 
         Task DeleteAsync(TId id);
-
     }
 }

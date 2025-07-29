@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Nexus.Application.UseCases.Review;
 using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
 using Nexus.Communication.Requests;
@@ -17,6 +18,13 @@ namespace Nexus.API.Controllers
         {
             var result = await useCase.Execute(request);
             return Created(string.Empty, result);
+        }
+
+        [HttpPost("test")]
+        public async Task<IActionResult> Teste ([FromBody] RequestLoginUserJson request)
+        {
+            Console.WriteLine("Teste" + request.Email);
+            return Ok(string.Empty);
         }
 
         [HttpPost("login")]

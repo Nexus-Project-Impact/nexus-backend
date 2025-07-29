@@ -10,12 +10,15 @@ namespace Nexus.Infrastructure.DataAccess
         public NexusDbContext(DbContextOptions<NexusDbContext> options) : base(options)
         {
         }
-        
+
         public DbSet<Travelers> Travelers { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Midia> Midias { get; set; }
         public DbSet<Review> Reviews { get; set; } 
-        public DbSet<TravelPackageEntity> TravelPackages { get; set; }
+
+        public DbSet<TravelPackage> TravelPackages { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,6 +30,9 @@ namespace Nexus.Infrastructure.DataAccess
             modelBuilder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins");
             modelBuilder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims");
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens");
+            modelBuilder.Entity<Review>().ToTable("Reviews");
+            modelBuilder.Entity<Midia>().ToTable("Midias");
+
 
             modelBuilder.Entity<Reservation>()
                 .HasMany(r => r.Traveler)
@@ -35,12 +41,14 @@ namespace Nexus.Infrastructure.DataAccess
                 .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Reservation>()
-                .HasOne(r => r.TravelPackageEntity)
+                .HasOne(r => r.TravelPackage)
                 .WithMany()
                 .HasForeignKey(r => r.TravelPackageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
         }
+
+
 
     }
 }

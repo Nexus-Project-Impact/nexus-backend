@@ -38,9 +38,16 @@ namespace Nexus.Application.UseCases.User.Register
             {
                 await _userManager.AddToRoleAsync(user, "User");
             }
+            //else
+            //{
+            //    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            //    //throw new UserCreationException($"Falha ao criar usuário: {errors}");
+            //    Console.WriteLine(errors);
+            //}
             else
             {
                 throw new UserCreationException();
+
             }
 
             await _unitOfWork.Commit();

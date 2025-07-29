@@ -171,13 +171,48 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Midias");
+                    b.ToTable("Midias", (string)null);
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("ReservationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("ReservationNumber")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("TravelPackageId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TravelPackageId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Comment")
                         .HasColumnType("nvarchar(max)");
@@ -200,7 +235,65 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.TravelPackage", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("DepartureDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Destination")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Duration")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("ReturnDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("Value")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TravelPackages");
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.Travelers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RG")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId");
+
+                    b.ToTable("Travelers");
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.User", b =>
@@ -328,6 +421,23 @@ namespace Nexus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
+                {
+                    b.HasOne("Nexus.Domain.Entities.TravelPackage", "TravelPackage")
+                        .WithMany()
+                        .HasForeignKey("TravelPackageId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Nexus.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("TravelPackage");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Nexus.Domain.Entities.Review", b =>
                 {
                     b.HasOne("Nexus.Domain.Entities.User", "User")
@@ -337,6 +447,22 @@ namespace Nexus.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.Travelers", b =>
+                {
+                    b.HasOne("Nexus.Domain.Entities.Reservation", "Reservation")
+                        .WithMany("Traveler")
+                        .HasForeignKey("ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Reservation");
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
+                {
+                    b.Navigation("Traveler");
                 });
 #pragma warning restore 612, 618
         }

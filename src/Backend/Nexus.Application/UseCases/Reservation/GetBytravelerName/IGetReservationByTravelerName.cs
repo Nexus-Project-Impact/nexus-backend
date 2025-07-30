@@ -9,6 +9,6 @@ namespace Nexus.Application.UseCases.Reservation.GetBytravelerName
 {
     public interface IGetReservationByTravelerName
     {
-        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerName();
+        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerNameAsync(string travelerName);
     }
 }

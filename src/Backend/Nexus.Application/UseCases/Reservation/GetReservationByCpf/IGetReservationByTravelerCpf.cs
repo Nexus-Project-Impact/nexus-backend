@@ -9,6 +9,6 @@ namespace Nexus.Application.UseCases.Reservation.GetReservationByCpf
 {
     public interface IGetReservationByTravelerCpf
     {
-        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerCpf();
+        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerCpfAsync(string Cpf);
     }
 }

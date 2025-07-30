@@ -7,15 +7,16 @@ using AutoMapper;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.GetById
 {
     public class GetByIdPackageUseCase : IGetByIdPackageUseCase
     {
-        private readonly IRepository<TravelPackage, int> _repository;
+        private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IMapper _mapper;
 
-        public GetByIdPackageUseCase(IRepository<TravelPackage, int> repository, IMapper mapper)
+        public GetByIdPackageUseCase(IPackageRepository<TravelPackage, int> repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

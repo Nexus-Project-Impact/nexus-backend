@@ -25,7 +25,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
- 
         }
 
         public async Task<Reservation> GetByIdAsync(int id)

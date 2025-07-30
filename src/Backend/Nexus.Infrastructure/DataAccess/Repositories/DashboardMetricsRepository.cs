@@ -36,7 +36,6 @@ public class DashboardMetricsRepository : IDashboardMetricsRepositoy
 
     public async Task<IEnumerable<SalesByPeriodDto>> GetSalesByPeriodAsync(DateTime? startDate, DateTime? endDate)
     {
-
         var query = _context.Reservations.AsQueryable();
         query = FilterByPeriod(query, startDate, endDate);
 
@@ -51,7 +50,6 @@ public class DashboardMetricsRepository : IDashboardMetricsRepositoy
             .ToListAsync();
 
         return result;
-
     }
 
     /*

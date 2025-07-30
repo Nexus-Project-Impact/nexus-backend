@@ -188,9 +188,6 @@ namespace Nexus.Infrastructure.Migrations
                     b.Property<int>("ReservationNumber")
                         .HasColumnType("int");
 
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("TravelPackageId")
                         .HasColumnType("int");
 
@@ -257,6 +254,9 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");

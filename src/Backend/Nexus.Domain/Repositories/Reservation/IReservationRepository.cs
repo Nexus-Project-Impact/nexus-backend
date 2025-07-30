@@ -13,6 +13,6 @@ namespace Nexus.Domain.Repositories.Reservation
         Task<IEnumerable<Entities.Reservation>> GetAllAsync();
         Task<Entities.Reservation> GetByIdAsync(int id);
         Task<IEnumerable<Entities.Reservation>> GetReservationByTravelerNameAsync(string travelerName);
-        Task<IEnumerable<Entities.Reservation>> GetReservationByCpfAsync(string travelerCpf)
+        Task<IEnumerable<Entities.Reservation>> GetReservationByCpfAsync(string travelerCpf);
     }
 }

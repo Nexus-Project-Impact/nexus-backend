@@ -255,6 +255,9 @@ namespace Nexus.Infrastructure.Migrations
                     b.Property<int>("Duration")
                         .HasColumnType("int");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");
 

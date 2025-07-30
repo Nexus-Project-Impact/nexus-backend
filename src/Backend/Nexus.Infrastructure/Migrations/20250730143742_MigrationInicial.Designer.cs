@@ -12,7 +12,7 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250730025807_MigrationInicial")]
+    [Migration("20250730143742_MigrationInicial")]
     partial class MigrationInicial
     {
         /// <inheritdoc />
@@ -257,6 +257,9 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.Property<int>("Duration")
                         .HasColumnType("int");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("datetime2");

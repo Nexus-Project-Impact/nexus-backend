@@ -3,6 +3,7 @@ using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Reservation;
 using Nexus.Infrastructure.DataAccess;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,11 @@ namespace Nexus.Application.UseCases.Reservation.Create
 {
     public class CreateReservationUseCase : ICreateReservationUseCase
     {
-        private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
+        private readonly IReservationRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public CreateReservationUseCase(IRepository<Nexus.Domain.Entities.Reservation, int> repository, IMapper mapper,
+        public CreateReservationUseCase(IReservationRepository repository, IMapper mapper,
             IUnitOfWork unitOfWork)
         {
             _repository = repository;
@@ -37,7 +38,7 @@ namespace Nexus.Application.UseCases.Reservation.Create
 
             return new ResponseRegisteredReservationJson
             {
-                ReservationNumber = reservation.ReservationNumber
+                Message = "Reserva realizada com sucesso!",
             };
         }
     }

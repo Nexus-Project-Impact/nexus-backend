@@ -57,8 +57,8 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetAll")]
-        [Authorize(Roles =("Admin"))]
-        public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetAll()
+        //[Authorize(Roles =("Admin"))]
+        public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetAll()
         {
             var reservations = await _getAllReservantionUseCase.ExecuteGetAllAsync();
 
@@ -66,8 +66,8 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        [Authorize(Roles =("Admin, User"))]
-        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetById(int id)
+        //[Authorize(Roles =("Admin, User"))]
+        public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
         {
             var reservations = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
 
@@ -79,7 +79,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var reservations = await _deleteReservationUseCase.ExecuteDeleteAsync(id);

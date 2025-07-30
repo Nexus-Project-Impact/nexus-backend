@@ -10,12 +10,13 @@ namespace Nexus.Domain.Entities
     {
         public int Id { get; set; }
         public DateTime ReservationDate { get; set; } = DateTime.UtcNow;
+        public string? Status { get; set; }
         //public Payment PaymentStatus { get; set; }
         public int ReservationNumber { get; set; }
         public string? UserId { get; set; }
         public int TravelPackageId { get; set; }
         public User? User { get; set; }
-        public TravelPackage? TravelPackageEntity { get; set; }
+        public TravelPackage? TravelPackage { get; set; }
         public ICollection<Travelers> Traveler { get; set; } = new List<Travelers>();
     }
 }

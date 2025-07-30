@@ -1,21 +1,22 @@
-﻿using AutoMapper;
-using Nexus.Communication.Responses;
-using Nexus.Domain.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
+using Nexus.Communication.Responses;
+using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Reservation;
 
 namespace Nexus.Application.UseCases.Reservation.GetByID
 {
     public class GetByIdReservationUseCase : IGetByIdReservationUseCase
     {
-        private readonly IRepository<Nexus.Domain.Entities.Reservation, int> _repository;
+        private readonly IReservationRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetByIdReservationUseCase(IRepository<Nexus.Domain.Entities.Reservation, int> repository, IMapper mapper,
+        public GetByIdReservationUseCase(IReservationRepository repository, IMapper mapper,
            IUnitOfWork unitOfWork)
         {
             _repository = repository;
@@ -23,11 +24,11 @@ namespace Nexus.Application.UseCases.Reservation.GetByID
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseRegisteredReservationJson?> ExecuteGetByIdAsync(int id)
+        public async Task<ResponseReservationJson?> ExecuteGetByIdAsync(int id)
         {
             var reservation = await _repository.GetByIdAsync(id);
 
-            var reservationJson = _mapper.Map<ResponseRegisteredReservationJson>(reservation);
+            var reservationJson = _mapper.Map<ResponseReservationJson>(reservation);
 
             await _unitOfWork.Commit();
 

@@ -13,19 +13,18 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class ReservationRepository : IReservationRepository
     {
         private readonly NexusDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ReservationRepository(NexusDbContext context, IUnitOfWork unitOfWork)
+
+        public ReservationRepository(NexusDbContext context)
         {
             _context = context;
-            _unitOfWork = unitOfWork;
+
         }
 
         public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
- 
         }
 
         public async Task<Reservation> GetByIdAsync(int id)
@@ -34,12 +33,13 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 .FirstOrDefaultAsync(r => r.Id == id) ?? throw new InvalidOperationException("Reservation not found.");
         }
 
+        
 
         public async Task AddAsync(Reservation reservation)
         {
+            reservation.ReservationNumber = await GetNextReservationNumberAsync();
             await _context.Reservations.AddAsync(reservation);
 
-            await _unitOfWork.Commit();
         }
 
         public async Task DeleteAsync(int id)
@@ -50,8 +50,14 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.Reservations.Remove(item);
 
-                await _unitOfWork.Commit();
             }
+        }
+
+        // Novo método para obter o próximo número de reserva
+        private async Task<int> GetNextReservationNumberAsync()
+        {
+            var maxNumber = await _context.Reservations.MaxAsync(r => (int?)r.ReservationNumber) ?? 0;
+            return maxNumber + 1;
         }
 
         public async Task<IEnumerable<Reservation>> GetReservationByTravelerNameAsync(string travelerName)
@@ -69,6 +75,40 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
                 .ToListAsync();
         }
+
+        /*
+        public async Task UpdateAsync(Reservation reservation)
+        {
+            _context.Reservations.Update(reservation);
+
+            await _unitOfWork.Commit();
+            
+            var existingTravelers = await _context.Travelers
+                        .Where(t => t.ReservationId == reservation.Id)
+                        .ToListAsync();
+
+            foreach (var traveler in reservation.Traveler)
+            {
+                if (traveler.Id == 0)
+                {
+                    _context.Travelers.Add(traveler);
+                }
+                else
+                {
+                    _context.Travelers.Update(traveler);
+                }
+            }
+
+            foreach (var existing in existingTravelers)
+            {
+                if (!reservation.Traveler.Any(t => t.Id == existing.Id))
+                {
+                    _context.Travelers.Remove(existing);
+                }
+            }
+            
+        }
+        */
     }
 }
 

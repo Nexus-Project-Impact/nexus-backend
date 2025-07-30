@@ -1,18 +1,22 @@
-using System;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using Nexus.Domain.Repositories;
-using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()// Permite qualquer origem
+              .AllowAnyMethod() // Permite qualquer método HTTP (GET, POST, PUT, DELETE, etc.)
+              .AllowAnyHeader(); // Permite qualquer cabeçalho HTTP
+    });
+});
 
 // Add services to the container.
 
@@ -47,10 +51,10 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
-
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 using (var scope = app.Services.CreateScope())
 {

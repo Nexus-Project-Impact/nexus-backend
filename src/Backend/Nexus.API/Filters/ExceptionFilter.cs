@@ -50,6 +50,8 @@ public class ExceptionFilter : IExceptionFilter
 
     private void ThrowUnknowException(ExceptionContext context)
     {
+        Console.WriteLine(context.Exception);
+
         context.HttpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Result = new ObjectResult(new ResponseErrorJson(ResourceMessagesException.UNKNOWN_ERROR));
     }

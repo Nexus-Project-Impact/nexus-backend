@@ -9,6 +9,6 @@ namespace Nexus.Application.UseCases.Reservation.GetByID
 {
     public interface IGetByIdReservationUseCase
     {
-        public Task<ResponseRegisteredReservationJson?> ExecuteGetByIdAsync(int id);
+        public Task<ResponseReservationJson?> ExecuteGetByIdAsync(int id);
     }
 }

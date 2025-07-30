@@ -105,7 +105,7 @@ namespace Nexus.API.Controllers
             return Ok(reservations);
         }
 
-        [HttpGet("GetReservationByTravelerCpf/{Name}")]
+        [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
         //[Authorize("Admin, User")]
 
         public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerCpf(string Cpf)

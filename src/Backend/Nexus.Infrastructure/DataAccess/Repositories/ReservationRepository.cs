@@ -69,40 +69,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
                 .ToListAsync();
         }
-
-        /*
-        public async Task UpdateAsync(Reservation reservation)
-        {
-            _context.Reservations.Update(reservation);
-
-            await _unitOfWork.Commit();
-            
-            var existingTravelers = await _context.Travelers
-                        .Where(t => t.ReservationId == reservation.Id)
-                        .ToListAsync();
-
-            foreach (var traveler in reservation.Traveler)
-            {
-                if (traveler.Id == 0)
-                {
-                    _context.Travelers.Add(traveler);
-                }
-                else
-                {
-                    _context.Travelers.Update(traveler);
-                }
-            }
-
-            foreach (var existing in existingTravelers)
-            {
-                if (!reservation.Traveler.Any(t => t.Id == existing.Id))
-                {
-                    _context.Travelers.Remove(existing);
-                }
-            }
-            
-        }
-        */
     }
 }
 

@@ -16,10 +16,15 @@ namespace Nexus.Application.Services.AutoMapper
         private void RequestToDomain() 
         {
             CreateMap<RequestRegisterUserJson, User>()
-                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+
 
             CreateMap<RequestCreatePackage, TravelPackage>();
             CreateMap<RequestUpdatePackage, TravelPackage>();
+
+
+            CreateMap<RequestTravelers, Travelers>();
 
             CreateMap<RequestRegisterReservationJson, Reservation>()
                 .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
@@ -47,6 +52,9 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<TravelPackage, ResponsePackage>();
 
             CreateMap<Reservation, ResponseReservationJson>();
+            CreateMap<Reservation, ResponseRegisteredReservationJson>()
+            .ForMember(dest => dest.Traveler, opt => opt.MapFrom(src => src.Traveler));
+            CreateMap<Travelers, ResponseTravelers>();
 
 
         }

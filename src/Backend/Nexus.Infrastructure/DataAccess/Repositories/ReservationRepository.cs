@@ -21,28 +21,28 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Reservation>> ExecuteGetAllAsync() 
+        public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
  
         }
 
-        public async Task<Reservation?> ExecuteGetByIdAsync(int id)
+        public async Task<Reservation?> GetByIdAsync(int id)
         {
             return await _context.Reservations.Include(t => t.Traveler)
             .FirstOrDefaultAsync(r => r.Id == id);
         }
 
 
-        public async Task ExecuteAddAsync(Reservation reservation)
+        public async Task AddAsync(Reservation reservation)
         {
             await _context.Reservations.AddAsync(reservation);
 
             await _unitOfWork.Commit();
         }
 
-        public async Task ExecuteDeleteAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var item = await _context.Reservations.FindAsync(id);
 

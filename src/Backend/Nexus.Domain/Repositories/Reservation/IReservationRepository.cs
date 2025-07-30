@@ -8,10 +8,10 @@ namespace Nexus.Domain.Repositories.Reservation
 {
     public interface IReservationRepository
     {
-        Task ExecuteAddAsync(Entities.Reservation entity);
-        Task ExecuteDeleteAsync(int id);
-        Task<IEnumerable<Entities.Reservation>> ExecuteGetAllAsync();
-        Task<Entities.Reservation> ExecuteGetByIdAsync(int id);
+        Task AddAsync(Entities.Reservation entity);
+        Task DeleteAsync(int id);
+        Task<IEnumerable<Entities.Reservation>> GetAllAsync();
+        Task<Entities.Reservation> GetByIdAsync(int id);
 
     }
 }

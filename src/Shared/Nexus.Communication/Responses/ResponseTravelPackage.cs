@@ -15,6 +15,7 @@ namespace Nexus.Communication.Responses
         public DateTime DepartureDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public decimal Value { get; set; }
+        public string? ImageUrl { get; set; }
 
     }
 }

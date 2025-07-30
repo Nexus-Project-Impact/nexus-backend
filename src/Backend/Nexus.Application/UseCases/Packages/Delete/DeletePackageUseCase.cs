@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.Delete
 {
     public class DeletePackageUseCase : IDeletePackageUseCase
     {
-        private readonly IRepository<TravelPackage, int> _repository;
+        private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeletePackageUseCase(IRepository<TravelPackage, int> repository, IUnitOfWork unitOfWork)
+        public DeletePackageUseCase(IPackageRepository<TravelPackage, int> repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;

@@ -25,13 +25,12 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
- 
         }
 
-        public async Task<Reservation?> GetByIdAsync(int id)
+        public async Task<Reservation> GetByIdAsync(int id)
         {
             return await _context.Reservations.Include(t => t.Traveler)
-            .FirstOrDefaultAsync(r => r.Id == id);
+                .FirstOrDefaultAsync(r => r.Id == id) ?? throw new InvalidOperationException("Reservation not found.");
         }
 
         
@@ -61,6 +60,21 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             return maxNumber + 1;
         }
 
+        public async Task<IEnumerable<Reservation>> GetReservationByTravelerNameAsync(string travelerName)
+        {
+            return await _context.Reservations
+                .Include(r => r.Traveler)
+                .Where(r => r.Traveler.Any(t => t.Name != null && t.Name.Contains(travelerName)))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationByCpfAsync(string travelerCpf)
+        {
+            return await _context.Reservations
+                .Include(r => r.User)
+                .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
+                .ToListAsync();
+        }
 
 
 

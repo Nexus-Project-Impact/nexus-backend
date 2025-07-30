@@ -6,6 +6,8 @@ using Nexus.Application.UseCases.Reservation.Create;
 using Nexus.Application.UseCases.Reservation.Delete;
 using Nexus.Application.UseCases.Reservation.GetAll;
 using Nexus.Application.UseCases.Reservation.GetByID;
+using Nexus.Application.UseCases.Reservation.GetBytravelerName;
+using Nexus.Application.UseCases.Reservation.GetReservationByCpf;
 using Nexus.Application.UseCases.Reservation.Update;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
@@ -22,14 +24,18 @@ namespace Nexus.API.Controllers
         private readonly IGetAllReservantionUseCase _getAllReservantionUseCase;
         private readonly IGetByIdReservationUseCase _getByIdReservationUseCase;
         private readonly IDeleteReservationUseCase _deleteReservationUseCase;
+        private readonly IGetReservationByTravelerCpf _getReservationByTravelerCpf;
+        private readonly IGetReservationByTravelerName _getReservationByTravelerName;
         private readonly IMapper _mapper;
 
         public ReservationController
         (
             // IUpdateReservationUseCase updateReservationUseCase,
-            IGetAllReservantionUseCase getAllReservantionUseCase, 
+            IGetAllReservantionUseCase getAllReservantionUseCase,
             IGetByIdReservationUseCase getByIdReservationUseCase,
-            IDeleteReservationUseCase deleteReservationUseCase, 
+            IDeleteReservationUseCase deleteReservationUseCase,
+            IGetReservationByTravelerCpf getReservationByTravelerCpf,
+            IGetReservationByTravelerName getReservationByTravelerName,
             IMapper mapper
         )
         {
@@ -37,6 +43,8 @@ namespace Nexus.API.Controllers
             _deleteReservationUseCase = deleteReservationUseCase;
             _getAllReservantionUseCase = getAllReservantionUseCase;
             _getByIdReservationUseCase = getByIdReservationUseCase;
+            _getReservationByTravelerCpf = getReservationByTravelerCpf;
+            _getReservationByTravelerName = getReservationByTravelerName;
             _mapper = mapper;
         }
 
@@ -52,35 +60,63 @@ namespace Nexus.API.Controllers
         //[Authorize(Roles =("Admin"))]
         public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetAll()
         {
-            var packages = await _getAllReservantionUseCase.ExecuteGetAllAsync();
+            var reservations = await _getAllReservantionUseCase.ExecuteGetAllAsync();
 
-            return Ok(packages);
+            return Ok(reservations);
         }
 
         [HttpGet("GetById/{id}")]
         //[Authorize(Roles =("Admin, User"))]
         public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
         {
-            var packages = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
+            var reservations = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
 
-            if (packages == null)
+            if (reservations == null)
             {
                 return NotFound();
             }
-            return Ok(packages);
+            return Ok(reservations);
         }
 
         [HttpDelete("Delete/{id}")]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
-            var packages = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
-            if (packages == false)
+            var reservations = await _deleteReservationUseCase.ExecuteDeleteAsync(id);
+            if (reservations == false)
             {
                 return NotFound();
             }
 
             return NoContent();
+        }
+
+        [HttpGet("GetReservationByTravelerName/{Name}")]
+        //[Authorize("Admin, User")]
+
+        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerName(string Name)
+        {
+            var reservations = await _getReservationByTravelerName.ExecuteGetReservationByTravelerNameAsync(Name);
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            return Ok(reservations);
+        }
+
+        [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
+        //[Authorize("Admin, User")]
+
+        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerCpf(string Cpf)
+        {
+            var reservations = await _getReservationByTravelerCpf.ExecuteGetReservationByTravelerCpfAsync(Cpf);
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            return Ok(reservations);
         }
 
         /*

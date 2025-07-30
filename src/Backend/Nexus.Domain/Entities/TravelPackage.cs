@@ -16,6 +16,7 @@ namespace Nexus.Domain.Entities
         public DateTime DepartureDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public double Value { get; set; }
+        public string? ImageUrl { get; set; }
 
     }
 }

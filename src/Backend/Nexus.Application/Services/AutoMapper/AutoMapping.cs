@@ -23,6 +23,7 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<RequestCreatePackage, TravelPackage>();
             CreateMap<RequestUpdatePackage, TravelPackage>();
 
+
             CreateMap<RequestTravelers, Travelers>();
 
             CreateMap<RequestRegisterReservationJson, Reservation>()

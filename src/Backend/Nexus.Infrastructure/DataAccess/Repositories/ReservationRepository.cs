@@ -13,12 +13,12 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class ReservationRepository : IReservationRepository
     {
         private readonly NexusDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ReservationRepository(NexusDbContext context, IUnitOfWork unitOfWork)
+
+        public ReservationRepository(NexusDbContext context)
         {
             _context = context;
-            _unitOfWork = unitOfWork;
+
         }
 
         public async Task<IEnumerable<Reservation>> GetAllAsync() 
@@ -34,12 +34,13 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             .FirstOrDefaultAsync(r => r.Id == id);
         }
 
+        
 
         public async Task AddAsync(Reservation reservation)
         {
+            reservation.ReservationNumber = await GetNextReservationNumberAsync();
             await _context.Reservations.AddAsync(reservation);
 
-            await _unitOfWork.Commit();
         }
 
         public async Task DeleteAsync(int id)
@@ -50,9 +51,18 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.Reservations.Remove(item);
 
-                await _unitOfWork.Commit();
             }
         }
+
+        // Novo método para obter o próximo número de reserva
+        private async Task<int> GetNextReservationNumberAsync()
+        {
+            var maxNumber = await _context.Reservations.MaxAsync(r => (int?)r.ReservationNumber) ?? 0;
+            return maxNumber + 1;
+        }
+
+
+
 
 
         /*

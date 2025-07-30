@@ -10,4 +10,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Backend\Nexus.Domain\Nexus.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

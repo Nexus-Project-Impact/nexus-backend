@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Application.Services.Auth;
-using Nexus.Application.Services.Cryptography;
 using Nexus.Application.Services.Email;
+using Nexus.Application.UseCases.Dashboard;
 using Nexus.Application.UseCases.Midia;
 
 using Nexus.Application.UseCases.Review.Delete;
@@ -33,7 +32,6 @@ namespace Nexus.Application
         {
             AddUseCases(services);
             AddAutoMapper(services);
-            AddPaswordEncrypter(services, configuration);
             AddJwtService(services, configuration); 
         }
         private static void AddAutoMapper(IServiceCollection services)
@@ -66,14 +64,8 @@ namespace Nexus.Application
             services.AddScoped<IGetByIdReservationUseCase, GetByIdReservationUseCase>();
             services.AddScoped<IDeleteReservationUseCase, DeleteReservationUseCase>();
 
+            services.AddScoped<IGetDashboardMetricsUseCase, GetDashboardMetricsUseCase>();
 
-
-        }
-
-        private static void AddPaswordEncrypter(IServiceCollection services, IConfiguration configuration)
-        {
-            var additionalKey = configuration.GetValue<string>("Settings:Password:AdditionalKey");
-            services.AddScoped(option => new PasswordEncripter(additionalKey!));
         }
         private static void AddJwtService(IServiceCollection services, IConfiguration configuration)
         {

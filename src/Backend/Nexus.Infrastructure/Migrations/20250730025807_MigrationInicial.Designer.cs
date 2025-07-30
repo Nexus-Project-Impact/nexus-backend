@@ -12,8 +12,8 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250728174015_MigrationInit")]
-    partial class MigrationInit
+    [Migration("20250730025807_MigrationInicial")]
+    partial class MigrationInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -190,9 +190,6 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.Property<int>("ReservationNumber")
                         .HasColumnType("int");
-
-                    b.Property<string>("Status")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TravelPackageId")
                         .HasColumnType("int");

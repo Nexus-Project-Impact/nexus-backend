@@ -29,8 +29,8 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
 
         public async Task<Reservation> GetByIdAsync(int id)
         {
-            return await _context.Reservations.Include(t => t.Traveler)
-                .FirstOrDefaultAsync(r => r.Id == id) ?? throw new InvalidOperationException("Reservation not found.");
+            var reservation = await _context.Reservations.Include(t => t.Traveler).FirstOrDefaultAsync(r => r.Id == id);
+            return reservation!;
         }
 
         

@@ -25,11 +25,11 @@ namespace Nexus.Application.UseCases.Reservation.GetAll
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetAllAsync()
+        public async Task<IEnumerable<ResponseReservationJson>> ExecuteGetAllAsync()
         {
             var reservations = await _repository.GetAllAsync();
 
-            var reservationsJson = _mapper.Map<IEnumerable<ResponseRegisteredReservationJson>>(reservations);
+            var reservationsJson = _mapper.Map<IEnumerable<ResponseReservationJson>>(reservations);
 
             await _unitOfWork.Commit();
 

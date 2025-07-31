@@ -24,11 +24,11 @@ namespace Nexus.Application.UseCases.Reservation.GetReservationByCpf
             _unitOfWork = unitOfWork;
         } 
 
-        public async Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerCpfAsync(string Cpf)
+        public async Task<IEnumerable<ResponseReservationJson>> ExecuteGetReservationByTravelerCpfAsync(string Cpf)
         {
             var reservations = await _reservationRepository.GetReservationByCpfAsync(Cpf);
 
-            var reservationsJson = _mapper.Map<IEnumerable<ResponseRegisteredReservationJson>>(reservations);
+            var reservationsJson = _mapper.Map<IEnumerable<ResponseReservationJson>>(reservations);
 
             await _unitOfWork.Commit();
             

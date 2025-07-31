@@ -9,6 +9,6 @@ namespace Nexus.Application.UseCases.Reservation.GetMyReservations
 {
     public interface IGetMyReservations
     {
-        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetMyReservationsAsync(string userId);
+        public Task<IEnumerable<ResponseReservationJson>> ExecuteGetMyReservationsAsync(string userId);
     }
 }

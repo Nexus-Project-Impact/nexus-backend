@@ -66,19 +66,6 @@ namespace Nexus.API.Controllers
             return Ok(reservations);
         }
 
-        [HttpGet("GetById/{id}")]
-        //[Authorize(Roles =("Admin, User"))]
-        public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
-        {
-            var reservations = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
-
-            if (reservations == null)
-            {
-                return NotFound();
-            }
-            return Ok(reservations);
-        }
-
         [HttpDelete("Delete/{id}")]
         //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
@@ -92,27 +79,64 @@ namespace Nexus.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("GetReservationByTravelerName/{Name}")]
-        //[Authorize("Admin, User")]
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
+        {
+            var reservation = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
 
-        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerName(string Name)
+            if (reservation == null)
+                return NotFound();
+
+            // Se a role for "User", filtra pelo userId
+            if (User.IsInRole("User"))
+            {
+                var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                    return Forbid();
+
+                if (reservation.UserId != userId)
+                    return Forbid();
+            }
+
+            return Ok(reservation);
+        }
+
+        [HttpGet("GetReservationByTravelerName/{Name}")]
+        public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetReservationByTravelerName(string Name)
         {
             var reservations = await _getReservationByTravelerName.ExecuteGetReservationByTravelerNameAsync(Name);
 
-            if (reservations == null)
+            // Se a role for "User", filtra pelo userId
+            if (User.IsInRole("User"))
             {
-                return NotFound();
+                var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                    return Forbid();
+
+                reservations = reservations.Where(r => r.UserId == userId);
             }
+
+            if (reservations == null || !reservations.Any())
+                return NotFound();
+
             return Ok(reservations);
         }
 
         [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
-        //[Authorize("Admin, User")]
-        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerCpf(string Cpf)
+        public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetReservationByTravelerCpf(string Cpf)
         {
             var reservations = await _getReservationByTravelerCpf.ExecuteGetReservationByTravelerCpfAsync(Cpf);
 
-            if (reservations == null)
+            if (User.IsInRole("User"))
+            {
+                var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(userId))
+                    return Forbid();
+
+                reservations = reservations.Where(r => r.UserId == userId);
+            }
+
+            if (reservations == null || !reservations.Any())
             {
                 return NotFound();
             }
@@ -120,7 +144,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("MyReservations")]
-        [Authorize(Roles = "User")]
+        // [Authorize(Roles = "User")]
         public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetMyReservations()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
@@ -134,5 +158,48 @@ namespace Nexus.API.Controllers
 
             return Ok(reservations);
         }
+
+        /*
+        [HttpGet("GetById/{id}")]
+        //[Authorize(Roles =("Admin, User"))]
+        public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
+        {
+            var reservations = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            return Ok(reservations);
+        } 
+         
+        [HttpGet("GetReservationByTravelerName/{Name}")]
+        //[Authorize("Admin")]
+
+        public async Task<ActionResult<ResponseReservationJson>> GetReservationByTravelerName(string Name)
+        {
+            var reservations = await _getReservationByTravelerName.ExecuteGetReservationByTravelerNameAsync(Name);
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            return Ok(reservations);
+        }
+
+        /*
+        [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
+        //[Authorize("Admin")]
+        public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerCpf(string Cpf)
+        {
+            var reservations = await _getReservationByTravelerCpf.ExecuteGetReservationByTravelerCpfAsync(Cpf);
+
+            if (reservations == null)
+            {
+                return NotFound();
+            }
+            return Ok(reservations);
+        }
+        */
     }
 }

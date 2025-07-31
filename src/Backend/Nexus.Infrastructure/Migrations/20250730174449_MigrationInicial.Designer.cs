@@ -12,7 +12,7 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250730143742_MigrationInicial")]
+    [Migration("20250730174449_MigrationInicial")]
     partial class MigrationInicial
     {
         /// <inheritdoc />
@@ -186,7 +186,7 @@ namespace Nexus.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("ReservationDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<int>("ReservationNumber")
                         .HasColumnType("int");
@@ -247,7 +247,7 @@ namespace Nexus.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DepartureDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -262,7 +262,7 @@ namespace Nexus.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ReturnDate")
-                        .HasColumnType("datetime2");
+                        .HasColumnType("date");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");

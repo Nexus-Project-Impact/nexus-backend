@@ -49,8 +49,8 @@ namespace Nexus.Infrastructure.Migrations
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Destination = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: false),
-                    DepartureDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReturnDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DepartureDate = table.Column<DateTime>(type: "date", nullable: false),
+                    ReturnDate = table.Column<DateTime>(type: "date", nullable: false),
                     Value = table.Column<double>(type: "float", nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
@@ -114,7 +114,7 @@ namespace Nexus.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ReservationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReservationDate = table.Column<DateTime>(type: "date", nullable: false),
                     ReservationNumber = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     TravelPackageId = table.Column<int>(type: "int", nullable: false)

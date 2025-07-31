@@ -10,6 +10,6 @@ namespace Nexus.Application.UseCases.Reservation.GetAll
 {
     public interface IGetAllReservantionUseCase
     {
-        public Task<IEnumerable<ResponseReservationJson>> ExecuteGetAllAsync();
+        public Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetAllAsync();
     }
 }

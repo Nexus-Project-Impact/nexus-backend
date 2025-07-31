@@ -4,28 +4,28 @@ using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Email;
 using Nexus.Application.UseCases.Dashboard;
 using Nexus.Application.UseCases.Midia;
-
+using Nexus.Application.UseCases.Packages.Create;
+using Nexus.Application.UseCases.Packages.Delete;
+using Nexus.Application.UseCases.Packages.GetAll;
+using Nexus.Application.UseCases.Packages.GetByDepartureDate;
+using Nexus.Application.UseCases.Packages.GetByDestination;
+using Nexus.Application.UseCases.Packages.GetById;
+using Nexus.Application.UseCases.Packages.GetByValue;
+using Nexus.Application.UseCases.Packages.Update;
+using Nexus.Application.UseCases.Reservation.Create;
+using Nexus.Application.UseCases.Reservation.Delete;
+using Nexus.Application.UseCases.Reservation.GetAll;
+using Nexus.Application.UseCases.Reservation.GetByID;
+using Nexus.Application.UseCases.Reservation.GetBytravelerName;
+using Nexus.Application.UseCases.Reservation.GetMyReservations;
+using Nexus.Application.UseCases.Reservation.GetReservationByCpf;
 using Nexus.Application.UseCases.Review.Delete;
 using Nexus.Application.UseCases.Review.GetAll;
 using Nexus.Application.UseCases.Review.GetId;
 using Nexus.Application.UseCases.Review.Moderate;
 using Nexus.Application.UseCases.Review.Register;
-
-using Nexus.Application.UseCases.Packages.Create;
-using Nexus.Application.UseCases.Packages.Delete;
-using Nexus.Application.UseCases.Packages.GetAll;
-using Nexus.Application.UseCases.Packages.GetById;
-using Nexus.Application.UseCases.Packages.Update;
-
 using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
-using Nexus.Application.UseCases.Reservation.Create;
-using Nexus.Application.UseCases.Reservation.GetAll;
-using Nexus.Application.UseCases.Reservation.GetByID;
-using Nexus.Application.UseCases.Reservation.Delete;
-using Nexus.Application.UseCases.Packages.GetByDepartureDate;
-using Nexus.Application.UseCases.Packages.GetByDestination;
-using Nexus.Application.UseCases.Packages.GetByValue;
 
 namespace Nexus.Application
 {
@@ -69,6 +69,9 @@ namespace Nexus.Application
             services.AddScoped<IGetAllReservantionUseCase, GetAllReservationUseCase>();
             services.AddScoped<IGetByIdReservationUseCase, GetByIdReservationUseCase>();
             services.AddScoped<IDeleteReservationUseCase, DeleteReservationUseCase>();
+            services.AddScoped<IGetReservationByTravelerCpf, GetReservationByTravelerCpf>();
+            services.AddScoped<IGetReservationByTravelerName, GetReservationByTravelerName>();
+            services.AddScoped<IGetMyReservations, GetMyReservations>();
 
             services.AddScoped<IGetDashboardMetricsUseCase, GetDashboardMetricsUseCase>();
 

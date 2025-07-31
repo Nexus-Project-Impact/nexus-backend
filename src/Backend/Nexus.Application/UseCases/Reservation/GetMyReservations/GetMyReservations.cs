@@ -1,23 +1,23 @@
-﻿using System;
+﻿using AutoMapper;
+using Nexus.Communication.Responses;
+using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Reservation;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Nexus.Communication.Responses;
-using Nexus.Domain.Repositories;
-using Nexus.Domain.Repositories.Reservation;
 
-namespace Nexus.Application.UseCases.Reservation.GetAll
+namespace Nexus.Application.UseCases.Reservation.GetMyReservations
 {
-    public class GetAllReservationUseCase : IGetAllReservantionUseCase
+    public class GetMyReservations : IGetMyReservations
     {
 
         private readonly IReservationRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetAllReservationUseCase(IReservationRepository repository, IMapper mapper,
+        public GetMyReservations(IReservationRepository repository, IMapper mapper,
            IUnitOfWork unitOfWork)
         {
             _repository = repository;
@@ -25,16 +25,15 @@ namespace Nexus.Application.UseCases.Reservation.GetAll
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetAllAsync()
+        public async Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetMyReservationsAsync(string userId)
         {
-            var reservations = await _repository.GetAllAsync();
+            var reservations = await _repository.GetMyReservationsAsync(userId);
 
             var reservationsJson = _mapper.Map<IEnumerable<ResponseRegisteredReservationJson>>(reservations);
 
             await _unitOfWork.Commit();
 
             return reservationsJson;
-        }    
+        }
     }
 }
-

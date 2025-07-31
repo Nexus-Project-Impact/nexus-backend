@@ -145,7 +145,7 @@ namespace Nexus.API.Controllers
 
         [HttpGet("MyReservations")]
         // [Authorize(Roles = "User")]
-        public async Task<ActionResult<IEnumerable<ResponseRegisteredReservationJson>>> GetMyReservations()
+        public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetMyReservations()
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             if (string.IsNullOrEmpty(userId))

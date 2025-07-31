@@ -75,6 +75,15 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> GetMyReservationsAsync(string userId)
+        {
+            return await _context.Reservations
+                 .Include(r => r.User)
+                 .Include(r => r.Traveler)
+                 .Where(r => r.UserId == userId)
+                 .ToListAsync();
+        }
     }
 }
 

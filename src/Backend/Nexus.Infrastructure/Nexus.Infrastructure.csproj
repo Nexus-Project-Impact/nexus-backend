@@ -26,4 +26,8 @@
     <ProjectReference Include="..\Nexus.Domain\Nexus.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

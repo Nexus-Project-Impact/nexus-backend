@@ -51,6 +51,8 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
+
 
 var app = builder.Build();
 
@@ -73,7 +75,8 @@ using (var scope = app.Services.CreateScope())
         throw new SeedDataException();
     }
 }
-    
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

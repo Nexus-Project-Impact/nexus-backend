@@ -13,33 +13,33 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class ReservationRepository : IReservationRepository
     {
         private readonly NexusDbContext _context;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public ReservationRepository(NexusDbContext context, IUnitOfWork unitOfWork)
+
+        public ReservationRepository(NexusDbContext context)
         {
             _context = context;
-            _unitOfWork = unitOfWork;
+
         }
 
         public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
              return await _context.Reservations.Include
                 (r => r.Traveler).ToListAsync(); 
- 
         }
 
-        public async Task<Reservation?> GetByIdAsync(int id)
+        public async Task<Reservation> GetByIdAsync(int id)
         {
-            return await _context.Reservations.Include(t => t.Traveler)
-            .FirstOrDefaultAsync(r => r.Id == id);
+            var reservation = await _context.Reservations.Include(t => t.Traveler).FirstOrDefaultAsync(r => r.Id == id);
+            return reservation!;
         }
 
+        
 
         public async Task AddAsync(Reservation reservation)
         {
+            reservation.ReservationNumber = await GetNextReservationNumberAsync();
             await _context.Reservations.AddAsync(reservation);
 
-            await _unitOfWork.Commit();
         }
 
         public async Task DeleteAsync(int id)
@@ -50,44 +50,40 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.Reservations.Remove(item);
 
-                await _unitOfWork.Commit();
             }
         }
 
-
-        /*
-        public async Task UpdateAsync(Reservation reservation)
+        // Novo método para obter o próximo número de reserva
+        private async Task<int> GetNextReservationNumberAsync()
         {
-            _context.Reservations.Update(reservation);
-
-            await _unitOfWork.Commit();
-            
-            var existingTravelers = await _context.Travelers
-                        .Where(t => t.ReservationId == reservation.Id)
-                        .ToListAsync();
-
-            foreach (var traveler in reservation.Traveler)
-            {
-                if (traveler.Id == 0)
-                {
-                    _context.Travelers.Add(traveler);
-                }
-                else
-                {
-                    _context.Travelers.Update(traveler);
-                }
-            }
-
-            foreach (var existing in existingTravelers)
-            {
-                if (!reservation.Traveler.Any(t => t.Id == existing.Id))
-                {
-                    _context.Travelers.Remove(existing);
-                }
-            }
-            
+            var maxNumber = await _context.Reservations.MaxAsync(r => (int?)r.ReservationNumber) ?? 0;
+            return maxNumber + 1;
         }
-        */
+
+        public async Task<IEnumerable<Reservation>> GetReservationByTravelerNameAsync(string travelerName)
+        {
+            return await _context.Reservations
+                .Include(r => r.Traveler)
+                .Where(r => r.Traveler.Any(t => t.Name != null && t.Name.Contains(travelerName)))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetReservationByCpfAsync(string travelerCpf)
+        {
+            return await _context.Reservations
+                .Include(r => r.User)
+                .Where(r => r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> GetMyReservationsAsync(string userId)
+        {
+            return await _context.Reservations
+                 .Include(r => r.User)
+                 .Include(r => r.Traveler)
+                 .Where(r => r.UserId == userId)
+                 .ToListAsync();
+        }
     }
 }
 

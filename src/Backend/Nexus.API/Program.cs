@@ -1,18 +1,22 @@
-using System;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using Nexus.Domain.Repositories;
-using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()// Permite qualquer origem
+              .AllowAnyMethod() // Permite qualquer método HTTP (GET, POST, PUT, DELETE, etc.)
+              .AllowAnyHeader(); // Permite qualquer cabeçalho HTTP
+    });
+});
 
 // Add services to the container.
 
@@ -49,19 +53,10 @@ builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
 
-// Configuração do CORS: politicas de acesso a este backend
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin() // permite qualquer origem
-                  .AllowAnyMethod() // permite qualquer método HTTP (GET, POST, PUT, DELETE, etc.)
-                  .AllowAnyHeader(); // permite qualquer cabeçalho
-        });
-});
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -81,8 +76,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-//Uso do CORS
-app.UseCors("AllowAll"); // aqui estamos aplicando a política de CORS definida acima
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

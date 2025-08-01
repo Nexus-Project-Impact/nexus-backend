@@ -8,16 +8,17 @@ using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.Update
 {
     public class UpdatePackageUseCase : IUpdatePackageUseCase
     {
-        private readonly IRepository<TravelPackage, int> _repository;
+        private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UpdatePackageUseCase(IRepository<TravelPackage, int> repository, IMapper mapper, IUnitOfWork unitOfWork)
+        public UpdatePackageUseCase(IPackageRepository<TravelPackage, int> repository, IMapper mapper, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _mapper = mapper;

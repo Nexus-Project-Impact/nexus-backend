@@ -16,15 +16,49 @@ namespace Nexus.Application.Services.AutoMapper
         private void RequestToDomain() 
         {
             CreateMap<RequestRegisterUserJson, User>()
-                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
-                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore());
+                .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
+
+
+            CreateMap<RequestCreatePackage, TravelPackage>();
+            CreateMap<RequestUpdatePackage, TravelPackage>();
+
+            CreateMap<RequestTravelers, Travelers>();
+
+            CreateMap<RequestPayment, Payment>();
+            //    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+
+            CreateMap<RequestRegisterReservationJson, Reservation>()
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.ReservationNumber, opt => opt.MapFrom(src => src.ReservationNumber))
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.ReservationDate, opt => opt.MapFrom(src => src.ReservationDate))
+                .ForMember(dest => dest.TravelPackageId, opt => opt.MapFrom(src => src.TravelPackageId))
+                .ForMember(dest => dest.Traveler, opt => opt.MapFrom(src => src.Traveler));
+            CreateMap<RequestUpdateReservationJson, Reservation>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+                .ForMember(dest => dest.TravelPackageId, opt => opt.MapFrom(src => src.TravelPackageId))
+                .ForMember(dest => dest.ReservationNumber, opt => opt.MapFrom(src => src.ReservationNumber))
+                .ForMember(dest => dest.ReservationDate, opt => opt.MapFrom(src => src.ReservationDate))
+                .ForMember(dest => dest.Status, opt => opt.MapFrom(src => src.Status))
+                .ForMember(dest => dest.Traveler, opt => opt.MapFrom(src => src.Traveler));
+
+
         }
 
         private void DomainToResponse() 
         {
             CreateMap<Review, ResponseReviewJson>();
+
+            CreateMap<TravelPackage, ResponseCreatedPackage>();
+            CreateMap<TravelPackage, ResponsePackage>();
+
+            CreateMap<Reservation, ResponseReservationJson>();
+            CreateMap<Reservation, ResponseRegisteredReservationJson>()
+            .ForMember(dest => dest.Traveler, opt => opt.MapFrom(src => src.Traveler));
+            CreateMap<Travelers, ResponseTravelers>();
+
 
         }
     }

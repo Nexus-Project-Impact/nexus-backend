@@ -71,5 +71,56 @@ namespace Nexus.Infrastructure.Services
             var paymentIntent = await service.CreateAsync(options);
             return paymentIntent.ClientSecret;
         }
+
+        // Boleto com stripe
+        public async Task<(string clientSecret, string boletoUrl)> CreatePaymentAsync(
+          double amount, string currency, string description,
+          string nome, string email, string cpf)
+        {
+            var paymentMethodOptions = new PaymentMethodCreateOptions
+            {
+                Type = "boleto",
+                Boleto = new PaymentMethodBoletoOptions
+                {
+                    TaxId = cpf.Replace(".", "").Replace("-", "")
+                },
+                BillingDetails = new PaymentMethodBillingDetailsOptions
+                {
+                    Name = nome,
+                    Email = email,
+                    Address = new AddressOptions
+                    {
+                        Line1 = "Rua Exemplo",
+                        City = "São Paulo",
+                        State = "SP",
+                        Country = "BR",
+                        PostalCode = "01000-000"
+                    }
+                }
+            };
+
+            var paymentMethodService = new PaymentMethodService();
+            var paymentMethod = await paymentMethodService.CreateAsync(paymentMethodOptions);
+
+            var paymentIntentOptions = new PaymentIntentCreateOptions
+            {
+                Amount = (long)(amount * 100),
+                Currency = currency,
+                PaymentMethod = paymentMethod.Id,
+                Description = description,
+                PaymentMethodTypes = new List<string> { "boleto" },
+                ReceiptEmail = email,
+                Confirm = true
+            };
+
+            var paymentIntentService = new PaymentIntentService();
+            var paymentIntent = await paymentIntentService.CreateAsync(paymentIntentOptions);
+
+            var boletoUrl = paymentIntent.NextAction?.BoletoDisplayDetails?.HostedVoucherUrl;
+            Console.WriteLine(boletoUrl);
+            var clientSecret = paymentIntent.ClientSecret;
+            return (clientSecret, boletoUrl);
+        }
+
     }
 }

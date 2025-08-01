@@ -1,13 +1,20 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Infrastructure.DataAccess;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Nexus.Infrastructure.Configuration;
 using Nexus.Infrastructure.Services;
+
+using Nexus.Infrastructure.DataAccess.Repositories;
+using Nexus.Domain.Repositories.Reservation;
+using Nexus.Domain.Repositories.Travelers;
+using Nexus.Domain.Repositories.Payments;
 
 namespace Nexus.Infrastructure
 {
@@ -54,7 +61,13 @@ namespace Nexus.Infrastructure
         private static void AddRepositories(IServiceCollection services)
         {
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IStripeService, Nexus.Infrastructure.Services.Stripe>();
+
+
+            services.AddScoped<IRepository<TravelPackage, int>, PackageRepository>();
+            services.AddScoped<IReservationRepository, ReservationRepository>();
+            services.AddScoped<IRepository<Review, int>, ReviewRepository>();
+            services.AddScoped<ITravelersRepository, TravelersRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
         }
 
         private static void AddIndentity(IServiceCollection services)
@@ -62,12 +75,14 @@ namespace Nexus.Infrastructure
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<NexusDbContext>() 
                 .AddDefaultTokenProviders();
+
         }
 
         private static void AddStripe(IServiceCollection services, IConfiguration configuration)
         {
             var stripeSection = configuration.GetSection("Stripe");
             services.Configure<StripeSettings>(stripeSection);
+            services.AddScoped<IStripeService, Nexus.Infrastructure.Services.Stripe>();
             services.AddSingleton<IStripeSettings>(sp => sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<StripeSettings>>().Value);
         }
     }

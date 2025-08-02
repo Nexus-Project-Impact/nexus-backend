@@ -19,11 +19,11 @@ namespace Nexus.Application.UseCases.Reservation.GetBytravelerName
            _unitOfWork = unitOfWork;
        }
 
-       public async Task<IEnumerable<ResponseRegisteredReservationJson>> ExecuteGetReservationByTravelerNameAsync(string travelerName)
+       public async Task<IEnumerable<ResponseReservationJson>> ExecuteGetReservationByTravelerNameAsync(string travelerName)
        {
           var reservations = await _reservationRepository.GetReservationByTravelerNameAsync(travelerName);
 
-          var reservationsJson = _mapper.Map<IEnumerable<ResponseRegisteredReservationJson>>(reservations);
+          var reservationsJson = _mapper.Map<IEnumerable<ResponseReservationJson>>(reservations);
 
           await _unitOfWork.Commit();
 

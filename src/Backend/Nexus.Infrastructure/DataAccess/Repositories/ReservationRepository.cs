@@ -76,42 +76,14 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                 .ToListAsync();
         }
 
-
-
-
-        /*
-        public async Task UpdateAsync(Reservation reservation)
+        public async Task<IEnumerable<Reservation>> GetMyReservationsAsync(string userId)
         {
-            _context.Reservations.Update(reservation);
-
-            await _unitOfWork.Commit();
-            
-            var existingTravelers = await _context.Travelers
-                        .Where(t => t.ReservationId == reservation.Id)
-                        .ToListAsync();
-
-            foreach (var traveler in reservation.Traveler)
-            {
-                if (traveler.Id == 0)
-                {
-                    _context.Travelers.Add(traveler);
-                }
-                else
-                {
-                    _context.Travelers.Update(traveler);
-                }
-            }
-
-            foreach (var existing in existingTravelers)
-            {
-                if (!reservation.Traveler.Any(t => t.Id == existing.Id))
-                {
-                    _context.Travelers.Remove(existing);
-                }
-            }
-            
+            return await _context.Reservations
+                 .Include(r => r.User)
+                 .Include(r => r.Traveler)
+                 .Where(r => r.UserId == userId)
+                 .ToListAsync();
         }
-        */
     }
 }
 

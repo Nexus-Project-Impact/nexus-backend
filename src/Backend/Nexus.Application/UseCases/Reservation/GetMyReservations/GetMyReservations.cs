@@ -8,30 +8,31 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-
-namespace Nexus.Application.UseCases.Reservation.GetReservationByCpf
+namespace Nexus.Application.UseCases.Reservation.GetMyReservations
 {
-    public class GetReservationByTravelerCpf : IGetReservationByTravelerCpf
+    public class GetMyReservations : IGetMyReservations
     {
-        private readonly IReservationRepository _reservationRepository;
+
+        private readonly IReservationRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
-        public GetReservationByTravelerCpf(IReservationRepository reservationRepository, IMapper mapper, IUnitOfWork unitOfWork)
+        public GetMyReservations(IReservationRepository repository, IMapper mapper,
+           IUnitOfWork unitOfWork)
         {
-            _reservationRepository = reservationRepository;
+            _repository = repository;
             _mapper = mapper;
             _unitOfWork = unitOfWork;
-        } 
+        }
 
-        public async Task<IEnumerable<ResponseReservationJson>> ExecuteGetReservationByTravelerCpfAsync(string Cpf)
+        public async Task<IEnumerable<ResponseReservationJson>> ExecuteGetMyReservationsAsync(string userId)
         {
-            var reservations = await _reservationRepository.GetReservationByCpfAsync(Cpf);
+            var reservations = await _repository.GetMyReservationsAsync(userId);
 
             var reservationsJson = _mapper.Map<IEnumerable<ResponseReservationJson>>(reservations);
 
             await _unitOfWork.Commit();
-            
+
             return reservationsJson;
         }
     }

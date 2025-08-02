@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nexus.Application.Services.Auth
 {
-    public class JwtService
+    public class JwtService : IJwtService
     {
         private readonly string _secretKey;
         private readonly string _issuer;

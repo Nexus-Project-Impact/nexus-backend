@@ -11,13 +11,13 @@ namespace Nexus.Application.UseCases.User.Auth
     {
         private readonly UserManager<Domain.Entities.User> _userManager;
         private readonly IConfiguration _config;
-        private readonly JwtService _jwtService;
+        private readonly IJwtService _jwtService;
      //   private readonly IEmailService _emailService;
         private readonly IMapper _mapper;
         private readonly SignInManager<Domain.Entities.User> _signInManager;
 
         public AuthUserUseCase(UserManager<Domain.Entities.User> userManager, IConfiguration config, 
-            JwtService jwtService, IMapper mapper, SignInManager<Domain.Entities.User> signIn)
+            IJwtService jwtService, IMapper mapper, SignInManager<Domain.Entities.User> signIn)
         {
             _userManager = userManager;
             _config = config;

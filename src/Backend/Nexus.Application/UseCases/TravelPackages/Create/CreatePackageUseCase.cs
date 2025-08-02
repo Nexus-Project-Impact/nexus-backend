@@ -12,7 +12,7 @@ using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.Create
 {
-    internal class CreatePackageUseCase : ICreatePackageUseCase
+    public class CreatePackageUseCase : ICreatePackageUseCase
     {
         private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IMapper _mapper;

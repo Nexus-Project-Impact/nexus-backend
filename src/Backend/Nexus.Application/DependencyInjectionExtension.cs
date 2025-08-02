@@ -85,7 +85,7 @@ namespace Nexus.Application
             var secretKey = configuration["Jwt:Key"];
             var issuer = configuration["Jwt:Issuer"];
             var audience = configuration["Jwt:Audience"];
-            services.AddScoped<JwtService>(provider => new JwtService(secretKey, issuer, audience));
+            services.AddScoped<IJwtService>(provider => new JwtService(secretKey, issuer, audience));
         }   
 
     }

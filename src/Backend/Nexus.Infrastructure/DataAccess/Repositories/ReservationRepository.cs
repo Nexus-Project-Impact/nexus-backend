@@ -24,7 +24,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         public async Task<IEnumerable<Reservation>> GetAllAsync() 
         { 
              return await _context.Reservations.Include
-                (r => r.Traveler).ToListAsync(); 
+                (r => r.Traveler).Include(r => r.TravelPackage).Include(r => r.User).ToListAsync(); 
         }
 
         public async Task<Reservation> GetByIdAsync(int id)

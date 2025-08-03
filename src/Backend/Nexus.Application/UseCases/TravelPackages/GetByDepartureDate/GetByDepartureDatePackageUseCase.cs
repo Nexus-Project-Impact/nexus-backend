@@ -10,7 +10,7 @@ using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.GetByDepartureDate
 {
-    internal class GetByDepartureDatePackageUseCase : IGetByDepartureDatePackageUseCase
+    public class GetByDepartureDatePackageUseCase : IGetByDepartureDatePackageUseCase
     {
         private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IMapper _mapper;

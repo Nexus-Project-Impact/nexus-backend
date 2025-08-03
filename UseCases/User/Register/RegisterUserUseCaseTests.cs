@@ -8,15 +8,15 @@ using Nexus.Domain.Repositories;
 using Shouldly;
 using System.Threading.Tasks;
 using Xunit;
-
+namespace UseCases.User.Register;
 public class RegisterUserUseCaseTests
 {
     [Fact]
     public async Task Execute_Should_Return_()
     {
         // Arrange
-        var userManagerMock = new Mock<UserManager<User>>(
-            Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null
+        var userManagerMock = new Mock<UserManager<Nexus.Domain.Entities.User>>(
+            Mock.Of<IUserStore<Nexus.Domain.Entities.User>>(), null, null, null, null, null, null, null, null
         );
         var mapperMock = new Mock<IMapper>();
         var unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -30,13 +30,13 @@ public class RegisterUserUseCaseTests
             CPF = "12345678900"
         };
 
-        var user = new User { Email = request.Email, Name = request.Name };
+        var user = new Nexus.Domain.Entities.User { Email = request.Email, Name = request.Name };
 
-        mapperMock.Setup(m => m.Map<User>(It.IsAny<RequestRegisterUserJson>())).Returns(user);
-        userManagerMock.Setup(m => m.FindByEmailAsync(request.Email)).ReturnsAsync((User)null);
-        userManagerMock.Setup(m => m.CreateAsync(It.IsAny<User>(), request.Password))
+        mapperMock.Setup(m => m.Map<Nexus.Domain.Entities.User>(It.IsAny<RequestRegisterUserJson>())).Returns(user);
+        userManagerMock.Setup(m => m.FindByEmailAsync(request.Email)).ReturnsAsync((Nexus.Domain.Entities.User)null);
+        userManagerMock.Setup(m => m.CreateAsync(It.IsAny<Nexus.Domain.Entities.User>(), request.Password))
             .ReturnsAsync(IdentityResult.Success);
-        userManagerMock.Setup(m => m.AddToRoleAsync(It.IsAny<User>(), "User"))
+        userManagerMock.Setup(m => m.AddToRoleAsync(It.IsAny<Nexus.Domain.Entities.User>(), "User"))
             .ReturnsAsync(IdentityResult.Success);
         unitOfWorkMock.Setup(u => u.Commit()).Returns(Task.CompletedTask);
 

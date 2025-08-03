@@ -15,7 +15,7 @@ namespace Nexus.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TravelPackageControler : ControllerBase
+    public class TravelPackageController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ICreatePackageUseCase _createPackageUseCase;
@@ -27,7 +27,7 @@ namespace Nexus.API.Controllers
         private readonly IGetByDestinationPackageUseCase _getByDestinationPackageUseCase;
         private readonly IGetByValuePackageUseCase _getByByValuePackageUseCase;
 
-        public TravelPackageControler(IMapper mapper, ICreatePackageUseCase createPackageUseCase, IGetByIdPackageUseCase getByIdPackageUseCase, IGetAllPackageUseCase getAllPackageUseCase, IUpdatePackageUseCase updatePackageUseCase, IDeletePackageUseCase deletePackageUseCase, IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase, IGetByDestinationPackageUseCase getByDestinationPackageUseCase, IGetByValuePackageUseCase getByByValuePackageUseCase)
+        public TravelPackageController(IMapper mapper, ICreatePackageUseCase createPackageUseCase, IGetByIdPackageUseCase getByIdPackageUseCase, IGetAllPackageUseCase getAllPackageUseCase, IUpdatePackageUseCase updatePackageUseCase, IDeletePackageUseCase deletePackageUseCase, IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase, IGetByDestinationPackageUseCase getByDestinationPackageUseCase, IGetByValuePackageUseCase getByByValuePackageUseCase)
         {
             _mapper = mapper;
             _createPackageUseCase = createPackageUseCase;

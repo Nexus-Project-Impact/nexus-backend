@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
-using Nexus.Domain.Repositories;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -53,7 +51,6 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddScoped<IRepository<Nexus.Domain.Entities.Review, int>, ReviewRepository>();
 
 
 var app = builder.Build();
@@ -78,7 +75,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -100,3 +96,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+    

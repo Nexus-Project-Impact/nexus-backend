@@ -1,13 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Nexus.Communication.Requests
+namespace Nexus.Domain.DTOs
 {
-    public class RequestCreatePackage
+    public class PackageDto
     {
         public string Title { get; set; }
         public string Description { get; set; }
@@ -16,6 +11,6 @@ namespace Nexus.Communication.Requests
         public DateTime DepartureDate { get; set; }
         public DateTime ReturnDate { get; set; }
         public double Value { get; set; }
-        public IFormFile? Image { get; set; }
+        public string ImageUrl { get; set; }
     }
 }

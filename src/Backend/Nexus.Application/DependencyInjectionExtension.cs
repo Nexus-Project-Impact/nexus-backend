@@ -26,6 +26,7 @@ using Nexus.Application.UseCases.Reservation.GetMyReservations;
 using Nexus.Application.UseCases.Reservation.GetReservationByCpf;
 using Nexus.Application.UseCases.Review.Delete;
 using Nexus.Application.UseCases.Review.GetAll;
+using Nexus.Application.UseCases.Review.GetByPackageId;
 using Nexus.Application.UseCases.Review.GetId;
 using Nexus.Application.UseCases.Review.Moderate;
 using Nexus.Application.UseCases.Review.Register;
@@ -56,11 +57,11 @@ namespace Nexus.Application
             services.AddScoped<IPaymentService, PaymentService>();
 
             services.AddScoped<IDeleteReviewUseCase, DeleteReviewUseCase>();
-            services.AddScoped<IDeleteReviewUseCase, DeleteReviewUseCase>();
             services.AddScoped<IModerateReviewUseCase, ModerateReviewUseCase>();
             services.AddScoped<IRegisterReviewUseCase, RegisterReviewUseCase>();
             services.AddScoped<IGetByIdReviewUseCase, GetByIdReviewUseCase>();
             services.AddScoped<IGetAllReviewUseCase, GetAllReviewUseCase>();
+            services.AddScoped<IGetByPackageIdReviewUseCase, GetByPackageIdReviewUseCase>();
 
             services.AddScoped<ICreatePackageUseCase, CreatePackageUseCase>();
             services.AddScoped<IGetAllPackageUseCase, GetAllPackageUseCase>();

@@ -116,6 +116,11 @@ namespace Nexus.Application.Services.Payments
 
             var payment = await _createPaymentUseCase.Execute(paymentDto);
 
+
+            if (payment == null)
+                throw new Exception("Erro ao criar pagamento no banco de dados.");
+
+
             var clientSecret = await _stripeService.CreatePaymentAsync(
               request.AmountPaid, // valor pago
               "BRL", // ou outro valor fixo ou obtido de outro local

@@ -21,7 +21,7 @@ namespace Nexus.API.Controllers
     public class Payment : ControllerBase
     {
         // enviar os dados do cartão pro stripe e  usar nosso próprio formulário
-        [HttpPost("pay")]
+        [HttpPost("pay-card")]
         [ProducesResponseType(typeof(ResponsePayment), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateCheckoutSession(
             [FromServices] IPaymentService paymentService,
@@ -29,7 +29,7 @@ namespace Nexus.API.Controllers
         {
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            var response = paymentService.PayWithCard(userId, request);
+            var response = await paymentService.PayWithCard(userId, request);
 
             return Ok(response);
         }

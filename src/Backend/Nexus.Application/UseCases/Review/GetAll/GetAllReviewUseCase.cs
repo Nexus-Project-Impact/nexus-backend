@@ -2,6 +2,7 @@
 using Nexus.Communication.Responses;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace Nexus.Application.UseCases.Review.GetAll
 {
     public class GetAllReviewUseCase : IGetAllReviewUseCase
     {
-        private readonly IRepository<Domain.Entities.Review, int> _repository;
+        private readonly IReviewRepository _repository;
         private readonly IMapper _mapper;
 
-        public GetAllReviewUseCase(IRepository<Domain.Entities.Review, int> repository, IMapper mapper)
+        public GetAllReviewUseCase(IReviewRepository repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;

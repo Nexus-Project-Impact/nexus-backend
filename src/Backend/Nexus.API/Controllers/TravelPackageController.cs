@@ -15,7 +15,7 @@ namespace Nexus.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TravelPackageControler : ControllerBase
+    public class TravelPackageController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ICreatePackageUseCase _createPackageUseCase;
@@ -27,7 +27,7 @@ namespace Nexus.API.Controllers
         private readonly IGetByDestinationPackageUseCase _getByDestinationPackageUseCase;
         private readonly IGetByValuePackageUseCase _getByByValuePackageUseCase;
 
-        public TravelPackageControler(IMapper mapper, ICreatePackageUseCase createPackageUseCase, IGetByIdPackageUseCase getByIdPackageUseCase, IGetAllPackageUseCase getAllPackageUseCase, IUpdatePackageUseCase updatePackageUseCase, IDeletePackageUseCase deletePackageUseCase, IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase, IGetByDestinationPackageUseCase getByDestinationPackageUseCase, IGetByValuePackageUseCase getByByValuePackageUseCase)
+        public TravelPackageController(IMapper mapper, ICreatePackageUseCase createPackageUseCase, IGetByIdPackageUseCase getByIdPackageUseCase, IGetAllPackageUseCase getAllPackageUseCase, IUpdatePackageUseCase updatePackageUseCase, IDeletePackageUseCase deletePackageUseCase, IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase, IGetByDestinationPackageUseCase getByDestinationPackageUseCase, IGetByValuePackageUseCase getByByValuePackageUseCase)
         {
             _mapper = mapper;
             _createPackageUseCase = createPackageUseCase;
@@ -130,21 +130,21 @@ namespace Nexus.API.Controllers
             }
         }
 
-        [HttpPost("GetByDepartureDate")]
-        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDepartureDate([FromBody] RequestDepartureDateRangePackage request)
+        [HttpGet("GetByDepartureDate")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDepartureDate([FromQuery] DateTime initialDate, DateTime finalDate)
         {
-            if (request.InitialDate == default || request.FinalDate == default) 
+            if (initialDate == default || finalDate == default) 
                 return BadRequest(new { message = "Os campos 'Data inicial' e 'Data final' são obrigatórios e devem estar em um formato válido." });
 
-            if (request.InitialDate > request.FinalDate)
+            if (initialDate > finalDate)
                 return BadRequest(new { message = "A data inicial não pode ser maior que a data final." });
 
             try
             {
-                var packages = await _getByDepartureDatePackageUseCase.ExecuteGetByDepartureDate(request.InitialDate, request.FinalDate);
+                var packages = await _getByDepartureDatePackageUseCase.ExecuteGetByDepartureDate(initialDate, finalDate);
 
                 if (packages == null || !packages.Any())
-                    return NotFound(new { message = $"Nenhum pacote encontrado entre {request.InitialDate:dd/MM/yyyy} e {request.FinalDate:dd/MM/yyyy}." });
+                    return NotFound(new { message = $"Nenhum pacote encontrado entre {initialDate:dd/MM/yyyy} e {finalDate:dd/MM/yyyy}." });
 
                 return Ok(packages);
             }
@@ -175,21 +175,21 @@ namespace Nexus.API.Controllers
 
         }
 
-        [HttpPost("GetByValue")]
-        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByValue ([FromBody] RequestValueRangePackage request)
+        [HttpGet("GetByValue")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByValue ([FromQuery] double minValue, double maxValue)
         {
-            if (request.MinValue == 0 || request.MaxValue == 0)
+            if (minValue == 0 || maxValue == 0)
                 return BadRequest(new { message = "Os campos 'Valor minimo' e 'Valor máximo' são obrigatórios e devem estar em um formato válido." });
 
-            if (request.MinValue > request.MaxValue)
+            if (minValue > maxValue)
                 return BadRequest(new { message = "O valor minimo não pode ser maior que o valor máximo." });
 
             try
             {
-                var packages = await _getByByValuePackageUseCase.ExecuteGetByValue(request.MinValue, request.MaxValue);
+                var packages = await _getByByValuePackageUseCase.ExecuteGetByValue(minValue, maxValue);
 
                 if (packages == null || !packages.Any())
-                    return NotFound(new { message = $"Nenhum pacote encontrado entre {request.MinValue: R$ 00,00} e {request.MaxValue:R$ 00,00}." });
+                    return NotFound(new { message = $"Nenhum pacote encontrado entre {minValue: R$ 00,00} e {maxValue:R$ 00,00}." });
 
                 return Ok(packages);
             }

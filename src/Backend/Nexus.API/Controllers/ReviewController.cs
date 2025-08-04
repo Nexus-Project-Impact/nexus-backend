@@ -76,12 +76,38 @@ namespace Nexus.API.Controllers
             }
         }
 
+        [HttpGet("test-auth")]
+        [Authorize]
+        public IActionResult TestAuth()
+        {
+            var allClaims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            
+            return Ok(new { 
+                userId = userId,
+                claims = allClaims,
+                isAuthenticated = User.Identity?.IsAuthenticated,
+                authType = User.Identity?.AuthenticationType
+            });
+        }
+
         [HttpPost("Create")]
         [ProducesResponseType(typeof(ResponseRegisteredReviewJson), StatusCodes.Status201Created)]
-        //[Authorize(Roles = ("User"))]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Register([FromServices] IRegisterReviewUseCase useCase, [FromBody] RequestRegisterReviewJson request)
         {
-            var result = await useCase.Execute(request);
+            // Extrair o UserId do token JWT
+            var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest(new { 
+                    error = "UserId não encontrado no token",
+                    message = "Usuário não autenticado corretamente"
+                });
+            }
+
+            var result = await useCase.Execute(request, userId);
             return Created(string.Empty, result);
         }
 

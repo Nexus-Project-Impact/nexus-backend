@@ -19,10 +19,8 @@ namespace Nexus.Application.Services.AutoMapper
                 .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email));
 
-
             CreateMap<RequestCreatePackage, TravelPackage>();
             CreateMap<RequestUpdatePackage, TravelPackage>();
-
 
             CreateMap<RequestTravelers, Travelers>();
 
@@ -37,12 +35,13 @@ namespace Nexus.Application.Services.AutoMapper
                 .ForMember(dest => dest.ReservationDate, opt => opt.MapFrom(src => src.ReservationDate))
                 .ForMember(dest => dest.Traveler, opt => opt.MapFrom(src => src.Traveler));
 
-
+            CreateMap<RequestRegisterReviewJson, Review>();
         }
 
         private void DomainToResponse() 
         {
             CreateMap<Review, ResponseReviewJson>();
+            CreateMap<Review, ResponseRegisteredReviewJson>();
 
             CreateMap<TravelPackage, ResponseCreatedPackage>();
             CreateMap<TravelPackage, ResponsePackage>();
@@ -52,8 +51,6 @@ namespace Nexus.Application.Services.AutoMapper
                 .ForMember(dest => dest.TravelPackageImageUrl, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.ImageUrl : null));
             
             CreateMap<Travelers, ResponseTravelers>();
-
-
         }
     }
 }

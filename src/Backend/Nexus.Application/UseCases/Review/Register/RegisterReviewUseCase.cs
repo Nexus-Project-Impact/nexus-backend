@@ -27,30 +27,18 @@ namespace Nexus.Application.UseCases.Review.Register
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseRegisteredReviewJson> Execute(RequestRegisterReviewJson request)
+        public async Task<ResponseRegisteredReviewJson> Execute(RequestRegisterReviewJson request, string userId)
         {
             var review = _mapper.Map<Domain.Entities.Review>(request);
+            review.UserId = userId; // Definir o UserId a partir do token
+            
             await _repository.AddAsync(review);
             await _unitOfWork.Commit();
 
-            return new ResponseRegisteredReviewJson
-            {
-                Id = review.Id,
-                PackageId = review.PackageId,
-                Rating = review.Rating,
-                Comment = review.Comment,
-                CreatedAt = review.CreatedAt,
-                Mensage = "Avaliação registrada com sucesso!"
-            };
-
-        }
-    }
-
-    public class MappingProfile : Profile
-    {
-        public MappingProfile()
-        {
-            CreateMap<RequestRegisterReviewJson, Domain.Entities.Review>();
+            var response = _mapper.Map<ResponseRegisteredReviewJson>(review);
+            response.Mensage = "Review registered successfully!";
+            
+            return response;
         }
     }
 }

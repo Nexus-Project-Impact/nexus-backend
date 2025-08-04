@@ -15,6 +15,7 @@ using Nexus.Infrastructure.DataAccess.Repositories;
 using Nexus.Domain.Repositories.Reservation;
 using Nexus.Domain.Repositories.Travelers;
 using Nexus.Domain.Repositories.Packages;
+using System.Security.Claims;
 
 namespace Nexus.Infrastructure
 {
@@ -43,7 +44,22 @@ namespace Nexus.Infrastructure
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
                     IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(key)),
-                    ClockSkew = TimeSpan.Zero 
+                    ClockSkew = TimeSpan.Zero,
+                    // Mapear claims automaticamente
+                    NameClaimType = ClaimTypes.Name,
+                    RoleClaimType = ClaimTypes.Role
+                };
+
+                // Configurar eventos para debug (opcional)
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // Log para debug - pode ser removido em produção
+                        var claims = context.Principal?.Claims.Select(c => $"{c.Type}: {c.Value}");
+                        Console.WriteLine($"Token validado com claims: {string.Join(", ", claims ?? new string[0])}");
+                        return Task.CompletedTask;
+                    }
                 };
             });
         }

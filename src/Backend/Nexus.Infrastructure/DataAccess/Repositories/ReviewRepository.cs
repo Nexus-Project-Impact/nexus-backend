@@ -23,17 +23,22 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
 
         public async Task<IEnumerable<Domain.Entities.Review>> GetAllAsync()
         {
-            return await _context.Reviews.ToListAsync();
+            return await _context.Reviews
+                .Include(r => r.User)
+                .ToListAsync();
         }
 
         public async Task<Domain.Entities.Review?> GetByIdAsync(int id)
         {
-            return await _context.Reviews.FindAsync(id);
+            return await _context.Reviews
+                .Include(r => r.User)
+                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<IEnumerable<Domain.Entities.Review>> GetByPackageIdAsync(int packageId)
         {
             return await _context.Reviews
+                .Include(r => r.User)
                 .Where(r => r.PackageId == packageId)
                 .OrderByDescending(r => r.CreatedAt)
                 .ToListAsync();

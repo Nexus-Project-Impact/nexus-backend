@@ -40,7 +40,8 @@ namespace Nexus.Application.Services.AutoMapper
 
         private void DomainToResponse() 
         {
-            CreateMap<Review, ResponseReviewJson>();
+            CreateMap<Review, ResponseReviewJson>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
             CreateMap<Review, ResponseRegisteredReviewJson>();
 
             CreateMap<TravelPackage, ResponseCreatedPackage>();

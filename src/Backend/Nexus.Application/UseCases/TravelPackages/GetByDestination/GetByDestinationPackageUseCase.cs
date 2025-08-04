@@ -27,9 +27,7 @@ namespace Nexus.Application.UseCases.Packages.GetByDestination
                 return new List<ResponsePackage?>();
 
             var packages = await _repository.GetByDestinationAsync(destination);
-
             var packagesJson = _mapper.Map<IEnumerable<ResponsePackage?>>(packages);
-
             return packagesJson;
         }
     }

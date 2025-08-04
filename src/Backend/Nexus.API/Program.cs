@@ -2,11 +2,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
-using Nexus.Domain.Repositories;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -76,7 +74,6 @@ using (var scope = app.Services.CreateScope())
         throw new SeedDataException();
     }
 }
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

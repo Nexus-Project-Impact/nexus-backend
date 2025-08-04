@@ -12,8 +12,8 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250801130423_MigrationInitial")]
-    partial class MigrationInitial
+    [Migration("20250801151702_MigrationAttReservation")]
+    partial class MigrationAttReservation
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -175,6 +175,40 @@ namespace Nexus.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Midias", (string)null);
+                });
+
+            modelBuilder.Entity("Nexus.Domain.Entities.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("AmountPaid")
+                        .HasColumnType("float");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Receipt")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReservationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Status")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReservationId")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
@@ -423,6 +457,17 @@ namespace Nexus.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Nexus.Domain.Entities.Payment", b =>
+                {
+                    b.HasOne("Nexus.Domain.Entities.Reservation", "reservation")
+                        .WithOne("Payment")
+                        .HasForeignKey("Nexus.Domain.Entities.Payment", "ReservationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("reservation");
+                });
+
             modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("Nexus.Domain.Entities.TravelPackage", "TravelPackage")
@@ -464,6 +509,9 @@ namespace Nexus.Infrastructure.Migrations
 
             modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
                 {
+                    b.Navigation("Payment")
+                        .IsRequired();
+
                     b.Navigation("Traveler");
                 });
 #pragma warning restore 612, 618

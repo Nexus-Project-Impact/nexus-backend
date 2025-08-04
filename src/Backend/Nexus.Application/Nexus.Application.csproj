@@ -28,4 +28,8 @@
     <ProjectReference Include="..\Nexus.Infrastructure\Nexus.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UseCases\Payments\Update\" />
+  </ItemGroup>
+
 </Project>

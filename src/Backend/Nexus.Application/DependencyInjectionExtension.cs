@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Email;
+using Nexus.Application.Services.Payments;
 using Nexus.Application.UseCases.Dashboard;
 using Nexus.Application.UseCases.Midia;
 using Nexus.Application.UseCases.Packages.Create;
@@ -12,6 +13,8 @@ using Nexus.Application.UseCases.Packages.GetByDestination;
 using Nexus.Application.UseCases.Packages.GetById;
 using Nexus.Application.UseCases.Packages.GetByValue;
 using Nexus.Application.UseCases.Packages.Update;
+using Nexus.Application.UseCases.Payments.Create;
+using Nexus.Application.UseCases.Payments.Read;
 using Nexus.Application.UseCases.Reservation.Create;
 using Nexus.Application.UseCases.Reservation.Delete;
 using Nexus.Application.UseCases.Reservation.GetAll;
@@ -72,6 +75,8 @@ namespace Nexus.Application
             services.AddScoped<IDeleteReservationUseCase, DeleteReservationUseCase>();
 
             services.AddScoped<ICreatePaymentUseCase, CreatePaymentUseCase>();
+            services.AddScoped<IReadPaymentUseCase, ReadPaymentsUseCase>();
+
             services.AddScoped<IGetReservationByTravelerCpf, GetReservationByTravelerCpf>();
             services.AddScoped<IGetReservationByTravelerName, GetReservationByTravelerName>();
             services.AddScoped<IGetMyReservations, GetMyReservations>();

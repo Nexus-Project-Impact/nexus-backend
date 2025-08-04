@@ -20,18 +20,27 @@ namespace Nexus.API.Controllers
             return Created(string.Empty, result);
         }
 
-        [HttpPost("test")]
-        public async Task<IActionResult> Teste ([FromBody] RequestLoginUserJson request)
-        {
-            Console.WriteLine("Teste" + request.Email);
-            return Ok(string.Empty);
-        }
-
         [HttpPost("login")]
         [ProducesResponseType(typeof(ResponseLoginUserJson), StatusCodes.Status200OK)]
         public async Task<IActionResult> Login([FromServices] IAuthUserUseCase useCase, [FromBody] RequestLoginUserJson request)
         {
             var result = await useCase.Execute(request);
+            return Ok(result);
+        }
+
+        [HttpPost("login-admin")]
+        [ProducesResponseType(typeof(ResponseLoginUserJson), StatusCodes.Status200OK)]
+        public async Task<IActionResult> LoginAdmin([FromServices] IAuthUserUseCase useCase, [FromBody] RequestLoginUserJson request)
+        {
+            var result = await useCase.Execute(request);
+          
+            var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+
+            var jwtToken = handler.ReadJwtToken(result.Token);
+
+            var roles = jwtToken.Claims.Where(c => c.Type == "role").Select(c => c.Value);
+            if (!roles.Contains("Admin"))
+                return Forbid();
             return Ok(result);
         }
 

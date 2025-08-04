@@ -6,6 +6,7 @@ using Nexus.Application.Services.Payments;
 using Nexus.Application.UseCases.Payments.Create;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Domain.DTOs;
 using Nexus.Domain.Entities;
 using Nexus.Infrastructure.Services;
 using Stripe;
@@ -21,17 +22,16 @@ namespace Nexus.API.Controllers
     {
         // enviar os dados do cartão pro stripe e  usar nosso próprio formulário
         [HttpPost("pay")]
+        [ProducesResponseType(typeof(ResponsePayment), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateCheckoutSession(
-            [FromServices] IStripeService stripeService,
-            [FromBody] RequestPayment model)
+            [FromServices] IPaymentService paymentService,
+            [FromBody] RequestPayment request)
         {
-            var clientSecret = await stripeService.CreatePaymentAsync(
-                model.AmountPaid, // valor pago
-                "BRL", // ou outro valor fixo ou obtido de outro local
-                $"Pagamento via {model.PaymentMethod}"
-            );
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-            return Ok(new { clientSecret });
+            var response = paymentService.PayWithCard(userId, request);
+
+            return Ok(response);
         }
 
         //[HttpPost("pay-bank-slip")]
@@ -41,6 +41,35 @@ namespace Nexus.API.Controllers
 
         //    return Ok(result);
         //}
+
+        // [HttpPost("pay-pix")]
+        // [ProducesResponseType(typeof(ResponsePayment), StatusCodes.Status200OK)]
+        // public async Task<ActionResult> PayWithPix(
+        //[FromServices] UserManager<User> userManager,
+        //[FromServices] IPaymentService useCase,
+        //[FromBody] RequestPayment request)
+        // {
+        //     var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        //     var response = await useCase.PayWithPix(userId, request);
+
+        //     return Ok(response);
+        // }
+
+        [HttpPost("pay-pix")]
+        [ProducesResponseType(typeof(ResponsePix), StatusCodes.Status200OK)]
+       public async Task<ActionResult> PayWithPix(
+      [FromServices] UserManager<User> userManager,
+      [FromServices] IPaymentService useCase,
+      [FromBody] RequestPayment request)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            var response = await useCase.PayWithPix(userId, request);
+
+            return Ok(response);
+        }
+
 
         [HttpPost("pay-boleto")]
         [ProducesResponseType(typeof(ResponseBoleto), StatusCodes.Status200OK)]
@@ -61,6 +90,17 @@ namespace Nexus.API.Controllers
 
             return Ok(response);
         }
+
+        [HttpGet("payments")]
+        [ProducesResponseType(typeof(IEnumerable<PaymentDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPayments([FromServices] IPaymentService paymentService)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var payments = await paymentService.GetPayments(userId);
+            return Ok(payments);
+        }
+
+
         //sistema de checkout para usar interface do stripe
         //[HttpPost("create-checkout-session")]
         //public IActionResult CreateCheckoutSession([FromServices] IStripeService stripeService, [FromBody] RequestCheckoutFormModel model)

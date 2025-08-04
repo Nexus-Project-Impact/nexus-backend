@@ -24,9 +24,7 @@ namespace Nexus.Application.UseCases.Packages.GetByDepartureDate
         public async Task<IEnumerable<ResponsePackage?>> ExecuteGetByDepartureDate(DateTime initialDate, DateTime finalDate)
         {
             var packages =  await _repository.GetByDepartureDateAsync(initialDate, finalDate);
-
             var packagesJson = _mapper.Map<IEnumerable<ResponsePackage?>>(packages);
-
             return packagesJson;
         }
 

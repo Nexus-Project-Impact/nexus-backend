@@ -122,5 +122,18 @@ namespace Nexus.Infrastructure.Services
             return (clientSecret, boletoUrl);
         }
 
+        public Task<PaymentIntent> CreatePaymentPixAsync(double amount)
+        {
+            var options = new PaymentIntentCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "pix" },
+                Amount = 1000,
+                Currency = "brl",
+            };
+            var service = new PaymentIntentService();
+            PaymentIntent paymentIntent = service.Create(options);
+
+            return Task.FromResult(paymentIntent);
+        }
     }
 }

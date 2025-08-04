@@ -202,7 +202,8 @@ namespace Nexus.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReservationId");
+                    b.HasIndex("ReservationId")
+                        .IsUnique();
 
                     b.ToTable("Payments");
                 });
@@ -456,8 +457,8 @@ namespace Nexus.Infrastructure.Migrations
             modelBuilder.Entity("Nexus.Domain.Entities.Payment", b =>
                 {
                     b.HasOne("Nexus.Domain.Entities.Reservation", "reservation")
-                        .WithMany()
-                        .HasForeignKey("ReservationId")
+                        .WithOne("Payment")
+                        .HasForeignKey("Nexus.Domain.Entities.Payment", "ReservationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -505,6 +506,9 @@ namespace Nexus.Infrastructure.Migrations
 
             modelBuilder.Entity("Nexus.Domain.Entities.Reservation", b =>
                 {
+                    b.Navigation("Payment")
+                        .IsRequired();
+
                     b.Navigation("Traveler");
                 });
 #pragma warning restore 612, 618

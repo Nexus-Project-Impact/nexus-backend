@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 namespace Nexus.Domain.Entities
 {
     public class Payment
-    {
+        {
         public int Id { get; set; }
 
         public int ReservationId { get; set; }
 
-        public Reservation? reservation { get; set; }
+        public Reservation? Reservation { get; set; } // Corrigido para PascalCase
 
         public double AmountPaid { get; set; }
 

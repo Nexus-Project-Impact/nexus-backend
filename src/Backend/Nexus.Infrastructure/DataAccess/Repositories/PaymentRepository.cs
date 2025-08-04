@@ -29,7 +29,8 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
 
         public async Task<IEnumerable<Payment>> GetAllAsync()
         {
-           return await _context.Payments.ToListAsync();
+           // Inclui Reservation ao buscar pagamentos
+           return await _context.Payments.Include(p => p.Reservation).ToListAsync();
         }
 
         public async Task<Payment> GetByIdAsync(int id)

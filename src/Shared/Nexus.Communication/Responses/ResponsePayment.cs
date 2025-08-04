@@ -9,10 +9,7 @@ namespace Nexus.Communication.Responses
     public class ResponsePayment
     {
 
-        public int Id { get; set; }
-        public double AmountPaid { get; set; }
-        public DateTime PaymentDate { get; set; }
-        public string? Status { get; set; }
+      public string PaymentIntent { get; set; }
 
     }
 }

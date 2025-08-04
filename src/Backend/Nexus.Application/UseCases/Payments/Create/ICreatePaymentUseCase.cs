@@ -1,5 +1,6 @@
 ﻿using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Domain.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,6 @@ namespace Nexus.Application.UseCases.Payments.Create
 {
     public interface ICreatePaymentUseCase
     {
-        public Task<ResponsePayment> Execute(RequestPayment request);
+        public Task<PaymentDto> Execute(PaymentDto request);
     }
 }

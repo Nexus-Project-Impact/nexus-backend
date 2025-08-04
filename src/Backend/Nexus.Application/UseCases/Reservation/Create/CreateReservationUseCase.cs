@@ -38,7 +38,7 @@ namespace Nexus.Application.UseCases.Reservation.Create
 
             return new ResponseRegisteredReservationJson
             {
-                ReservationNumber = reservation.ReservationNumber
+                Message = "Reserva realizada com sucesso!",
             };
         }
     }

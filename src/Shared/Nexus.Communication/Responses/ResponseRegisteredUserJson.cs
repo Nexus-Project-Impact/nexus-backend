@@ -8,6 +8,6 @@ namespace Nexus.Communication.Responses
 {
     public class ResponseRegisteredUserJson
     {
-        public string Name { get; set; } = string.Empty;
+        public string Message { get; set; } = string.Empty;
     }
 }

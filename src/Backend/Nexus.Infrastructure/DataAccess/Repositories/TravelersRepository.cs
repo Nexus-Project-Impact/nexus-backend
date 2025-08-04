@@ -18,27 +18,27 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task ExecuteAddAsync(Travelers travelers)
+        public async Task AddAsync(Travelers travelers)
         {
             await _context.Travelers.AddAsync(travelers);
         }
 
-        public Task ExecuteDeleteAsync(int id)
+        public Task DeleteAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Travelers>> ExecuteGetAllAsync()
+        public Task<IEnumerable<Travelers>> GetAllAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Travelers> ExecuteGetByIdAsync(int id)
+        public Task<Travelers> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task ExecuteUpdateAsync(Travelers entity)
+        public Task UpdateAsync(Travelers entity)
         {
             throw new NotImplementedException();
         }

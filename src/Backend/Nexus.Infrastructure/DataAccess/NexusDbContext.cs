@@ -17,7 +17,6 @@ namespace Nexus.Infrastructure.DataAccess
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Midia> Midias { get; set; }
         public DbSet<Review> Reviews { get; set; } 
-
         public DbSet<TravelPackage> TravelPackages { get; set; }
 
 
@@ -38,7 +37,7 @@ namespace Nexus.Infrastructure.DataAccess
 
             modelBuilder.Entity<Reservation>()
                 .HasMany(r => r.Traveler)
-                .WithOne(t => t.Reservation )
+                .WithOne(t => t.Reservation)
                 .HasForeignKey("ReservationId")
                 .OnDelete(DeleteBehavior.Cascade);
 
@@ -48,6 +47,13 @@ namespace Nexus.Infrastructure.DataAccess
                 .HasForeignKey(r => r.TravelPackageId)
                 .OnDelete(DeleteBehavior.Restrict);
 
+            /*
+            modelBuilder.Entity<Reservation>()
+            .HasOne(r => r.PaymentStatus)
+            .WithOne(p => p.Reservation)
+            .HasForeignKey("PaymentId)
+            .OnDelete(DeleteBehavior.Cascade);
+            */
         }
 
 

@@ -1,15 +1,24 @@
-using System;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
+using Nexus.Domain.Repositories;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Microsoft.OpenApi.Models;
+using Nexus.Infrastructure.DataAccess.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()// Permite qualquer origem
+              .AllowAnyMethod() // Permite qualquer método HTTP (GET, POST, PUT, DELETE, etc.)
+              .AllowAnyHeader(); // Permite qualquer cabeçalho HTTP
+    });
+});
 
 // Add services to the container.
 
@@ -48,6 +57,8 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -65,7 +76,8 @@ using (var scope = app.Services.CreateScope())
         throw new SeedDataException();
     }
 }
-    
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

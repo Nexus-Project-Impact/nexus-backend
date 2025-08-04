@@ -38,7 +38,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetAllReviews")]
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = ("Admin, User"))]
         public async Task<ActionResult<IEnumerable<ResponseReviewJson>>> GetAll()
         {
             try
@@ -57,7 +57,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = ("Admin, User"))]
         public async Task<ActionResult<ResponseReviewJson>> ExecuteGetById(int id)
         {
             if (id == 0) return NotFound(new { message = $"O valor do campo Id não pode ser nulo." });
@@ -78,7 +78,7 @@ namespace Nexus.API.Controllers
 
         [HttpPost("Create")]
         [ProducesResponseType(typeof(ResponseRegisteredReviewJson), StatusCodes.Status201Created)]
-        [Authorize(Roles = "User")]
+        //[Authorize(Roles = ("User"))]
         public async Task<IActionResult> Register([FromServices] IRegisterReviewUseCase useCase, [FromBody] RequestRegisterReviewJson request)
         {
             var result = await useCase.Execute(request);
@@ -87,7 +87,7 @@ namespace Nexus.API.Controllers
 
         [HttpPut("Moderate/{id}")]
         [ProducesResponseType(typeof(ResponseModeratedReviewJson), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Moderate([FromServices] IModerateReviewUseCase moderateReviewUseCase,int id,[FromBody] RequestModerateReviewJson request)
         {
 
@@ -112,7 +112,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteReview(int id)
         {
             try

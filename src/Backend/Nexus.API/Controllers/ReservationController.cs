@@ -16,7 +16,7 @@ using Nexus.Domain.Entities;
 
 namespace Nexus.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ReservationController : ControllerBase
     {

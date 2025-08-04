@@ -47,7 +47,10 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<TravelPackage, ResponseCreatedPackage>();
             CreateMap<TravelPackage, ResponsePackage>();
 
-            CreateMap<Reservation, ResponseReservationJson>();
+            CreateMap<Reservation, ResponseReservationJson>()
+                .ForMember(dest => dest.TravelPackageDestination, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.Destination : null))
+                .ForMember(dest => dest.TravelPackageImageUrl, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.ImageUrl : null));
+            
             CreateMap<Travelers, ResponseTravelers>();
 
 

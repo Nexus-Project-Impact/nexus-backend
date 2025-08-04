@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Nexus.Application.UseCases.Review;
 using Nexus.Application.UseCases.Review.Delete;
 using Nexus.Application.UseCases.Review.GetAll;
+using Nexus.Application.UseCases.Review.GetByPackageId;
 using Nexus.Application.UseCases.Review.GetId;
 using Nexus.Application.UseCases.Review.Moderate;
 using Nexus.Application.UseCases.Review.Register;
@@ -21,18 +22,21 @@ namespace Nexus.API.Controllers
         private readonly IMapper _mapper;
         private readonly IGetAllReviewUseCase _allReviewUseCase;
         private readonly IGetByIdReviewUseCase _getByIdReviewUseCase;
+        private readonly IGetByPackageIdReviewUseCase _getByPackageIdReviewUseCase;
         private readonly IModerateReviewUseCase _moderateReviewUseCase;
         private readonly IDeleteReviewUseCase _deleteReviewUseCase;
 
         public ReviewController(IMapper mapper, 
             IGetAllReviewUseCase allReviewUseCase, 
-            IGetByIdReviewUseCase getByIdReviewUseCase, 
+            IGetByIdReviewUseCase getByIdReviewUseCase,
+            IGetByPackageIdReviewUseCase getByPackageIdReviewUseCase,
             IModerateReviewUseCase updateReviewUseCase, 
             IDeleteReviewUseCase deleteReviewUseCase)
         {
             _mapper = mapper;
             _allReviewUseCase = allReviewUseCase;
             _getByIdReviewUseCase = getByIdReviewUseCase;
+            _getByPackageIdReviewUseCase = getByPackageIdReviewUseCase;
             _moderateReviewUseCase = updateReviewUseCase;
             _deleteReviewUseCase = deleteReviewUseCase;
         }
@@ -67,6 +71,27 @@ namespace Nexus.API.Controllers
 
                 if (reviews == null)
                     return NotFound(new { message = $"Avaliação com ID {id} não foi encontrado." });
+
+                return Ok(reviews);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetByPackageId/{packageId}")]
+        public async Task<ActionResult<IEnumerable<ResponseReviewJson>>> GetByPackageId(int packageId)
+        {
+            if (packageId <= 0) 
+                return BadRequest(new { message = "O ID do pacote deve ser um valor válido." });
+
+            try
+            {
+                var reviews = await _getByPackageIdReviewUseCase.ExecuteGetByPackageId(packageId);
+
+                if (reviews == null || !reviews.Any())
+                    return NotFound(new { message = $"Nenhuma avaliação encontrada para o pacote com ID {packageId}." });
 
                 return Ok(reviews);
             }
@@ -155,8 +180,5 @@ namespace Nexus.API.Controllers
                 return StatusCode(500, new { errors = new[] { ex.Message } });
             }
         }
-
-
-
     }
 }

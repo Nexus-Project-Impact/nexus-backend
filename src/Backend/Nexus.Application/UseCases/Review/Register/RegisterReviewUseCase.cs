@@ -2,6 +2,7 @@
 using Nexus.Communication.Responses;
 using Nexus.Domain.Repositories;
 using Nexus.Domain.Entities;
+using Nexus.Domain.Repositories.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,12 +14,12 @@ namespace Nexus.Application.UseCases.Review.Register
 {
     public class RegisterReviewUseCase : IRegisterReviewUseCase
     {
-        private readonly IRepository<Domain.Entities.Review, int> _repository;
+        private readonly IReviewRepository _repository;
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
 
         public RegisterReviewUseCase(
-            IRepository<Domain.Entities.Review, int> repository,
+            IReviewRepository repository,
             IMapper mapper,
             IUnitOfWork unitOfWork)
         {

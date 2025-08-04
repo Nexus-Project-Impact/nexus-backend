@@ -1,6 +1,7 @@
 ﻿using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Review;
 using System.Threading.Tasks;
 using AutoMapper;
 
@@ -8,11 +9,11 @@ namespace Nexus.Application.UseCases.Review.Moderate
 {
     public class ModerateReviewUseCase : IModerateReviewUseCase
     {
-        private readonly IRepository<Domain.Entities.Review, int> _repository;
+        private readonly IReviewRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public ModerateReviewUseCase(
-            IRepository<Domain.Entities.Review, int> repository,
+            IReviewRepository repository,
             IUnitOfWork unitOfWork)
         {
             _repository = repository;

@@ -15,6 +15,7 @@ using Nexus.Infrastructure.DataAccess.Repositories;
 using Nexus.Domain.Repositories.Reservation;
 using Nexus.Domain.Repositories.Travelers;
 using Nexus.Domain.Repositories.Packages;
+using Nexus.Domain.Repositories.Review;
 using System.Security.Claims;
 
 namespace Nexus.Infrastructure
@@ -80,7 +81,7 @@ namespace Nexus.Infrastructure
 
             services.AddScoped<IPackageRepository<TravelPackage, int>, PackageRepository>();
             services.AddScoped<IReservationRepository, ReservationRepository>();
-            services.AddScoped<IRepository<Review, int>, ReviewRepository>();
+            services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<ITravelersRepository, TravelersRepository>();
 
             services.AddScoped<IDashboardMetricsRepositoy, DashboardMetricsRepository>();

@@ -10,6 +10,6 @@ namespace Nexus.Application.UseCases.Review.Register
 {
     public interface IRegisterReviewUseCase
     {
-        public Task<ResponseRegisteredReviewJson> Execute(RequestRegisterReviewJson request);
+        public Task<ResponseRegisteredReviewJson> Execute(RequestRegisterReviewJson request, string userId);
     }
 }

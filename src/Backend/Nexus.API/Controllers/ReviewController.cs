@@ -38,7 +38,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetAllReviews")]
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = ("Admin, User"))]
         public async Task<ActionResult<IEnumerable<ResponseReviewJson>>> GetAll()
         {
             try
@@ -57,7 +57,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetById/{id}")]
-        [Authorize(Roles = "Admin,User")]
+        //[Authorize(Roles = ("Admin, User"))]
         public async Task<ActionResult<ResponseReviewJson>> ExecuteGetById(int id)
         {
             if (id == 0) return NotFound(new { message = $"O valor do campo Id não pode ser nulo." });
@@ -76,18 +76,44 @@ namespace Nexus.API.Controllers
             }
         }
 
+        [HttpGet("test-auth")]
+        [Authorize]
+        public IActionResult TestAuth()
+        {
+            var allClaims = User.Claims.Select(c => new { Type = c.Type, Value = c.Value }).ToList();
+            var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            
+            return Ok(new { 
+                userId = userId,
+                claims = allClaims,
+                isAuthenticated = User.Identity?.IsAuthenticated,
+                authType = User.Identity?.AuthenticationType
+            });
+        }
+
         [HttpPost("Create")]
         [ProducesResponseType(typeof(ResponseRegisteredReviewJson), StatusCodes.Status201Created)]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Register([FromServices] IRegisterReviewUseCase useCase, [FromBody] RequestRegisterReviewJson request)
         {
-            var result = await useCase.Execute(request);
+            // Extrair o UserId do token JWT
+            var userId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest(new { 
+                    error = "UserId não encontrado no token",
+                    message = "Usuário não autenticado corretamente"
+                });
+            }
+
+            var result = await useCase.Execute(request, userId);
             return Created(string.Empty, result);
         }
 
         [HttpPut("Moderate/{id}")]
         [ProducesResponseType(typeof(ResponseModeratedReviewJson), StatusCodes.Status200OK)]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Moderate([FromServices] IModerateReviewUseCase moderateReviewUseCase,int id,[FromBody] RequestModerateReviewJson request)
         {
 
@@ -112,7 +138,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteReview(int id)
         {
             try

@@ -4,6 +4,8 @@ using Nexus.Application.Services.Auth;
 using Nexus.Application.Services.Email;
 using Nexus.Application.Services.Payments;
 using Nexus.Application.UseCases.Dashboard;
+using Nexus.Application.UseCases.Dashboard.Exports.Excel;
+using Nexus.Application.UseCases.Dashboard.Exports.Pdf;
 using Nexus.Application.UseCases.Midia;
 using Nexus.Application.UseCases.Packages.Create;
 using Nexus.Application.UseCases.Packages.Delete;
@@ -82,6 +84,8 @@ namespace Nexus.Application
             services.AddScoped<IGetMyReservations, GetMyReservations>();
 
             services.AddScoped<IGetDashboardMetricsUseCase, GetDashboardMetricsUseCase>();
+            services.AddScoped<IExportToExcelUseCase, ExportToExcelUseCase>();
+            services.AddScoped<IExportToPdfUseCase, ExportToPdfUseCase>();
 
         }
         private static void AddJwtService(IServiceCollection services, IConfiguration configuration)
@@ -89,7 +93,7 @@ namespace Nexus.Application
             var secretKey = configuration["Jwt:Key"];
             var issuer = configuration["Jwt:Issuer"];
             var audience = configuration["Jwt:Audience"];
-            services.AddScoped<JwtService>(provider => new JwtService(secretKey, issuer, audience));
+            services.AddScoped<IJwtService>(provider => new JwtService(secretKey, issuer, audience));
         }   
 
     }

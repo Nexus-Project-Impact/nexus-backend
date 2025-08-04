@@ -68,7 +68,7 @@ namespace Nexus.API.Controllers
                 var package = await _getByIdPackageUseCase.ExecuteGetById(id);
                 if (package == null)
                     return NotFound(new { message = $"Pacote com ID {id} não foi encontrado." });
-   
+
                 package.ImageUrl = BuildImageUrl(package.ImageUrl);
                 return Ok(package);
             }

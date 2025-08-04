@@ -15,14 +15,14 @@ public class GetDashboardMetricsUseCase : IGetDashboardMetricsUseCase
     {
         var salesByDestination = await _dashboardMetricsRepository.GetSalesByDestinationAsync(startDate, endDate);
         var salesByPeriod = await _dashboardMetricsRepository.GetSalesByPeriodAsync(startDate, endDate);
-        //var salesByStatus = await _dashboardMetricsRepository.GetSalesByStatusAsync(startDate, endDate);
+        var salesByStatus = await _dashboardMetricsRepository.GetSalesByStatusAsync(startDate, endDate);
         var summary = await _dashboardMetricsRepository.GetSummaryAsync(startDate, endDate);
 
         return new ResponseDashboardMetricsJson
         {
             SalesByDestination = salesByDestination,
             SalesByPeriod = salesByPeriod,
-            //SalesByStatus = salesByStatus,
+            SalesByStatus = salesByStatus,
             Summary = summary
         };
     }

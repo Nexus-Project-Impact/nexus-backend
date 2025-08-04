@@ -12,8 +12,8 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250804151044_MigrationInit")]
-    partial class MigrationInit
+    [Migration("20250804203847_MigrationInicial")]
+    partial class MigrationInicial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

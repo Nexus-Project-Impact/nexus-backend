@@ -26,6 +26,8 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
              return await _context.Reservations
                 .Include(r => r.Traveler)
                 .Include(r => r.TravelPackage)
+                .Include(r => r.Payment)
+                .Include(r => r.User)
                 .ToListAsync(); 
         }
 
@@ -34,6 +36,8 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             var reservation = await _context.Reservations
                 .Include(t => t.Traveler)
                 .Include(r => r.TravelPackage)
+                .Include(r => r.Payment)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
             return reservation!;
         }
@@ -70,6 +74,8 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             return await _context.Reservations
                 .Include(r => r.Traveler)
                 .Include(r => r.TravelPackage)
+                .Include(r => r.Payment)
+                .Include(r => r.User)
                 .Where(r => r.Traveler.Any(t => t.Name != null && t.Name.Contains(travelerName)))
                 .ToListAsync();
         }
@@ -89,6 +95,7 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                  .Include(r => r.User)
                  .Include(r => r.Traveler)
                  .Include(r => r.TravelPackage)
+                 .Include(r => r.Payment)
                  .Where(r => r.UserId == userId)
                  .ToListAsync();
         }

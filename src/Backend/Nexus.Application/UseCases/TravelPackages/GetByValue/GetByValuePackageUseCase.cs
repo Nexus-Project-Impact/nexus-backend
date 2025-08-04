@@ -25,9 +25,7 @@ namespace Nexus.Application.UseCases.Packages.GetByValue
         public async Task<IEnumerable<ResponsePackage?>> ExecuteGetByValue(double minValue, double maxValue)
         {
             var packages = await _repository.GetByValueAsync(minValue, maxValue);
-
             var packagesJson = _mapper.Map<IEnumerable<ResponsePackage?>>(packages);
-
             return packagesJson;
         }
     }

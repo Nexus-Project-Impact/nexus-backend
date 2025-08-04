@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Domain.DTOs;
 using Nexus.Domain.Entities;
 
 namespace Nexus.Application.Services.AutoMapper
@@ -21,8 +22,15 @@ namespace Nexus.Application.Services.AutoMapper
 
             CreateMap<RequestCreatePackage, TravelPackage>();
             CreateMap<RequestUpdatePackage, TravelPackage>();
+            // Novo mapeamento para PackageDto -> TravelPackage
+            CreateMap<PackageDto, TravelPackage>();
 
             CreateMap<RequestTravelers, Travelers>();
+
+            CreateMap<PaymentDto, Payment>();
+            //    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.UtcNow));
+
+            CreateMap<Payment, PaymentDto>();
 
             CreateMap<RequestRegisterReservationJson, Reservation>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))

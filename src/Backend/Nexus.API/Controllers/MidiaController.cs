@@ -12,16 +12,45 @@ namespace Nexus.API.Controllers
     public class MidiaController : ControllerBase
     {
 
-        [HttpPost("Register")]
-        [Consumes("multipart/form-data")]
-        [Authorize]
-        [ProducesResponseType(typeof(ResponseMessage), StatusCodes.Status200OK)]
-        public async Task<IActionResult> RegisterMidia(
-            [FromServices] IMidiaUseCase midiaService,
-            [FromForm] RequestMidia request)
+        private string GetMimeType(string fileName)
         {
-            var result = await midiaService.Execute(request);
-            return Ok(result);
+            var ext = Path.GetExtension(fileName).ToLower();
+
+            return ext switch
+            {
+                ".jpg" or ".jpeg" => "image/jpeg",
+                ".png" => "image/png",
+                ".gif" => "image/gif",
+                _ => "application/octet-stream"
+            };
+        }
+
+        //[HttpPost("Register")]
+        //[Consumes("multipart/form-data")]
+        //[Authorize]
+        //[ProducesResponseType(typeof(ResponseMessage), StatusCodes.Status200OK)]
+        //public async Task<IActionResult> RegisterMidia(
+        //    [FromServices] IMidiaUseCase midiaService,
+        //    [FromForm] RequestMidia request)
+        //{
+        //    var result = await midiaService.Execute(request);
+        //    return Ok(result);
+        //}
+
+        [HttpGet("{name}")]
+        public IActionResult Get(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest("Nome da imagem é obrigatório.");
+
+            var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "Images", name);
+
+            if (!System.IO.File.Exists(imagePath))
+                return NotFound("Imagem não encontrada.");
+
+            var mimeType = GetMimeType(name);
+
+            return PhysicalFile(imagePath, mimeType);
         }
     }
 }

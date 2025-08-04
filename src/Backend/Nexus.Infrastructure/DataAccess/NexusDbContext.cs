@@ -12,6 +12,8 @@ namespace Nexus.Infrastructure.DataAccess
         }
 
         public DbSet<Travelers> Travelers { get; set; }
+
+        public DbSet<Payment> Payments { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Midia> Midias { get; set; }
         public DbSet<Review> Reviews { get; set; } 

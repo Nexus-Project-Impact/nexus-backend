@@ -47,12 +47,28 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         public async Task AddAsync(Domain.Entities.Review review)
         {
             await _context.Reviews.AddAsync(review);
-            await _unitOfWork.Commit();
         }
 
-        public async Task UpdateAsync(Domain.Entities.Review review) // aqui representando o Moderate
+        public async Task UpdateAsync(Domain.Entities.Review review)
         {
-            _context.Reviews.Update(review);
+            // Ensure the entity is being tracked and marked as modified
+            var existingReview = await _context.Reviews.FindAsync(review.Id);
+            if (existingReview != null)
+            {
+                // Update the properties
+                existingReview.Comment = review.Comment;
+                existingReview.Rating = review.Rating;
+                existingReview.PackageId = review.PackageId;
+                existingReview.UserId = review.UserId;
+                
+                // The context will automatically track changes
+                _context.Reviews.Update(existingReview);
+            }
+            else
+            {
+                // If not found in context, use the provided review
+                _context.Reviews.Update(review);
+            }
         }
 
         public async Task DeleteAsync(int id)

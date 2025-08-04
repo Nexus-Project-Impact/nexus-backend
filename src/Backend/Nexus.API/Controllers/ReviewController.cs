@@ -138,12 +138,20 @@ namespace Nexus.API.Controllers
 
         [HttpPut("Moderate/{id}")]
         [ProducesResponseType(typeof(ResponseModeratedReviewJson), StatusCodes.Status200OK)]
-        //[Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Moderate([FromServices] IModerateReviewUseCase moderateReviewUseCase,int id,[FromBody] RequestModerateReviewJson request)
+        //[Authorize(Roles = "Admin")] // Temporarily commented for testing - uncomment after JWT setup
+        public async Task<IActionResult> Moderate([FromServices] IModerateReviewUseCase moderateReviewUseCase, int id, [FromBody] RequestModerateReviewJson request)
         {
-
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            // Validate that NewComment is provided
+            if (string.IsNullOrWhiteSpace(request.NewComment))
+            {
+                return BadRequest(new { 
+                    error = "NewComment é obrigatório",
+                    message = "O novo comentário deve ser fornecido para moderar a avaliação"
+                });
+            }
 
             request.ReviewId = id;
 

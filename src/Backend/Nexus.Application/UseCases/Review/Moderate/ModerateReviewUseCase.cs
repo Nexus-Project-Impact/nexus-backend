@@ -29,14 +29,19 @@ namespace Nexus.Application.UseCases.Review.Moderate
                 return null;
             }
 
+            // Update the comment with the new moderated comment
+            review.Comment = request.NewComment;
+
             await _repository.UpdateAsync(review);
             await _unitOfWork.Commit();
 
             return new ResponseModeratedReviewJson
             {
                 ReviewId = review.Id,
-                ActionTaken = request.Action.ToLower(),
-                Mensagem = "Avaliação moderada com sucesso."
+                ActionTaken = "comment_updated",
+                Mensagem = "Comentário da avaliação moderado com sucesso.",
+                NewComment = request.NewComment, // Include the new comment in response
+                Reason = request.Reason // Include the reason in response
             };
         }
     }

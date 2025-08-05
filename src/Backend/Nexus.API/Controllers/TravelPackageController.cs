@@ -111,14 +111,16 @@ namespace Nexus.API.Controllers
         }
 
         [HttpPut("Update/{id}")]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ResponsePackage), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromServices] IUpdatePackageUseCase useCase, int id, [FromBody] RequestUpdatePackage request)
+        public async Task<IActionResult> Update([FromServices] IUpdatePackageUseCase useCase, int id, [FromForm] RequestUpdatePackage request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
+                request.Id = id; // Ensure the ID from the route is set in the request
                 var updatedPackage = await _updatePackageUseCase.ExecuteUpdate(id, request);
 
                 if (updatedPackage == null)

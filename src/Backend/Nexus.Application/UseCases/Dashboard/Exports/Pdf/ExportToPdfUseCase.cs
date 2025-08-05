@@ -34,55 +34,58 @@ namespace Nexus.Application.UseCases.Dashboard.Exports.Pdf
 
                     page.Content().Column(col =>
                     {
-                        col.Item().Text($"Período: {startDate?.ToShortDateString()} - {endDate?.ToShortDateString()}");
-                        col.Item().Text($"Total de Reservas: {filteredReservations.Count}");
+                        col.Item().Text($"Período: {startDate?.ToShortDateString()} - {endDate?.ToShortDateString()}").FontSize(12);
+                        col.Item().Text($"Total de Reservas: {filteredReservations.Count}").FontSize(12);
                         col.Item().PaddingVertical(10);
 
                         col.Item().Table(table =>
                         {
                             table.ColumnsDefinition(columns =>
                             {
-                                columns.ConstantColumn(40);  // ID
-                                columns.ConstantColumn(80);  // Data
-                                columns.ConstantColumn(80);  // Número da reserva
-                                columns.ConstantColumn(60);  // UserId
-                                columns.RelativeColumn();    // Nome Usuário
-                                columns.ConstantColumn(60);  // PacoteId
-                                columns.RelativeColumn();    // Nome Pacote
-                                columns.RelativeColumn();    // Destino
+                                columns.ConstantColumn(70);  // Nº Reserva
+                                columns.ConstantColumn(70);  // Data
+                                columns.RelativeColumn(2);   // Nome Cliente
+                                columns.ConstantColumn(70);  // Status Pagamento
+                                columns.RelativeColumn(2);   // Nome Pacote
+                                columns.RelativeColumn(1);   // Destino
                                 columns.ConstantColumn(60);  // Valor
                             });
 
                             // Cabeçalho
                             table.Header(header =>
                             {
-                                header.Cell().Element(CellStyle).Text("ID");
-                                header.Cell().Element(CellStyle).Text("Data");
-                                header.Cell().Element(CellStyle).Text("Nº Reserva");
-                                header.Cell().Element(CellStyle).Text("UserId");
-                                header.Cell().Element(CellStyle).Text("Nome Usuário");
-                                header.Cell().Element(CellStyle).Text("PacoteId");
-                                header.Cell().Element(CellStyle).Text("Nome Pacote");
-                                header.Cell().Element(CellStyle).Text("Destino");
-                                header.Cell().Element(CellStyle).Text("Valor");
+                                header.Cell().Element(HeaderCellStyle).Text("Nº Reserva");
+                                header.Cell().Element(HeaderCellStyle).Text("Data");
+                                header.Cell().Element(HeaderCellStyle).Text("Nome Cliente");
+                                header.Cell().Element(HeaderCellStyle).Text("Status Pag.");
+                                header.Cell().Element(HeaderCellStyle).Text("Nome Pacote");
+                                header.Cell().Element(HeaderCellStyle).Text("Destino");
+                                header.Cell().Element(HeaderCellStyle).Text("Valor");
                             });
 
-                            // Dados
+                            // Dados limpos
                             foreach (var r in filteredReservations)
                             {
-                                table.Cell().Element(CellStyle).Text(r.Id.ToString());
-                                table.Cell().Element(CellStyle).Text(r.ReservationDate.ToString("dd/MM/yyyy"));
-                                table.Cell().Element(CellStyle).Text(r.ReservationNumber.ToString());
-                                table.Cell().Element(CellStyle).Text(r.UserId ?? "-");
-                                table.Cell().Element(CellStyle).Text(r.User?.Name ?? "-");
-                                table.Cell().Element(CellStyle).Text(r.TravelPackageId.ToString());
-                                table.Cell().Element(CellStyle).Text(r.TravelPackage?.Title ?? "-");
-                                table.Cell().Element(CellStyle).Text(r.TravelPackage?.Destination ?? "-");
-                                table.Cell().Element(CellStyle).Text(r.TravelPackage?.Value.ToString("C") ?? "-");
+                                table.Cell().Element(DataCellStyle).Text(r.ReservationNumber.ToString());
+                                table.Cell().Element(DataCellStyle).Text(r.ReservationDate.ToString("dd/MM/yyyy"));
+                                table.Cell().Element(DataCellStyle).Text(r.User?.Name ?? "-");
+                                table.Cell().Element(DataCellStyle).Text(r.Payment == null ? "Pendente" : r.Payment.Status);
+                                table.Cell().Element(DataCellStyle).Text(r.TravelPackage?.Title ?? "-");
+                                table.Cell().Element(DataCellStyle).Text(r.TravelPackage?.Destination ?? "-");
+                                table.Cell().Element(DataCellStyle).Text(r.TravelPackage?.Value.ToString("C") ?? "-");
                             }
 
-                            // Defina o estilo de célula com padding
-                            static IContainer CellStyle(IContainer container) => container.PaddingVertical(4);
+                            // Estilo para cabeçalho - fonte maior e em negrito
+                            static IContainer HeaderCellStyle(IContainer container) => 
+                                container
+                                    .PaddingVertical(5)
+                                    .DefaultTextStyle(x => x.FontSize(11).SemiBold());
+
+                            // Estilo para dados - fonte maior
+                            static IContainer DataCellStyle(IContainer container) => 
+                                container
+                                    .PaddingVertical(3)
+                                    .DefaultTextStyle(x => x.FontSize(10));
                         });
                     });
                 });

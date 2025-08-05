@@ -12,7 +12,7 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250804203847_MigrationInicial")]
+    [Migration("20250805004259_MigrationInicial")]
     partial class MigrationInicial
     {
         /// <inheritdoc />

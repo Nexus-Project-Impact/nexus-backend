@@ -106,7 +106,7 @@ namespace Nexus.Application.UseCases.User.Auth
             <p><strong>Nunca compartilhe este código com ninguém.</strong></p>
             <p>Ele expira em 10 minutos.</p>
             ";
-            await _emailService.SendEmailAsync("joseruanxd@gmail.com", subject, textMessage, htmlMessage);
+            await _emailService.SendEmailAsync("nexusImpacta@outlook.com.br", subject, textMessage, htmlMessage);
 
             return new ResponseForgotPassword
             {

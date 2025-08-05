@@ -13,6 +13,8 @@ namespace Nexus.Communication.Responses
         public int ReservationNumber { get; set; }
         public string? UserId { get; set; }
         public int TravelPackageId { get; set; }
+        public string? TravelPackageDestination { get; set; }
+        public string? TravelPackageImageUrl { get; set; }
         public ICollection<ResponseTravelers> Traveler { get; set; } = new List<ResponseTravelers>();
     }
 }

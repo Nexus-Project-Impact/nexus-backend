@@ -9,8 +9,7 @@ namespace Nexus.Communication.Requests
     public class RequestModerateReviewJson
     {
         public int ReviewId { get; set; }
-        public string ModeratorId { get; set; }
-        public string Action { get; set; } 
         public string? Reason { get; set; }
+        public string NewComment { get; set; } // Required field for the new moderated comment
     }
 }

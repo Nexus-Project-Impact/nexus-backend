@@ -25,9 +25,7 @@ namespace Nexus.Application.UseCases.Packages.GetById
         public async Task <ResponsePackage?> ExecuteGetById(int id)
         {
             var packages = await _repository.GetByIdAsync(id);
-            
             var packagesJson = _mapper.Map<ResponsePackage>(packages);
-
             return packagesJson;
         }
 

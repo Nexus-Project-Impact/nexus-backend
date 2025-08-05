@@ -62,7 +62,7 @@ public class DashboardMetricsRepository : IDashboardMetricsRepositoy
         var total = await query.CountAsync();
 
         var result = await query
-            .GroupBy(r => r.Status)
+            .GroupBy(r => r.Payment.Status)
             .Select(g => new SalesByStatusDto
             {
                 Status = g.Key,
@@ -74,6 +74,29 @@ public class DashboardMetricsRepository : IDashboardMetricsRepositoy
 
     }
     */
+
+    public async Task<IEnumerable<SalesByStatusDto>> GetSalesByStatusAsync(DateTime? startDate, DateTime? endDate)
+    {
+        var query = _context.Reservations
+            .Include(r => r.Payment)
+            .AsQueryable();
+
+        query = FilterByPeriod(query, startDate, endDate);
+
+        var result = await query
+            .GroupBy(r => r.Payment == null ? "Pendente" : r.Payment.Status)
+            .Select(g => new SalesByStatusDto
+            {
+                Status = g.Key,
+                Quantity = g.Count()
+            })
+            .ToListAsync();
+
+        return result;
+    }
+
+
+
     public async Task<DashboardSummaryDto> GetSummaryAsync(DateTime? startDate, DateTime? endDate)
     {
 

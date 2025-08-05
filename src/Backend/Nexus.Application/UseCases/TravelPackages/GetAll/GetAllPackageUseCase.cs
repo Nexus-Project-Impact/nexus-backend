@@ -26,9 +26,7 @@ namespace Nexus.Application.UseCases.Packages.GetAll
         public async Task<IEnumerable<ResponsePackage>> ExecuteGetAll()
         {
             var packages = await _repository.GetAllAsync();
-
             var packagesJson = _mapper.Map<IEnumerable<ResponsePackage>>(packages);
-
             return packagesJson;
         }
     }

@@ -17,6 +17,7 @@ namespace Nexus.Domain.Entities
         public string? UserId { get; set; }
         public int TravelPackageId { get; set; }
         public User? User { get; set; }
+        public Payment Payment { get; set; }
         public TravelPackage? TravelPackage { get; set; }
         public ICollection<Travelers> Traveler { get; set; } = new List<Travelers>();
     }

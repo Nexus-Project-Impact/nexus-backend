@@ -10,7 +10,7 @@ using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Application.UseCases.Packages.GetByDepartureDate
 {
-    internal class GetByDepartureDatePackageUseCase : IGetByDepartureDatePackageUseCase
+    public class GetByDepartureDatePackageUseCase : IGetByDepartureDatePackageUseCase
     {
         private readonly IPackageRepository<TravelPackage, int> _repository;
         private readonly IMapper _mapper;
@@ -24,9 +24,7 @@ namespace Nexus.Application.UseCases.Packages.GetByDepartureDate
         public async Task<IEnumerable<ResponsePackage?>> ExecuteGetByDepartureDate(DateTime initialDate, DateTime finalDate)
         {
             var packages =  await _repository.GetByDepartureDateAsync(initialDate, finalDate);
-
             var packagesJson = _mapper.Map<IEnumerable<ResponsePackage?>>(packages);
-
             return packagesJson;
         }
 

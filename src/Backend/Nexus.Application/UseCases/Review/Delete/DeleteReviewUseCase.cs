@@ -1,5 +1,6 @@
 ﻿using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,10 @@ namespace Nexus.Application.UseCases.Review.Delete
 {
     public class DeleteReviewUseCase : IDeleteReviewUseCase
     {
-        private readonly IRepository<Domain.Entities.Review, int> _repository;
+        private readonly IReviewRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
-        public DeleteReviewUseCase(IRepository<Domain.Entities.Review, int> repository, IUnitOfWork unitOfWork)
+        public DeleteReviewUseCase(IReviewRepository repository, IUnitOfWork unitOfWork)
         {
             _repository = repository;
             _unitOfWork = unitOfWork;

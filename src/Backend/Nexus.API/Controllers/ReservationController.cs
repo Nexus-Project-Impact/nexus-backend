@@ -80,6 +80,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetById/{id}")]
+        //[Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<ResponseReservationJson>> GetById(int id)
         {
             var reservation = await _getByIdReservationUseCase.ExecuteGetByIdAsync(id);
@@ -102,6 +103,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetReservationByTravelerName/{Name}")]
+        //[Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetReservationByTravelerName(string Name)
         {
             var reservations = await _getReservationByTravelerName.ExecuteGetReservationByTravelerNameAsync(Name);
@@ -123,6 +125,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
+        //[Authorize(Roles = "Admin, User")]
         public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetReservationByTravelerCpf(string Cpf)
         {
             var reservations = await _getReservationByTravelerCpf.ExecuteGetReservationByTravelerCpfAsync(Cpf);

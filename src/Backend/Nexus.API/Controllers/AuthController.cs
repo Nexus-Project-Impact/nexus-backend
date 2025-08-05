@@ -33,7 +33,7 @@ namespace Nexus.API.Controllers
         public async Task<IActionResult> LoginAdmin([FromServices] IAuthUserUseCase useCase, [FromBody] RequestLoginUserJson request)
         {
             var result = await useCase.Execute(request);
-          
+
             var handler = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
 
             var jwtToken = handler.ReadJwtToken(result.Token);
@@ -45,7 +45,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpPost("forgot-password")]
-        [Authorize]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ResponseForgotPassword), StatusCodes.Status200OK)]
         public async Task<IActionResult> ForgotPassword([FromServices] IAuthUserUseCase useCase, [FromBody] RequestForgotPassword request)
         {
@@ -63,7 +63,7 @@ namespace Nexus.API.Controllers
         }
 
         [HttpPost("reset-password")]
-        [Authorize]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(ResponseMessage), StatusCodes.Status200OK)]
         public async Task<IActionResult> ResetPassword([FromServices] IAuthUserUseCase useCase, [FromBody] RequestResetPassword request)
         {

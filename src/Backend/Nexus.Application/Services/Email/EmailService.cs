@@ -34,6 +34,8 @@ namespace Nexus.Application.Services.Email
             };
             message.Body = builder.ToMessageBody();
 
+            Console.WriteLine(smtpUser + "\t" + smtpPass );
+
             using var client = new SmtpClient();
             await client.ConnectAsync(smtpServer, smtpPort, false);
             await client.AuthenticateAsync(smtpUser, smtpPass);

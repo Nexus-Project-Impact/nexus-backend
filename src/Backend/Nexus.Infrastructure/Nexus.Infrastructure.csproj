@@ -20,10 +20,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="QuestPDF" Version="2025.7.0" />
+    <PackageReference Include="Stripe.net" Version="48.3.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nexus.Domain\Nexus.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

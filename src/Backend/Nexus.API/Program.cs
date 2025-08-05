@@ -52,6 +52,7 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
@@ -73,7 +74,7 @@ using (var scope = app.Services.CreateScope())
         throw new SeedDataException();
     }
 }
-    
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -95,3 +96,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+    

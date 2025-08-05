@@ -1,6 +1,7 @@
 ﻿using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Review;
 using System.Threading.Tasks;
 using AutoMapper;
 
@@ -8,11 +9,11 @@ namespace Nexus.Application.UseCases.Review.Moderate
 {
     public class ModerateReviewUseCase : IModerateReviewUseCase
     {
-        private readonly IRepository<Domain.Entities.Review, int> _repository;
+        private readonly IReviewRepository _repository;
         private readonly IUnitOfWork _unitOfWork;
 
         public ModerateReviewUseCase(
-            IRepository<Domain.Entities.Review, int> repository,
+            IReviewRepository repository,
             IUnitOfWork unitOfWork)
         {
             _repository = repository;
@@ -28,14 +29,19 @@ namespace Nexus.Application.UseCases.Review.Moderate
                 return null;
             }
 
+            // Update the comment with the new moderated comment
+            review.Comment = request.NewComment;
+
             await _repository.UpdateAsync(review);
             await _unitOfWork.Commit();
 
             return new ResponseModeratedReviewJson
             {
                 ReviewId = review.Id,
-                ActionTaken = request.Action.ToLower(),
-                Mensagem = "Avaliação moderada com sucesso."
+                ActionTaken = "comment_updated",
+                Mensagem = "Comentário da avaliação moderado com sucesso.",
+                NewComment = request.NewComment, // Include the new comment in response
+                Reason = request.Reason // Include the reason in response
             };
         }
     }

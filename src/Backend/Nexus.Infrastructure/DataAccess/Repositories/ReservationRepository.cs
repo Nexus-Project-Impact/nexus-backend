@@ -99,6 +99,48 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
                  .Where(r => r.UserId == userId)
                  .ToListAsync();
         }
+
+        public async Task<IEnumerable<Reservation>> SearchByTravelerAsync(string? travelerName, string? travelerCpf)
+        {
+            return await _context.Reservations
+                .Include(r => r.Traveler)
+                .Include(r => r.TravelPackage)
+                .Include(r => r.Payment)
+                .Include(r => r.User)
+                .Where(r =>
+                    (string.IsNullOrWhiteSpace(travelerName) || r.Traveler.Any(t => t.Name != null && t.Name.Contains(travelerName))) &&
+                    (string.IsNullOrWhiteSpace(travelerCpf) || (r.User != null && r.User.CPF != null && r.User.CPF.Contains(travelerCpf))))
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reservation>> SearchByUserAsync(string? userName, string? userCpf)
+        {
+            var query = _context.Reservations
+                .Include(r => r.Traveler)
+                .Include(r => r.TravelPackage)
+                .Include(r => r.Payment)
+                .Include(r => r.User)
+                .AsQueryable();
+
+            // Se nenhum parâmetro for fornecido, retorna todas as reservas
+            if (string.IsNullOrWhiteSpace(userName) && string.IsNullOrWhiteSpace(userCpf))
+            {
+                return await query.ToListAsync();
+            }
+
+            // Aplicar filtros apenas se os parâmetros tiverem valor
+            if (!string.IsNullOrWhiteSpace(userName))
+            {
+                query = query.Where(r => r.User!.Name!.Contains(userName));
+            }
+
+            if (!string.IsNullOrWhiteSpace(userCpf))
+            {
+                query = query.Where(r => r.User!.CPF!.Contains(userCpf));
+            }
+
+            return await query.ToListAsync();
+        }
     }
 }
 

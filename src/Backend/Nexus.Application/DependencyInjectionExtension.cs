@@ -24,6 +24,7 @@ using Nexus.Application.UseCases.Reservation.GetByID;
 using Nexus.Application.UseCases.Reservation.GetBytravelerName;
 using Nexus.Application.UseCases.Reservation.GetMyReservations;
 using Nexus.Application.UseCases.Reservation.GetReservationByCpf;
+using Nexus.Application.UseCases.Reservation.SearchReservations;
 using Nexus.Application.UseCases.Review.Delete;
 using Nexus.Application.UseCases.Review.GetAll;
 using Nexus.Application.UseCases.Review.GetByPackageId;
@@ -85,6 +86,7 @@ namespace Nexus.Application
             services.AddScoped<IGetReservationByTravelerCpf, GetReservationByTravelerCpf>();
             services.AddScoped<IGetReservationByTravelerName, GetReservationByTravelerName>();
             services.AddScoped<IGetMyReservations, GetMyReservations>();
+            services.AddScoped<ISearchReservationsUseCase, SearchReservationsUseCase>();
 
             services.AddScoped<IGetDashboardMetricsUseCase, GetDashboardMetricsUseCase>();
             services.AddScoped<IExportToExcelUseCase, ExportToExcelUseCase>();

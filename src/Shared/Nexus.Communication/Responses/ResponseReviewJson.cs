@@ -9,6 +9,7 @@ namespace Nexus.Communication.Responses
     public class ResponseReviewJson
     {
         public string Id { get; set; } 
+        public string UserId { get; set; } // ✅ Added UserId for frontend validations
         public int PackageId { get; set; }
         public int Rating { get; set; } 
         public string? Comment { get; set; } 

@@ -34,6 +34,11 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             return await _context.TravelPackages.ToListAsync();
         }
 
+        public async Task<IEnumerable<TravelPackage>> GetAllActiveAsync()
+        {
+            return await _context.TravelPackages.Where(x => x.IsActive == true).ToListAsync();
+        }
+
 
         public async Task<TravelPackage?> GetByIdAsync(int id)
         {
@@ -50,9 +55,11 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         public async Task DeleteAsync(int id)
         {
             var travelPackage = await _context.TravelPackages.FindAsync(id);
-            if (travelPackage != null)
+            if (travelPackage != null && travelPackage.IsActive)
             {
-                _context.TravelPackages.Remove(travelPackage);
+                travelPackage.IsActive = false;
+                _context.TravelPackages.Update(travelPackage);
+                await _unitOfWork.Commit();
             }
 
         }

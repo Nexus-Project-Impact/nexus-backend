@@ -31,6 +31,7 @@ using Nexus.Application.UseCases.Review.GetByPackageId;
 using Nexus.Application.UseCases.Review.GetId;
 using Nexus.Application.UseCases.Review.Moderate;
 using Nexus.Application.UseCases.Review.Register;
+using Nexus.Application.UseCases.TravelPackages.GetAllActive;
 using Nexus.Application.UseCases.User.Auth;
 using Nexus.Application.UseCases.User.Register;
 
@@ -72,6 +73,7 @@ namespace Nexus.Application
             services.AddScoped<IGetByDepartureDatePackageUseCase, GetByDepartureDatePackageUseCase>();
             services.AddScoped<IGetByDestinationPackageUseCase, GetByDestinationPackageUseCase>();
             services.AddScoped<IGetByValuePackageUseCase, GetByValuePackageUseCase>();
+            services.AddScoped<IGetAllActivePackageUseCase, GetAllActivePackageUseCase>();
 
             services.AddScoped<ICreateReservationUseCase, CreateReservationUseCase>();
             services.AddScoped<IGetAllReservantionUseCase, GetAllReservationUseCase>();

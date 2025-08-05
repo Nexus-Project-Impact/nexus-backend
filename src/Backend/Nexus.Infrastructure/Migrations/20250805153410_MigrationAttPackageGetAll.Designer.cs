@@ -12,8 +12,8 @@ using Nexus.Infrastructure.DataAccess;
 namespace Nexus.Infrastructure.Migrations
 {
     [DbContext(typeof(NexusDbContext))]
-    [Migration("20250804203847_MigrationInicial")]
-    partial class MigrationInicial
+    [Migration("20250805153410_MigrationAttPackageGetAll")]
+    partial class MigrationAttPackageGetAll
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -294,14 +294,17 @@ namespace Nexus.Infrastructure.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime>("ReturnDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Value")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Value")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 

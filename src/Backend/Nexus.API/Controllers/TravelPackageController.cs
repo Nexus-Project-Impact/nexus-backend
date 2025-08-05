@@ -8,6 +8,7 @@ using Nexus.Application.UseCases.Packages.GetByDestination;
 using Nexus.Application.UseCases.Packages.GetById;
 using Nexus.Application.UseCases.Packages.GetByValue;
 using Nexus.Application.UseCases.Packages.Update;
+using Nexus.Application.UseCases.TravelPackages.GetAllActive;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
 
@@ -26,6 +27,7 @@ namespace Nexus.API.Controllers
         private readonly IGetByDepartureDatePackageUseCase _getByDepartureDatePackageUseCase;
         private readonly IGetByDestinationPackageUseCase _getByDestinationPackageUseCase;
         private readonly IGetByValuePackageUseCase _getByByValuePackageUseCase;
+        private readonly IGetAllActivePackageUseCase _getAllActivePackageUseCase;
 
         public TravelPackageController(
             IMapper mapper,
@@ -36,7 +38,8 @@ namespace Nexus.API.Controllers
             IDeletePackageUseCase deletePackageUseCase,
             IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase,
             IGetByDestinationPackageUseCase getByDestinationPackageUseCase,
-            IGetByValuePackageUseCase getByByValuePackageUseCase)
+            IGetByValuePackageUseCase getByByValuePackageUseCase,
+            IGetAllActivePackageUseCase getAllActivePackageUseCase)
         {
             _mapper = mapper;
             _createPackageUseCase = createPackageUseCase;
@@ -47,6 +50,7 @@ namespace Nexus.API.Controllers
             _getByDepartureDatePackageUseCase = getByDepartureDatePackageUseCase;
             _getByDestinationPackageUseCase = getByDestinationPackageUseCase;
             _getByByValuePackageUseCase = getByByValuePackageUseCase;
+            _getAllActivePackageUseCase = getAllActivePackageUseCase;
         }
 
         private string BuildImageUrl(string imagePath)
@@ -86,7 +90,7 @@ namespace Nexus.API.Controllers
                 var packages = await _getAllPackageUseCase.ExecuteGetAll();
 
                 if (packages == null || !packages.Any())
-                    return NotFound();
+                    return NotFound(new { message = "Nenhum pacote encontrado." });
 
                 foreach (var pkg in packages)
                 {
@@ -101,6 +105,29 @@ namespace Nexus.API.Controllers
             }
         }
 
+        [HttpGet("GetAllActive")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> GetAllActive()
+        {
+            try
+            {
+                var packages = await _getAllActivePackageUseCase.ExecuteGetAllActive();
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = "Nenhum pacote encontrado." });
+
+                foreach (var pkg in packages)
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+
+
         [HttpPost("Create")]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ResponseCreatedPackage), StatusCodes.Status201Created)]
@@ -111,14 +138,16 @@ namespace Nexus.API.Controllers
         }
 
         [HttpPut("Update/{id}")]
+        [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ResponsePackage), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Update([FromServices] IUpdatePackageUseCase useCase, int id, [FromBody] RequestUpdatePackage request)
+        public async Task<IActionResult> Update([FromServices] IUpdatePackageUseCase useCase, int id, [FromForm] RequestUpdatePackage request)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             try
             {
+                request.Id = id; // Ensure the ID from the route is set in the request
                 var updatedPackage = await _updatePackageUseCase.ExecuteUpdate(id, request);
 
                 if (updatedPackage == null)
@@ -151,18 +180,18 @@ namespace Nexus.API.Controllers
             }
         }
 
-        [HttpPost("GetByDepartureDate")]
-        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDepartureDate([FromBody] RequestDepartureDateRangePackage request)
+        [HttpGet("GetByDepartureDate")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDepartureDate([FromQuery] DateTime initialDate, DateTime finalDate)
         {
-            if (request.InitialDate == default || request.FinalDate == default)
+            if (initialDate == default || finalDate == default)
                 return BadRequest(new { message = "Os campos 'Data inicial' e 'Data final' são obrigatórios." });
 
-            if (request.InitialDate > request.FinalDate)
+            if (initialDate > finalDate)
                 return BadRequest(new { message = "A data inicial não pode ser maior que a data final." });
 
             try
             {
-                var packages = await _getByDepartureDatePackageUseCase.ExecuteGetByDepartureDate(request.InitialDate, request.FinalDate);
+                var packages = await _getByDepartureDatePackageUseCase.ExecuteGetByDepartureDate(initialDate, finalDate);
 
                 if (packages == null || !packages.Any())
                     return NotFound(new { message = "Nenhum pacote encontrado no intervalo de datas." });
@@ -202,18 +231,18 @@ namespace Nexus.API.Controllers
             }
         }
 
-        [HttpPost("GetByValue")]
-        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByValue([FromBody] RequestValueRangePackage request)
+        [HttpGet("GetByValue")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByValue([FromQuery] double minValue, double maxValue)
         {
-            if (request.MinValue <= 0 || request.MaxValue <= 0)
+            if (minValue <= 0 || maxValue <= 0)
                 return BadRequest(new { message = "Os valores mínimo e máximo devem ser maiores que zero." });
 
-            if (request.MinValue > request.MaxValue)
+            if (minValue > maxValue)
                 return BadRequest(new { message = "O valor mínimo não pode ser maior que o valor máximo." });
 
             try
             {
-                var packages = await _getByByValuePackageUseCase.ExecuteGetByValue(request.MinValue, request.MaxValue);
+                var packages = await _getByByValuePackageUseCase.ExecuteGetByValue(minValue, maxValue);
 
                 if (packages == null || !packages.Any())
                     return NotFound(new { message = "Nenhum pacote encontrado no intervalo de valores informado." });

@@ -19,7 +19,7 @@ namespace Nexus.Application.UseCases.User.Auth
         private readonly IMapper _mapper;
         private readonly SignInManager<Domain.Entities.User> _signInManager;
 
-        public AuthUserUseCase(UserManager<Domain.Entities.User> userManager, IConfiguration config, 
+        public AuthUserUseCase(UserManager<Domain.Entities.User> userManager, IConfiguration config,
             IJwtService jwtService, IMapper mapper, SignInManager<Domain.Entities.User> signIn, IEmailService emailService,
             IMemoryCache memoryCache)
         {
@@ -47,7 +47,7 @@ namespace Nexus.Application.UseCases.User.Auth
                 };
             }
 
-            if(user.Id == null || user.Email == null || user.Name == null)
+            if (user.Id == null || user.Email == null || user.Name == null)
             {
                 // implementar para disparar erro específico para alguns campos nulos
                 return new ResponseLoginUserJson
@@ -118,7 +118,7 @@ namespace Nexus.Application.UseCases.User.Auth
         public async Task<bool> ResetPassword(RequestResetPassword request)
         {
             if (!_memoryCache.TryGetValue($"pwdreset:{request.email}:{request.code}", out string token))
-                return false; 
+                return false;
 
             var user = await _userManager.FindByEmailAsync(request.email);
             if (user == null) return false;
@@ -132,7 +132,7 @@ namespace Nexus.Application.UseCases.User.Auth
             return false;
         }
         public async Task Logout()
-        {       
+        {
             await _signInManager.SignOutAsync();
         }
     }

@@ -22,19 +22,20 @@ namespace Nexus.Application.UseCases.Packages.Delete
 
         public async Task<bool> ExecuteDelete(int id)
         {
-
             var package = await _repository.GetByIdAsync(id);
 
             if (package == null)
-
                 return false;
 
-            await _repository.DeleteAsync(id);
+            if (package.IsActive)
+            {
+                package.IsActive = false;
+                await _repository.UpdateAsync(package);
+                await _unitOfWork.Commit();
+                return true;
+            }
 
-            await _unitOfWork.Commit();
-
-            return true;
-
+            return false;
         }
     }
 }

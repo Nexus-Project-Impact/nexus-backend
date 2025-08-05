@@ -6,6 +6,8 @@ namespace Nexus.Domain.Repositories.Packages
     {
         Task<IEnumerable<T>> GetAllAsync();
 
+        Task<IEnumerable<T>> GetAllActiveAsync();
+
         Task<T?> GetByIdAsync(TId id);
 
         Task AddAsync(T entity);

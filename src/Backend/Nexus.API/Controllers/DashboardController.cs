@@ -7,7 +7,7 @@ using Nexus.Communication.Responses;
 
 namespace Nexus.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class DashboardController : ControllerBase
     {

@@ -61,7 +61,18 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<Reservation, ResponseReservationJson>()
                 .ForMember(dest => dest.TravelPackageDestination, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.Destination : null))
                 .ForMember(dest => dest.TravelPackageImageUrl, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.ImageUrl : null));
-            
+
+            CreateMap<Reservation, ResponseReservationAdminJson>()
+                .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.User!.Id))
+                .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User!.Name))
+                .ForMember(dest => dest.UserEmail, opt => opt.MapFrom(src => src.User!.Email))
+                .ForMember(dest => dest.UserPhone, opt => opt.MapFrom(src => src.User!.Phone))
+                .ForMember(dest => dest.UserDocument, opt => opt.MapFrom(src => src.User!.CPF))
+                .ForMember(dest => dest.StatusPayment, opt => opt.MapFrom(src => src.Payment == null || string.IsNullOrEmpty(src.Payment.Status) ? "Pendente" : src.Payment.Status))
+                .ForMember(dest => dest.TravelPackageName, opt => opt.MapFrom(src => src.TravelPackage!.Title))
+                .ForMember(dest => dest.TravelPackageDestination, opt => opt.MapFrom(src => src.TravelPackage!.Destination))
+                .ForMember(dest => dest.TotalValue, opt => opt.MapFrom(src => src.TravelPackage!.Value * src.Traveler.Count));
+
             CreateMap<Travelers, ResponseTravelers>();
         }
     }

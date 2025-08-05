@@ -9,6 +9,7 @@ using Nexus.Application.UseCases.Reservation.GetByID;
 using Nexus.Application.UseCases.Reservation.GetBytravelerName;
 using Nexus.Application.UseCases.Reservation.GetMyReservations;
 using Nexus.Application.UseCases.Reservation.GetReservationByCpf;
+using Nexus.Application.UseCases.Reservation.SearchReservations;
 using Nexus.Application.UseCases.Reservation.Update;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
@@ -20,7 +21,6 @@ namespace Nexus.API.Controllers
     [ApiController]
     public class ReservationController : ControllerBase
     {
-
         private readonly IGetAllReservantionUseCase _getAllReservantionUseCase;
         private readonly IGetByIdReservationUseCase _getByIdReservationUseCase;
         private readonly IDeleteReservationUseCase _deleteReservationUseCase;
@@ -59,7 +59,7 @@ namespace Nexus.API.Controllers
 
         [HttpGet("GetAll")]
         //[Authorize(Roles =("Admin"))]
-        public async Task<ActionResult<IEnumerable<ResponseReservationJson>>> GetAll()
+        public async Task<ActionResult<IEnumerable<ResponseReservationAdminJson>>> GetAll()
         {
             var reservations = await _getAllReservantionUseCase.ExecuteGetAllAsync();
 
@@ -187,7 +187,6 @@ namespace Nexus.API.Controllers
             return Ok(reservations);
         }
 
-        /*
         [HttpGet("GetReservationByTravelerCpf/{Cpf}")]
         //[Authorize("Admin")]
         public async Task<ActionResult<ResponseRegisteredReservationJson>> GetReservationByTravelerCpf(string Cpf)
@@ -201,5 +200,15 @@ namespace Nexus.API.Controllers
             return Ok(reservations);
         }
         */
+
+        [HttpGet("Search")]
+        public async Task<ActionResult<IEnumerable<ResponseReservationAdminJson>>> SearchReservations(
+            [FromServices] ISearchReservationsUseCase useCase,
+            [FromQuery] string? userName, 
+            [FromQuery] string? userCpf)
+        {
+            var result = await useCase.Execute(userName, userCpf);
+            return Ok(result);
+        }
     }
 }

@@ -69,6 +69,8 @@ namespace Nexus.Infrastructure.Services
             };
             var service = new PaymentIntentService();
             var paymentIntent = await service.CreateAsync(options);
+
+            Console.WriteLine(paymentIntent);
             return paymentIntent.ClientSecret;
         }
 

@@ -31,6 +31,8 @@ namespace Nexus.API.Controllers
 
             var response = await paymentService.PayWithCard(userId, request);
 
+            Console.WriteLine($"Payment Intent: {response.ClientSecret}");
+
             return Ok(response);
         }
 

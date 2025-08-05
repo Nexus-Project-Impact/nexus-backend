@@ -22,8 +22,6 @@ namespace Nexus.Application.Services.AutoMapper
 
             CreateMap<RequestCreatePackage, TravelPackage>();
             CreateMap<RequestUpdatePackage, TravelPackage>();
-            // Novo mapeamento para PackageDto -> TravelPackage
-            CreateMap<PackageDto, TravelPackage>();
 
             CreateMap<RequestTravelers, Travelers>();
 
@@ -31,6 +29,9 @@ namespace Nexus.Application.Services.AutoMapper
             //    .ForMember(dest => dest.Date, opt => opt.MapFrom(src => DateTime.UtcNow));
 
             CreateMap<Payment, PaymentDto>();
+
+            CreateMap<PackageDto, TravelPackage>();
+            CreateMap<TravelPackage, PackageDto>();
 
             CreateMap<RequestRegisterReservationJson, Reservation>()
                 .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
@@ -46,7 +47,7 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<RequestRegisterReviewJson, Review>();
         }
 
-        private void DomainToResponse() 
+        private void DomainToResponse()
         {
             CreateMap<Review, ResponseReviewJson>();
             CreateMap<Review, ResponseRegisteredReviewJson>();
@@ -57,7 +58,7 @@ namespace Nexus.Application.Services.AutoMapper
             CreateMap<Reservation, ResponseReservationJson>()
                 .ForMember(dest => dest.TravelPackageDestination, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.Destination : null))
                 .ForMember(dest => dest.TravelPackageImageUrl, opt => opt.MapFrom(src => src.TravelPackage != null ? src.TravelPackage.ImageUrl : null));
-            
+
             CreateMap<Travelers, ResponseTravelers>();
         }
     }

@@ -57,7 +57,7 @@ namespace Nexus.Application.UseCases.User.Register
                 Message = "Usuário cadastrado com sucesso!"
             };
         }
-
+        
         private async Task Validate(RequestRegisterUserJson request)
         {
             var validator = new RegisterUserValidator();

@@ -15,7 +15,7 @@ namespace Nexus.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    public class TravelPackageControler : ControllerBase
+    public class TravelPackage: ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly ICreatePackageUseCase _createPackageUseCase;
@@ -27,7 +27,7 @@ namespace Nexus.API.Controllers
         private readonly IGetByDestinationPackageUseCase _getByDestinationPackageUseCase;
         private readonly IGetByValuePackageUseCase _getByByValuePackageUseCase;
 
-        public TravelPackageControler(
+        public TravelPackage(
             IMapper mapper,
             ICreatePackageUseCase createPackageUseCase,
             IGetByIdPackageUseCase getByIdPackageUseCase,

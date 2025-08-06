@@ -8,8 +8,7 @@ namespace Nexus.Communication.Responses
 {
     public class ResponsePayment
     {
-
-      public string PaymentIntent { get; set; }
+      public string ClientSecret { get; set; }
 
     }
 }

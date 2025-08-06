@@ -10,6 +10,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{B501D44C-02FD-426A-A286-2D3C1F1CB9E8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{D72B9A1F-47BA-48FF-A641-97FEB1365ADC}"
+	ProjectSection(SolutionItems) = preProject
+		src\Backend\Nexus.Infrastructure\DependencyInjectionExtension.cs = src\Backend\Nexus.Infrastructure\DependencyInjectionExtension.cs
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nexus.API", "src\Backend\Nexus.API\Nexus.API.csproj", "{607E8765-898E-4FE4-9365-63FED53CA2AE}"
 EndProject

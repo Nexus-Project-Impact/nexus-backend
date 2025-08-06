@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 namespace Nexus.Communication.Requests
 {
     public class RequestRegisterReservationJson
+
     {
         public string? UserId { get; set; }
         public int TravelPackageId { get; set; }

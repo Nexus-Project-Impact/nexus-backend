@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Domain.DTOs;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
 using Nexus.Domain.Repositories.Packages;

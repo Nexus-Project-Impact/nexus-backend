@@ -2,9 +2,10 @@ namespace Nexus.Communication.Requests
 {
     public class RequestPayment
     {
-        public int ReservationId { get; set; }
         public double AmountPaid { get; set; }
         public string Receipt { get; set; } = string.Empty;
+        public int TravelPackageId { get; set; }
+        public ICollection<RequestTravelers> Traveler { get; set; } = new List<RequestTravelers>();
     }
 }
     

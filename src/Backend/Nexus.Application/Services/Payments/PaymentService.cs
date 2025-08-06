@@ -1,19 +1,13 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Nexus.Application.Services.Email;
 using Nexus.Application.UseCases.Payments.Create;
 using Nexus.Application.UseCases.Payments.Read;
+using Nexus.Application.UseCases.Reservation.Create;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
+using Nexus.Infrastructure.Services;
 using Nexus.Domain.DTOs;
 using Nexus.Domain.Entities;
-using Nexus.Infrastructure.Services;
-using Stripe.V2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Nexus.Application.Services.Payments
 {
@@ -24,14 +18,18 @@ namespace Nexus.Application.Services.Payments
         private readonly IEmailService _emailService;
         private readonly UserManager<User> _userManager;
         private readonly IReadPaymentUseCase _readPaymentUseCase;
+        private readonly ICreateReservationUseCase _createReservationUseCase;
 
-        public PaymentService(IStripeService stripeService, ICreatePaymentUseCase createPaymentUseCase, IEmailService emailService, UserManager<User> userManager, IReadPaymentUseCase readPaymentUseCase)
+        public PaymentService(IStripeService stripeService, ICreatePaymentUseCase createPaymentUseCase,
+            IEmailService emailService, UserManager<User> userManager, IReadPaymentUseCase readPaymentUseCase,
+            ICreateReservationUseCase createReservationUseCase)
         {
             _stripeService = stripeService;
             _createPaymentUseCase = createPaymentUseCase;
             _emailService = emailService;
             _userManager = userManager;
             _readPaymentUseCase = readPaymentUseCase;
+            _createReservationUseCase = createReservationUseCase;
         }
 
         private string BuildConfirmationEmailBody(string userName, double amount, string paymentMethod, string? extraInfo = null, string? extraHtml = null)
@@ -51,17 +49,37 @@ namespace Nexus.Application.Services.Payments
                 </div>";
         }
 
+        private async Task<int> CreateReservationIfNeeded(RequestRegisterReservationJson? registerReservationJson)
+        {
+            if (registerReservationJson == null) 
+                throw new ArgumentNullException(nameof(registerReservationJson), "Dados de reserva não podem ser nulos.");
+
+            var reservation = await _createReservationUseCase.Execute(registerReservationJson);
+            if (reservation == null)
+                throw new Exception("Erro ao criar reserva.");
+
+            return reservation;
+        }
+
         public async Task<ResponseBoleto> PayWithBoleto(string userId, RequestPayment request)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 throw new Exception("Usuário não encontrado.");
 
-            // realizar instância do pagamento no banco de dados como pendente
+            var reservationDTO = new RequestRegisterReservationJson
+            {
+                UserId = userId,
+                TravelPackageId = request.TravelPackageId,
+                Traveler = request.Traveler
+            };
+           
+
+            var reservationId = await CreateReservationIfNeeded(reservationDTO);
 
             var paymentDto = new PaymentDto
             {
-                ReservationId = request.ReservationId,
+                ReservationId = reservationId,
                 AmountPaid = request.AmountPaid,
                 Receipt = request.Receipt,
                 Status = "Pendente",
@@ -70,33 +88,28 @@ namespace Nexus.Application.Services.Payments
             };
 
             var payment = await _createPaymentUseCase.Execute(paymentDto);
-
             if (payment == null)
-            {
                 throw new Exception("Erro ao criar pagamento no banco de dados.");
-            }
 
-            // gerar boleto via stripe
-            var dataStripe = await _stripeService.CreatePaymentAsync(request.AmountPaid, "brl", "pagamento de uma reserva", user.Name, user.Email, user.CPF);
+            var dataStripe = await _stripeService.CreatePaymentAsync(
+                request.AmountPaid, "brl", "pagamento de uma reserva", user.Name, user.Email, user.CPF);
 
             if (dataStripe.clientSecret == null)
-            {
                 throw new Exception("Erro ao gerar boleto no Stripe.");
-            }
 
-            
             var subject = "Confirmação de Geração de Boleto";
-            var extraInfo = $"Seu boleto foi gerado com sucesso. <br/>Acesse o link abaixo para visualizar e realizar o pagamento.";
+            var extraInfo = "Seu boleto foi gerado com sucesso. <br/>Acesse o link abaixo para visualizar e realizar o pagamento.";
             var extraHtml = $"<a href='{dataStripe.boletoUrl}' style='display:inline-block;padding:10px 18px;background:#2a7ae2;color:#fff;text-decoration:none;border-radius:5px;'>Visualizar Boleto</a>";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Boleto", extraInfo, extraHtml);
-            await _emailService.SendEmailAsync(user.Email, subject, $"Seu boleto foi gerado com sucesso: {dataStripe.boletoUrl}", htmlBody);
+
+            // await _emailService.SendEmailAsync(user.Email, subject, $"Seu boleto foi gerado com sucesso: {dataStripe.boletoUrl}", htmlBody);
 
             return new ResponseBoleto
             {
                 BankSlipUrl = dataStripe.boletoUrl,
                 ClientSecret = dataStripe.clientSecret
             };
-        }           
+        }
 
         public async Task<ResponsePayment> PayWithCard(string userId, RequestPayment request)
         {
@@ -104,9 +117,19 @@ namespace Nexus.Application.Services.Payments
             if (user == null)
                 throw new Exception("Usuário não encontrado.");
 
+            var reservationDTO = new RequestRegisterReservationJson
+            {
+                UserId = userId,
+                TravelPackageId = request.TravelPackageId,
+                Traveler = request.Traveler
+            };
+
+
+            var reservationId = await CreateReservationIfNeeded(reservationDTO);
+
             var paymentDto = new PaymentDto
             {
-                ReservationId = request.ReservationId,
+                ReservationId = reservationId,
                 AmountPaid = request.AmountPaid,
                 Receipt = request.Receipt,
                 Status = "Pendente",
@@ -115,27 +138,28 @@ namespace Nexus.Application.Services.Payments
             };
 
             var payment = await _createPaymentUseCase.Execute(paymentDto);
-
-
             if (payment == null)
                 throw new Exception("Erro ao criar pagamento no banco de dados.");
 
-
             var clientSecret = await _stripeService.CreatePaymentAsync(
-              request.AmountPaid, // valor pago
-              "BRL", // ou outro valor fixo ou obtido de outro local
-              $"Pagamento via Cartão"
-          );
+                request.AmountPaid, "BRL", "Pagamento via Cartão");
 
-         
+            Console.WriteLine(clientSecret);
+
+            if(clientSecret == null)
+            {
+                throw new Exception("Erro do Stripe");
+            }
+
             var subject = "Confirmação de Pagamento com Cartão";
-            var extraInfo = $"Seu pagamento com cartão foi iniciado. Assim que confirmado, você receberá a confirmação.";
+            var extraInfo = "Seu pagamento com cartão foi iniciado. Assim que confirmado, você receberá a confirmação.";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Cartão de Crédito", extraInfo);
-            await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento com cartão foi iniciado.", htmlBody);
+
+            //await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento com cartão foi iniciado.", htmlBody);
 
             return new ResponsePayment
             {
-                PaymentIntent = clientSecret
+                ClientSecret = clientSecret
             };
         }
 
@@ -145,9 +169,21 @@ namespace Nexus.Application.Services.Payments
             if (user == null)
                 throw new Exception("Usuário não encontrado.");
 
+
+            // gambiarra
+            var reservationDTO = new RequestRegisterReservationJson
+            {
+                UserId = userId,
+                TravelPackageId = request.TravelPackageId,
+                Traveler = request.Traveler
+            };
+
+
+            var reservationId = await CreateReservationIfNeeded(reservationDTO);
+
             var paymentDto = new PaymentDto
             {
-                ReservationId = request.ReservationId,
+                ReservationId = reservationId,
                 AmountPaid = request.AmountPaid,
                 Receipt = request.Receipt,
                 Status = "Pendente",
@@ -170,12 +206,12 @@ namespace Nexus.Application.Services.Payments
                 QrCodeImageUrl = $"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={Uri.EscapeDataString(payloadPix)}"
             };
 
-           
             var subject = "Confirmação de Pagamento com Pix";
-            var extraInfo = $"Seu pagamento via Pix foi iniciado. Utilize o QR Code abaixo para concluir o pagamento.";
+            var extraInfo = "Seu pagamento via Pix foi iniciado. Utilize o QR Code abaixo para concluir o pagamento.";
             var extraHtml = $"<img src='{response.QrCodeImageUrl}' alt='QR Code Pix' style='margin-top:10px;max-width:220px;'><div style='margin-top:8px;font-size:13px;color:#555;word-break:break-all;'>{payloadPix}</div>";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Pix", extraInfo, extraHtml);
-            await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento via Pix foi iniciado.", htmlBody);
+
+          //  await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento via Pix foi iniciado.", htmlBody);
 
             return response;
         }

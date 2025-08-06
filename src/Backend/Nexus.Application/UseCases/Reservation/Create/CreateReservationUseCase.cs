@@ -28,7 +28,7 @@ namespace Nexus.Application.UseCases.Reservation.Create
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ResponseRegisteredReservationJson> Execute(RequestRegisterReservationJson request)
+        public async Task<int> Execute(RequestRegisterReservationJson request)
         {
             var reservation = _mapper.Map<Nexus.Domain.Entities.Reservation>(request);
 
@@ -36,10 +36,16 @@ namespace Nexus.Application.UseCases.Reservation.Create
 
             await _unitOfWork.Commit();
 
-            return new ResponseRegisteredReservationJson
-            {
-                Message = "Reserva realizada com sucesso!",
-            };
+
+            return reservation.Id;
+
+            //return new ResponseRegisteredReservationJson
+            //{
+            //    Message = "Reserva realizada com sucesso!",
+            //};
+
+
+
         }
     }
 }

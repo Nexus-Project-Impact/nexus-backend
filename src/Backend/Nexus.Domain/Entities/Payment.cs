@@ -12,7 +12,7 @@ namespace Nexus.Domain.Entities
 
         public int ReservationId { get; set; }
 
-        public Reservation? Reservation { get; set; } // Corrigido para PascalCase
+        public Reservation? Reservation { get; set; } 
 
         public double AmountPaid { get; set; }
 

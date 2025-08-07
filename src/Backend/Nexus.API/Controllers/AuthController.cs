@@ -78,5 +78,19 @@ namespace Nexus.API.Controllers
                 Message = "Senha foi redefinida com sucesso"
             });
         }
+        [HttpPost("change-password")]
+        [Authorize]
+        [ProducesResponseType(typeof(ResponseMessage), StatusCodes.Status200OK)]
+        public async Task<IActionResult> ChangePassword([FromServices] IAuthUserUseCase useCase, [FromBody] RequestChangePassword request)
+        {
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId) || !Guid.TryParse(userId, out var guidUserId))
+            {
+                return BadRequest(new { message = "Id do usuário inválido ou não encontrado." });
+            }
+            var result = await useCase.ChangePassword(guidUserId, request);
+            return Ok(result);
+        }
+
     }
 }

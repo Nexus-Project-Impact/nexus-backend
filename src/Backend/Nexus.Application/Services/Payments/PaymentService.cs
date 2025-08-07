@@ -1,13 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.AspNetCore.Identity;
 using Nexus.Application.Services.Email;
 using Nexus.Application.UseCases.Payments.Create;
 using Nexus.Application.UseCases.Payments.Read;
 using Nexus.Application.UseCases.Reservation.Create;
 using Nexus.Communication.Requests;
 using Nexus.Communication.Responses;
-using Nexus.Infrastructure.Services;
 using Nexus.Domain.DTOs;
 using Nexus.Domain.Entities;
+using Nexus.Infrastructure.Services;
+using Stripe;
+using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Nexus.Application.Services.Payments
 {
@@ -31,6 +35,25 @@ namespace Nexus.Application.Services.Payments
             _readPaymentUseCase = readPaymentUseCase;
             _createReservationUseCase = createReservationUseCase;
         }
+
+        public string GenerateReceipt(int Id, int ReservationId, double AmountPaid, string PaymentMethod, string Status, Date Date)
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("======= RECIBO DE PAGAMENTO =======");
+            sb.AppendLine($"Número do Pagamento: {Id}");
+            sb.AppendLine($"ID da Reserva: {ReservationId}");
+            sb.AppendLine($"Data do Pagamento: {Date:dd/MM/yyyy HH:mm}");
+            sb.AppendLine($"Valor Pago: R$ {AmountPaid:F2}");
+            sb.AppendLine($"Método de Pagamento: {PaymentMethod ?? "N/A"}");
+            sb.AppendLine($"Status: {Status ?? "N/A"}");
+            sb.AppendLine("-----------------------------------");
+            sb.AppendLine("Obrigado pela sua preferência!");
+            sb.AppendLine("===================================");
+
+            return sb.ToString();
+        }
+
 
         private string BuildConfirmationEmailBody(string userName, double amount, string paymentMethod, string? extraInfo = null, string? extraHtml = null)
         {
@@ -102,7 +125,7 @@ namespace Nexus.Application.Services.Payments
             var extraHtml = $"<a href='{dataStripe.boletoUrl}' style='display:inline-block;padding:10px 18px;background:#2a7ae2;color:#fff;text-decoration:none;border-radius:5px;'>Visualizar Boleto</a>";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Boleto", extraInfo, extraHtml);
 
-            // await _emailService.SendEmailAsync(user.Email, subject, $"Seu boleto foi gerado com sucesso: {dataStripe.boletoUrl}", htmlBody);
+             await _emailService.SendEmailAsync(user.Email, subject, $"Seu boleto foi gerado com sucesso: {dataStripe.boletoUrl}", htmlBody);
 
             return new ResponseBoleto
             {
@@ -132,7 +155,7 @@ namespace Nexus.Application.Services.Payments
                 ReservationId = reservationId,
                 AmountPaid = request.AmountPaid,
                 Receipt = request.Receipt,
-                Status = "Pendente",
+                Status = "Aprovado",
                 PaymentMethod = "Cartão",
                 Date = DateTime.Now
             };
@@ -155,7 +178,7 @@ namespace Nexus.Application.Services.Payments
             var extraInfo = "Seu pagamento com cartão foi iniciado. Assim que confirmado, você receberá a confirmação.";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Cartão de Crédito", extraInfo);
 
-            //await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento com cartão foi iniciado.", htmlBody);
+            await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento com cartão foi iniciado.", htmlBody);
 
             return new ResponsePayment
             {
@@ -211,7 +234,7 @@ namespace Nexus.Application.Services.Payments
             var extraHtml = $"<img src='{response.QrCodeImageUrl}' alt='QR Code Pix' style='margin-top:10px;max-width:220px;'><div style='margin-top:8px;font-size:13px;color:#555;word-break:break-all;'>{payloadPix}</div>";
             var htmlBody = BuildConfirmationEmailBody(user.Name, request.AmountPaid, "Pix", extraInfo, extraHtml);
 
-          //  await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento via Pix foi iniciado.", htmlBody);
+            await _emailService.SendEmailAsync(user.Email, subject, "Seu pagamento via Pix foi iniciado.", htmlBody);
 
             return response;
         }

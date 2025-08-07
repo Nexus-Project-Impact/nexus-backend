@@ -33,6 +33,7 @@ using Nexus.Application.UseCases.Review.Moderate;
 using Nexus.Application.UseCases.Review.Register;
 using Nexus.Application.UseCases.TravelPackages.GetAllActive;
 using Nexus.Application.UseCases.User.Auth;
+using Nexus.Application.UseCases.User.Read;
 using Nexus.Application.UseCases.User.Register;
 
 namespace Nexus.Application
@@ -53,6 +54,8 @@ namespace Nexus.Application
         private static void AddUseCases(IServiceCollection services)
         {
             services.AddScoped<IRegisterUserUseCase, RegisterUserUseCase>();
+            services.AddScoped<IReadUserUseCase, ReadUserUseCase>();
+
             services.AddScoped<IAuthUserUseCase, AuthUserUseCase>();
             services.AddScoped<IMidiaUseCase, MidiaUseCase>();
             services.AddScoped<IEmailService, EmailService>();

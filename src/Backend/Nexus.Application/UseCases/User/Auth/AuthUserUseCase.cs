@@ -47,23 +47,13 @@ namespace Nexus.Application.UseCases.User.Auth
                 };
             }
 
-            if (user.Id == null || user.Email == null || user.Name == null)
+            if (string.IsNullOrEmpty(user.Id) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Name))
             {
                 // implementar para disparar erro específico para alguns campos nulos
                 return new ResponseLoginUserJson
                 {
                     Token = string.Empty,
                     Message = "Dados do usuário estão incompletos."
-                };
-            }
-            var isPasswordValid = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-
-            if (!isPasswordValid.Succeeded)
-            {
-                return new ResponseLoginUserJson
-                {
-                    Token = string.Empty,
-                    Message = "Invalid password."
                 };
             }
             var roles = await _userManager.GetRolesAsync(user);
@@ -131,6 +121,25 @@ namespace Nexus.Application.UseCases.User.Auth
             }
             return false;
         }
+
+        public async Task<ResponseMessage> ChangePassword(Guid userId, RequestChangePassword request)
+        {
+            var user = await _userManager.FindByIdAsync(userId.ToString());
+            if (user == null)
+            {
+                throw new Exception("Usuário não encontrado.");
+            }
+            var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
+            if (!result.Succeeded)
+            {
+                throw new Exception("Erro ao alterar a senha: " + string.Join(", ", result.Errors.Select(e => e.Description)));
+            }
+            return new ResponseMessage
+            {
+                Message = "Senha alterada com sucesso."
+            };
+        }
+
         public async Task Logout()
         {
             await _signInManager.SignOutAsync();

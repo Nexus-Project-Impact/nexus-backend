@@ -30,6 +30,8 @@ namespace Nexus.Application.Services.AutoMapper
 
             CreateMap<Payment, PaymentDto>();
 
+            CreateMap<User, ResponseUserData>();
+
             CreateMap<PackageDto, TravelPackage>();
             CreateMap<TravelPackage, PackageDto>();
 

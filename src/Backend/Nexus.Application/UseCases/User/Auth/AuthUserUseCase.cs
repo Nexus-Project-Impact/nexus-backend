@@ -47,6 +47,7 @@ namespace Nexus.Application.UseCases.User.Auth
                 };
             }
 
+
             if (string.IsNullOrEmpty(user.Id) || string.IsNullOrEmpty(user.Email) || string.IsNullOrEmpty(user.Name))
             {
                 // implementar para disparar erro específico para alguns campos nulos
@@ -56,6 +57,18 @@ namespace Nexus.Application.UseCases.User.Auth
                     Message = "Dados do usuário estão incompletos."
                 };
             }
+
+            var isPasswordValid = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+
+            if (!isPasswordValid.Succeeded)
+            {
+                return new ResponseLoginUserJson
+                {
+                    Token = string.Empty,
+                    Message = "Senha inválida"
+                };
+            }
+
             var roles = await _userManager.GetRolesAsync(user);
             var token = _jwtService.GenerateToken(user.Id, user.Email, user.Name, roles);
 

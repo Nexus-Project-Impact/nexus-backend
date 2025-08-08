@@ -13,7 +13,7 @@ namespace Nexus.Infrastructure.DataAccess
         {
             await context.Database.MigrateAsync();
 
-            if(!await roleManager.RoleExistsAsync("Admin"))
+            if (!await roleManager.RoleExistsAsync("Admin"))
             {
                 await roleManager.CreateAsync(new IdentityRole("Admin"));
             }
@@ -32,12 +32,12 @@ namespace Nexus.Infrastructure.DataAccess
                     UserName = "admin@nexus.com",
                     Name = "Administrador",
                     Email = "admin@nexus.com"
-                    
+
                 };
 
                 var resultado = await userManager.CreateAsync(adminUser, "Senha@123");
 
-                if(resultado.Succeeded)
+                if (resultado.Succeeded)
                 {
                     await userManager.AddToRoleAsync(adminUser, "Admin");
                 }

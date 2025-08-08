@@ -38,19 +38,26 @@ namespace Nexus.Application.UseCases.User.Register
             {
                 await _userManager.AddToRoleAsync(user, "User");
             }
+            //else
+            //{
+            //    var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+            //    //throw new UserCreationException($"Falha ao criar usuário: {errors}");
+            //    Console.WriteLine(errors);
+            //}
             else
             {
                 throw new UserCreationException();
+
             }
 
             await _unitOfWork.Commit();
 
             return new ResponseRegisteredUserJson
             {
-                Name = user.Name
+                Message = "Usuário cadastrado com sucesso!"
             };
         }
-
+        
         private async Task Validate(RequestRegisterUserJson request)
         {
             var validator = new RegisterUserValidator();

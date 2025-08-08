@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 namespace Nexus.Application.Services.Auth
 {
-    public class JwtService
+    public class JwtService : IJwtService
     {
         private readonly string _secretKey;
         private readonly string _issuer;

@@ -14,33 +14,64 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
     public class ReviewRepository : IReviewRepository
     {
         private readonly NexusDbContext _context;
-        public ReviewRepository(NexusDbContext context)
+        private readonly IUnitOfWork _unitOfWork;
+        public ReviewRepository(NexusDbContext context, IUnitOfWork unitOfWork)
         {
             _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<Review>> GetAllAsync()
+        public async Task<IEnumerable<Domain.Entities.Review>> GetAllAsync()
         {
-            return await _context.Reviews.ToListAsync();
-            
-
+            return await _context.Reviews
+                .Include(r => r.User)
+                .ToListAsync();
         }
 
-        public async Task<Review?> GetByIdAsync(string id)
+        public async Task<Domain.Entities.Review?> GetByIdAsync(int id)
         {
             return await _context.Reviews
                 .Include(r => r.User)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task AddAsync(Review entity)
+        public async Task<IEnumerable<Domain.Entities.Review>> GetByPackageIdAsync(int packageId)
         {
-            await _context.Reviews.AddAsync(entity);
-            
+            return await _context.Reviews
+                .Include(r => r.User)
+                .Where(r => r.PackageId == packageId)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
         }
 
+        public async Task AddAsync(Domain.Entities.Review review)
+        {
+            await _context.Reviews.AddAsync(review);
+        }
 
-        public async Task DeleteAsync(string id)
+        public async Task UpdateAsync(Domain.Entities.Review review)
+        {
+            // Ensure the entity is being tracked and marked as modified
+            var existingReview = await _context.Reviews.FindAsync(review.Id);
+            if (existingReview != null)
+            {
+                // Update the properties
+                existingReview.Comment = review.Comment;
+                existingReview.Rating = review.Rating;
+                existingReview.PackageId = review.PackageId;
+                existingReview.UserId = review.UserId;
+                
+                // The context will automatically track changes
+                _context.Reviews.Update(existingReview);
+            }
+            else
+            {
+                // If not found in context, use the provided review
+                _context.Reviews.Update(review);
+            }
+        }
+
+        public async Task DeleteAsync(int id)
         {
             var review = await _context.Reviews.FindAsync(id);
 
@@ -48,8 +79,6 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             {
                 _context.Reviews.Remove(review);
             }
-            
         }
-
     }
 }

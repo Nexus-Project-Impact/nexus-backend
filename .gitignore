@@ -193,3 +193,5 @@ FakesAssemblies/
 
 /.sonarqube
 coverage.opencover.xml
+/src/Backend/Nexus.API/appsettings.json
+/src/Backend/Nexus.API/appsettings.json

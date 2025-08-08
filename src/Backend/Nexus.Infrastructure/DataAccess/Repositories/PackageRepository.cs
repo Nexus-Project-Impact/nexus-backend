@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Nexus.Domain.Entities;
 using Nexus.Domain.Repositories;
+using Nexus.Domain.Repositories.Packages;
 
 namespace Nexus.Infrastructure.DataAccess.Repositories
 {
-    public class PackageRepository : IRepository<TravelPackage, int>
+    public class PackageRepository : IPackageRepository<TravelPackage, int>
     {
         private readonly NexusDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
@@ -33,6 +34,11 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
             return await _context.TravelPackages.ToListAsync();
         }
 
+        public async Task<IEnumerable<TravelPackage>> GetAllActiveAsync()
+        {
+            return await _context.TravelPackages.Where(x => x.IsActive == true).ToListAsync();
+        }
+
 
         public async Task<TravelPackage?> GetByIdAsync(int id)
         {
@@ -49,13 +55,34 @@ namespace Nexus.Infrastructure.DataAccess.Repositories
         public async Task DeleteAsync(int id)
         {
             var travelPackage = await _context.TravelPackages.FindAsync(id);
-            if (travelPackage != null)
+            if (travelPackage != null && travelPackage.IsActive)
             {
-                _context.TravelPackages.Remove(travelPackage);
+                travelPackage.IsActive = false;
+                _context.TravelPackages.Update(travelPackage);
+                await _unitOfWork.Commit();
             }
 
         }
 
+        public async Task<IEnumerable<TravelPackage>> GetByDepartureDateAsync(DateTime? initialDepartureDate, DateTime? finalDepartureDate)
+        {
+            return await _context.TravelPackages
+                .Where(f => f.DepartureDate.Date >= initialDepartureDate && f.DepartureDate.Date <= finalDepartureDate)
+                .ToListAsync();
+        }
 
+        public async Task<IEnumerable<TravelPackage>> GetByValueAsync(double? minValue, double? maxValue)
+        {
+            return await _context.TravelPackages
+                .Where(f => f.Value >= minValue && f.Value <= maxValue)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TravelPackage>> GetByDestinationAsync(string destination)
+        {
+            return await _context.TravelPackages
+                    .Where(p => p.Destination.ToLower().Contains(destination.ToLower()))
+                    .ToListAsync();
+        }
     }
 }

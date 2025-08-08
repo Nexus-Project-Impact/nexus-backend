@@ -1,22 +1,9 @@
-﻿using Nexus.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Nexus.Domain.Entities;
 
 namespace Nexus.Domain.Repositories.Review
 {
-    public interface IReviewRepository
+    public interface IReviewRepository : IRepository<Entities.Review, int>
     {
-
-        Task<IEnumerable<Entities.Review>> GetAllAsync();
-
-        Task<Entities.Review?> GetByIdAsync(string id);
-
-        Task AddAsync(Entities.Review entity);
-
-        Task DeleteAsync(string id);
-
+        Task<IEnumerable<Entities.Review>> GetByPackageIdAsync(int packageId);
     }
 }

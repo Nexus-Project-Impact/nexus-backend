@@ -1,18 +1,27 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.OpenApi.Models;
 using Nexus.API.Filters;
 using Nexus.Application;
 using Nexus.Exceptions.ExceptionsBase;
 using Nexus.Infrastructure;
 using Nexus.Infrastructure.DataAccess;
-using Microsoft.OpenApi.Models;
-using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()// Permite qualquer origem
+              .AllowAnyMethod() // Permite qualquer mÃ©todo HTTP (GET, POST, PUT, DELETE, etc.)
+              .AllowAnyHeader(); // Permite qualquer cabeÃ§alho HTTP
+    });
+});
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Configuração do Swagger com suporte a JWT Bearer
+// ConfiguraÃ§Ã£o do Swagger com suporte a JWT Bearer
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "NexusAPI", Version = "v1" });
@@ -43,10 +52,10 @@ builder.Services.AddMvc(options => options.Filters.Add(typeof(ExceptionFilter)))
 builder.Services.AddApplication(builder.Configuration);
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Remover bloco comentado de AddAuthentication/AddJwtBearer/AddAuthorization pois já está na infraestrutura
-
 
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 using (var scope = app.Services.CreateScope())
 {
@@ -65,7 +74,7 @@ using (var scope = app.Services.CreateScope())
         throw new SeedDataException();
     }
 }
-    
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -87,3 +96,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+    

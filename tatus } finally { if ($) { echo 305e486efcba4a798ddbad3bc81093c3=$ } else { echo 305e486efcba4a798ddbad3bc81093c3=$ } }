@@ -1,0 +1,22 @@
+[1mdiff --git a/src/Backend/Nexus.API/Controllers/PaymentController.cs b/src/Backend/Nexus.API/Controllers/PaymentController.cs[m
+[1mindex e4e8223..3907f1c 100644[m
+[1m--- a/src/Backend/Nexus.API/Controllers/PaymentController.cs[m
+[1m+++ b/src/Backend/Nexus.API/Controllers/PaymentController.cs[m
+[36m@@ -21,7 +21,7 @@[m [mnamespace Nexus.API.Controllers[m
+     public class Payment : ControllerBase[m
+     {[m
+         // enviar os dados do cartão pro stripe e  usar nosso próprio formulário[m
+[31m-        [HttpPost("pay")][m
+[32m+[m[32m        [HttpPost("pay-card")][m
+         [ProducesResponseType(typeof(ResponsePayment), StatusCodes.Status200OK)][m
+         public async Task<IActionResult> CreateCheckoutSession([m
+             [FromServices] IPaymentService paymentService,[m
+[36m@@ -29,7 +29,7 @@[m [mnamespace Nexus.API.Controllers[m
+         {[m
+             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;[m
+ [m
+[31m-            var response = paymentService.PayWithCard(userId, request);[m
+[32m+[m[32m            var response = await paymentService.PayWithCard(userId, request);[m
+ [m
+             return Ok(response);[m
+         }[m

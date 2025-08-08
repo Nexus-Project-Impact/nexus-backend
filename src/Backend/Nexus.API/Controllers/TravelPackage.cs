@@ -1,0 +1,261 @@
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Nexus.Application.UseCases.Packages.Create;
+using Nexus.Application.UseCases.Packages.Delete;
+using Nexus.Application.UseCases.Packages.GetAll;
+using Nexus.Application.UseCases.Packages.GetByDepartureDate;
+using Nexus.Application.UseCases.Packages.GetByDestination;
+using Nexus.Application.UseCases.Packages.GetById;
+using Nexus.Application.UseCases.Packages.GetByValue;
+using Nexus.Application.UseCases.Packages.Update;
+using Nexus.Application.UseCases.TravelPackages.GetAllActive;
+using Nexus.Communication.Requests;
+using Nexus.Communication.Responses;
+
+namespace Nexus.API.Controllers
+{
+    [Route("[controller]")]
+    [ApiController]
+    public class TravelPackageController : ControllerBase
+    {
+        private readonly IMapper _mapper;
+        private readonly ICreatePackageUseCase _createPackageUseCase;
+        private readonly IGetByIdPackageUseCase _getByIdPackageUseCase;
+        private readonly IGetAllPackageUseCase _getAllPackageUseCase;
+        private readonly IUpdatePackageUseCase _updatePackageUseCase;
+        private readonly IDeletePackageUseCase _deletePackageUseCase;
+        private readonly IGetByDepartureDatePackageUseCase _getByDepartureDatePackageUseCase;
+        private readonly IGetByDestinationPackageUseCase _getByDestinationPackageUseCase;
+        private readonly IGetByValuePackageUseCase _getByByValuePackageUseCase;
+        private readonly IGetAllActivePackageUseCase _getAllActivePackageUseCase;
+
+        public TravelPackageController(
+            IMapper mapper,
+            ICreatePackageUseCase createPackageUseCase,
+            IGetByIdPackageUseCase getByIdPackageUseCase,
+            IGetAllPackageUseCase getAllPackageUseCase,
+            IUpdatePackageUseCase updatePackageUseCase,
+            IDeletePackageUseCase deletePackageUseCase,
+            IGetByDepartureDatePackageUseCase getByDepartureDatePackageUseCase,
+            IGetByDestinationPackageUseCase getByDestinationPackageUseCase,
+            IGetByValuePackageUseCase getByByValuePackageUseCase,
+            IGetAllActivePackageUseCase getAllActivePackageUseCase)
+        {
+            _mapper = mapper;
+            _createPackageUseCase = createPackageUseCase;
+            _getByIdPackageUseCase = getByIdPackageUseCase;
+            _getAllPackageUseCase = getAllPackageUseCase;
+            _updatePackageUseCase = updatePackageUseCase;
+            _deletePackageUseCase = deletePackageUseCase;
+            _getByDepartureDatePackageUseCase = getByDepartureDatePackageUseCase;
+            _getByDestinationPackageUseCase = getByDestinationPackageUseCase;
+            _getByByValuePackageUseCase = getByByValuePackageUseCase;
+            _getAllActivePackageUseCase = getAllActivePackageUseCase;
+        }
+
+        private string BuildImageUrl(string imagePath)
+        {
+            if (string.IsNullOrWhiteSpace(imagePath))
+                return null;
+
+            var fileName = Path.GetFileName(imagePath);
+            return $"{Request.Scheme}://{Request.Host}/Midia/{fileName}";
+        }
+
+        [HttpGet("GetById/{id}")]
+        public async Task<ActionResult<ResponsePackage>> ExecuteGetById(int id)
+        {
+            if (id == 0) return NotFound(new { message = "O valor do campo Id não pode ser nulo." });
+
+            try
+            {
+                var package = await _getByIdPackageUseCase.ExecuteGetById(id);
+                if (package == null)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado." });
+
+                package.ImageUrl = BuildImageUrl(package.ImageUrl);
+                return Ok(package);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetAllPackages")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> GetAll()
+        {
+            try
+            {
+                var packages = await _getAllPackageUseCase.ExecuteGetAll();
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = "Nenhum pacote encontrado." });
+
+                foreach (var pkg in packages)
+                {
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+                }
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetAllActive")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> GetAllActive()
+        {
+            try
+            {
+                var packages = await _getAllActivePackageUseCase.ExecuteGetAllActive();
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = "Nenhum pacote encontrado." });
+
+                foreach (var pkg in packages)
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+
+
+        [HttpPost("Create")]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(ResponseCreatedPackage), StatusCodes.Status201Created)]
+        public async Task<IActionResult> Create([FromServices] ICreatePackageUseCase useCase, [FromForm] RequestCreatePackage request)
+        {
+            var result = await useCase.ExecuteCreate(request);
+            return Created(string.Empty, result);
+        }
+
+        [HttpPut("Update/{id}")]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(ResponsePackage), StatusCodes.Status200OK)]
+        public async Task<IActionResult> Update([FromServices] IUpdatePackageUseCase useCase, int id, [FromForm] RequestUpdatePackage request)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            try
+            {
+                request.Id = id; // Ensure the ID from the route is set in the request
+                var updatedPackage = await _updatePackageUseCase.ExecuteUpdate(id, request);
+
+                if (updatedPackage == null)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado para atualização." });
+
+                updatedPackage.ImageUrl = BuildImageUrl(updatedPackage.ImageUrl);
+                return Ok(updatedPackage);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpDelete("Delete/{id}")]
+        public async Task<IActionResult> DeletePackage(int id)
+        {
+            try
+            {
+                var deleted = await _deletePackageUseCase.ExecuteDelete(id);
+
+                if (!deleted)
+                    return NotFound(new { message = $"Pacote com ID {id} não foi encontrado para exclusão." });
+
+                return Ok(new { message = "Pacote excluído com sucesso." });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetByDepartureDate")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDepartureDate([FromQuery] DateTime initialDate, DateTime finalDate)
+        {
+            if (initialDate == default || finalDate == default)
+                return BadRequest(new { message = "Os campos 'Data inicial' e 'Data final' são obrigatórios." });
+
+            if (initialDate > finalDate)
+                return BadRequest(new { message = "A data inicial não pode ser maior que a data final." });
+
+            try
+            {
+                var packages = await _getByDepartureDatePackageUseCase.ExecuteGetByDepartureDate(initialDate, finalDate);
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = "Nenhum pacote encontrado no intervalo de datas." });
+
+                foreach (var pkg in packages)
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetByDestination")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByDestination(string destination)
+        {
+            if (string.IsNullOrWhiteSpace(destination))
+                return BadRequest(new { message = "Destino não pode ser vazio." });
+
+            try
+            {
+                var packages = await _getByDestinationPackageUseCase.ExecuteGetByDestination(destination);
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = $"Nenhum pacote encontrado para o destino: {destination}" });
+
+                foreach (var pkg in packages)
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+
+        [HttpGet("GetByValue")]
+        public async Task<ActionResult<IEnumerable<ResponsePackage>>> ExecuteGetByValue([FromQuery] double minValue, double maxValue)
+        {
+            if (minValue <= 0 || maxValue <= 0)
+                return BadRequest(new { message = "Os valores mínimo e máximo devem ser maiores que zero." });
+
+            if (minValue > maxValue)
+                return BadRequest(new { message = "O valor mínimo não pode ser maior que o valor máximo." });
+
+            try
+            {
+                var packages = await _getByByValuePackageUseCase.ExecuteGetByValue(minValue, maxValue);
+
+                if (packages == null || !packages.Any())
+                    return NotFound(new { message = "Nenhum pacote encontrado no intervalo de valores informado." });
+
+                foreach (var pkg in packages)
+                    pkg.ImageUrl = BuildImageUrl(pkg.ImageUrl);
+
+                return Ok(packages);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { errors = new[] { ex.Message } });
+            }
+        }
+    }
+}

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,9 +14,19 @@ namespace Nexus.Domain.Entities
         public string? Description { get; set; }
         public string? Destination { get; set; }
         public int Duration { get; set; }
+
+        [Column(TypeName = "date")]
+
         public DateTime DepartureDate { get; set; }
+
+        [Column(TypeName = "date")]
+
         public DateTime ReturnDate { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public double Value { get; set; }
+        public string? ImageUrl { get; set; }
+
+        public bool IsActive { get; set; } = true;
 
     }
 }

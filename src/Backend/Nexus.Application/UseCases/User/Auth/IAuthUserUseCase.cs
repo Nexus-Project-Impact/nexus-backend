@@ -12,8 +12,9 @@ namespace Nexus.Application.UseCases.User.Auth
     {
         public Task<ResponseLoginUserJson> Execute(RequestLoginUserJson request);
         public Task<ResponseForgotPassword> Execute(RequestForgotPassword request);
-        public Task Logout();
 
-        //reset-password
+        public Task<ResponseMessage> ChangePassword(Guid userId, RequestChangePassword request);
+        public Task<bool> ResetPassword(RequestResetPassword request);
+        public Task Logout();
     }
 }
